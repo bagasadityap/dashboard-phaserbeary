@@ -1,0 +1,184 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Yajra\DataTables\Facades\DataTables;
+
+class UserController extends Controller
+{
+    public function index() {
+        $page = 'Configuration \ User';
+        $users = User::all();
+
+        if (request()->ajax()) {
+            return DataTables::of(User::query())
+                ->addColumn('role', function($model) {
+                    return $model->getRoleNames()->first();
+                })
+                ->addColumn('_', function($model) {
+                    $html = '';
+                    // $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
+                    // $html .= '<button href="" class="btn btn-outline-warning px-2 me-1 d-inline-flex align-items-center" onclick="edit(\'' . $model->id . '\')"><i class="iconoir-edit fs-14"></i></button>';
+                    // $html .= '<button href="" class="btn btn-outline-danger px-2 d-inline-flex align-items-center" onclick="remove(\'' . $model->id . '\')"><i class="iconoir-trash fs-14"></i></button>';
+                    if (auth()->user()->can('User Read')) {
+                        $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
+                    }
+                    if (auth()->user()->can('User Edit')) {
+                        $html .= '<button href="" class="btn btn-outline-warning px-2 me-1 d-inline-flex align-items-center" onclick="edit(\'' . $model->id . '\')"><i class="iconoir-edit fs-14"></i></button>';
+                    }
+                    if (auth()->user()->can('User Delete')) {
+                        $html .= '<button href="" class="btn btn-outline-danger px-2 d-inline-flex align-items-center" onclick="remove(\'' . $model->id . '\')"><i class="iconoir-trash fs-14"></i></button>';
+                    }
+                    return $html;
+                })
+                ->rawColumns(['_'])
+                ->make(true);
+        }
+
+        return view('configuration.user.index', compact('page', 'users'));
+    }
+
+    public function create(Request $request) {
+        $datas = Role::all();
+
+        return view('configuration.user.create', compact('datas'));
+    }
+
+    public function store(Request $request) {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'username' => 'required|string|max:255',
+                'email' => 'required|string|max:255|unique:users',
+                'password' => 'required|string',
+                'role' => 'required',
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $role = Role::where('name', $request->role)->first();
+            if ($role) {
+                $user->assignRole($role);
+            }
+
+            $user->save();
+
+            return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        }
+    }
+
+    public function edit($id) {
+        $user = User::findOrFail($id);
+        $datas = Role::all();
+
+        return view('configuration.user.update', compact('user', 'datas'));
+    }
+
+    public function update(Request $request, $id) {
+        try {
+            $user = User::findOrFail($id);
+
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'username' => 'required|string|max:255',
+                'email' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('users')->ignore($user),
+                ],
+                'password' => 'nullable|string',
+                'role' => 'required',
+            ]);
+
+            $user->name = $request->name;
+            $user->username = $request->username;
+            $user->email = $request->email;
+            if (!empty($request->password)) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->syncRoles([$request->role]);
+
+            $user->save();
+
+            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        }
+    }
+
+    public function delete($id) {
+        try {
+            $user = User::findOrFail($id);
+            if ($user) {
+                $user->delete();
+            }
+            session()->flash('success', 'Data berhasil dihapus.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus'
+            ]);
+        } catch (ValidationException $e) {
+            session()->flash('success', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal'
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('success', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus data.'
+            ]);
+        }
+    }
+
+}
+
+// ->editColumn('active', function($model) {
+                //     if ($model->active) {
+                //         $html = '<div class="form-group">
+                //                 <label class="switch">
+                //                 <input type="checkbox" name="active" id="active-'.$model->id.'" value="0" onchange="non_active('.$model->id.', \''.$model->title.'\')" checked>
+                //                     <span class="slider round"></span>
+                //                 </label>
+                //             </div>
+                //             ';
+                //     } else {
+                //         $html = '<div class="form-group">
+                //             <label class="switch">
+                //             <input type="checkbox" name="active" id="active-'.$model->id.'" value="1" onchange="active('.$model->id.', \''.$model->title.'\')">
+                //                 <span class="slider round"></span>
+                //             </label>
+                //         </div>
+                //         ';
+                //     }
+                //     return $html;
+                // })
+                // ->addColumn('_', function($model) {
+                //      return '<button class="btn btn-info">Edit</button>';
+                //     $html = present()->button('view', '<i class="fas fa-eye"></i>', 'view("'.$model->id.'")', 'class="btn btn-info btn-icon mr-2" title="Lihat"');
+                //     $html .= present()->button('edit', '<i class="fas fa-edit"></i>', 'edit("'.$model->id.'")', 'class="btn btn-warning btn-icon mr-2" title="Ubah"');
+                //     $html .= present()->button('delete', '<i class="far fa-trash-alt"></i>', 'destroy("'.$model->id.'")', 'class="btn btn-danger btn-icon mr-2" title="Hapus"');
+                //     return $html;
+                // })
+                // ->rawColumns(['_', 'active'])
