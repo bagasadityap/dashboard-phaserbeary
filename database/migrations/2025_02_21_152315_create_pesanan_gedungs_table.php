@@ -13,6 +13,22 @@ return new class extends Migration
     {
         Schema::create('pesanan_gedungs', function (Blueprint $table) {
             $table->id();
+            $table->string('judul');
+            $table->date('tanggal');
+            $table->string('no_hp');
+            $table->string('dokumen');
+            $table->text('catatan')->nullable();
+            $table->foreignId('gedung_id')->references('id')->on('gedungs')->onDelete('set null');
+            $table->integer('total_biaya');
+            $table->boolean('is_paid')->default(0);
+            $table->string('invoice');
+            $table->timestamps();
+        });
+
+        Schema::create('gedung_pesanan', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('pesanan_gedung_id')->constrained()->onDelete('cascade');
+            $table->foreignId('gedung_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

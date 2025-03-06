@@ -9,7 +9,7 @@
         top: -12px;
         transform: translateX(-50%);
     }
-    
+
     .step-1 { left: 0%; }
     .step-2 { left: 20%; }
     .step-3 { left: 40%; }
@@ -22,9 +22,9 @@
         <div class="card">
             <div class="card-header" style="background-color: #e9ecef">
                 <div class="row align-items-center">
-                    <div class="col">                      
-                        <h4 class="card-title">Pesanan #2R3NR1NRKN1</h4>  
-                        <p class="mb-0 text-muted mt-1">Dibuat 1 Januari 2025 pada 07:45</p>                    
+                    <div class="col">
+                        <h4 class="card-title">Pesanan #2R3NR1NRKN1</h4>
+                        <p class="mb-0 text-muted mt-1">Dibuat 1 Januari 2025 pada 07:45</p>
                     </div>
                     <div class="col-auto">
                         {{-- <div class="bg-primary-subtle p-2 border-dashed border-primary rounded">
@@ -34,7 +34,7 @@
                             <span class="text-warning fw-semibold">BELUM BAYAR</span>
                         </div>
                     </div>
-                </div>                     
+                </div>
             </div>
             <div class="card-body pt-0 mt-1">
                 <div class="table-responsive mb-2">
@@ -45,8 +45,9 @@
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">BUMN Goes to Campus Batch 5</span>
-                                        <span class="text-muted font-13">Auditorium Algoritma Gedung G.2 FILKOM</span><br>
-                                        <span class="text-muted font-13">Tanggal Acara:  25 Agustus 2025</span> 
+                                        <span class="text-danger font-13">Silakan pilih gedung ketika sudah diverifikasi oleh admin</span>
+                                        {{-- <span class="text-muted font-13">Auditorium Algoritma Gedung G.2 FILKOM</span> --}}
+                                        <br><span class="text-muted font-13">Tanggal Acara:  25 Agustus 2025</span>
                                     </p>
                                 </td>
                             </tr>
@@ -54,21 +55,22 @@
                     </table>
                 </div>
                 <hr class="hr mt-0">
-                <div>
+                <button type="button" class="btn rounded-pill btn-primary" disabled>Pilih Gedung</button>
+                {{-- <div>
                     <div class="d-flex justify-content-between">
                       <p class="text-body fw-semibold">Biaya Gedung :</p>
                       <p class="text-body-emphasis fw-semibold">Rp. 20.000.000</p>
                     </div>
                     <div class="d-flex justify-content-between">
-                      <p class="text-body fw-semibold">Biaya Additional :</p>
-                      <p class="text-body-emphasis fw-semibold">Rp. 3.000.000</p>
+                      <p class="text-body fw-semibold">PPN :</p>
+                      <p class="text-body-emphasis fw-semibold">Rp. 2.000.000</p>
                     </div>
                 </div>
                 <hr class="hr-dashed mt-0">
                 <div class="d-flex justify-content-between">
                     <h5 class="mb-0">Total :</h5>
-                    <h5 class="mb-0">Rp. 23.000.000</h5>
-                </div>
+                    <h5 class="mb-0">Rp. 22.000.000</h5>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -76,13 +78,13 @@
         {{-- <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <div class="col">                      
-                        <h4 class="card-title">Order Summary</h4>                      
+                    <div class="col">
+                        <h4 class="card-title">Order Summary</h4>
                     </div>
-                    <div class="col-auto">                      
-                        <span class="badge rounded text-warning bg-warning-subtle fs-10 p-1">Payment pending</span>                  
+                    <div class="col-auto">
+                        <span class="badge rounded text-warning bg-warning-subtle fs-10 p-1">Payment pending</span>
                     </div>
-                </div>                     
+                </div>
             </div>
             <div class="card-body pt-0">
                 <div>
@@ -117,10 +119,10 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <div class="col">                      
-                        <h4 class="card-title">Detail Customer</h4>                      
+                    <div class="col">
+                        <h4 class="card-title">Detail Customer</h4>
                     </div>
-                </div>                     
+                </div>
             </div>
             <div class="card-body pt-0">
                 <div>

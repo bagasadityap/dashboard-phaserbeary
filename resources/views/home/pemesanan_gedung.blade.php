@@ -5,8 +5,8 @@
     <div class="card">
         <div class="card-header">
             <div class="row align-items-center">
-                <div class="col">                      
-                    <h4 class="card-title">Form Pemesanan Gedung</h4>                      
+                <div class="col">
+                    <h4 class="card-title">Form Pemesanan Gedung</h4>
                 </div>
             </div>
         </div>
@@ -26,10 +26,6 @@
                     <small class="form-text text-muted">Format No. HP: 08XXXXXXXXXX</small>
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" required>
-                </div>
-                <div class="mb-3">
                     <label for="dokumen" class="form-label">Dokumen</label>
                     <input type="file" class="form-control" name="dokumen" id="dokumen" required>
                 </div>
@@ -46,7 +42,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-danger">Cancel</button>
-            </form>                
+            </form>
         </div>
 </div>
 @endsection
