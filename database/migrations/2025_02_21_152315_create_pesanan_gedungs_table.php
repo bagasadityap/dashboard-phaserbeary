@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('dokumen');
             $table->text('catatan')->nullable();
             $table->foreignId('gedung_id')->references('id')->on('gedungs')->onDelete('set null');
+            $table->foreignId('gedung_id')->references('id')->on('gedungs')->onDelete('set null');
             $table->integer('total_biaya');
             $table->boolean('is_paid')->default(0);
             $table->string('invoice');
