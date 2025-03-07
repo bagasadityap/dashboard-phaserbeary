@@ -69,13 +69,13 @@
                                 <td>
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
-                                        <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">BUMN Goes to Campus Batch 5</span>
+                                        <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
                                         @if (!$model->is_verified)
                                         <span class="text-danger font-13">Belum ada gedung yang dipilih</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
-                                        <br><span class="text-muted font-13">Tanggal Acara:  25 Agustus 2025</span>
+                                        <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
                                     </p>
                                 </td>
                             </tr>
@@ -85,7 +85,7 @@
                 <hr class="hr mt-0">
                 @if (!$model->is_verified)
                     <div class="col my-2 d-flex">
-                        <button type="button" class="btn rounded-pill btn-primary" >Konfirmasi Pesanan</button>
+                        <button type="button" class="btn rounded-pill btn-primary" onclick="confirm()">Konfirmasi Pesanan</button>
                     </div>
                 @else
                     <form action="" class="row mb-4">
@@ -196,4 +196,48 @@
 <script src="{{ asset('assets/js/moment.js') }}"></script>
 <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages/forms-advanced.js') }}"></script>
+<script>
+    function confirm(id) {
+        bootbox.dialog({
+            title: '<span class="text-light">Perhatian!</span>',
+            message: 'Apakah anda yakin untuk melakukan konfirmasi/menolak pesanan ini?',
+            buttons: {
+                confirm: {
+                    label: 'Konfirmasi',
+                    className: 'btn-success',
+                    callback: function() {
+                        sendStatus(id, 'konfirmasi');
+                    }
+                },
+                reject: {
+                    label: 'Tolak',
+                    className: 'btn-danger',
+                    callback: function() {
+                        sendStatus(id, 'tolak');
+                    },
+                },
+            },
+        });
+    }
+
+    function sendStatus(id, status) {
+        $.ajax({
+            url: '/pesanan/gedung/confirm',
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                id: id,
+                status: status
+            },
+            success: function(response) {
+                toastr.success('Pesanan berhasil diperbarui menjadi ' + status);
+                window.location.reload();
+                bootbox.hideAll();
+            },
+            error: function() {
+                toastr.error('Terjadi kesalahan, coba lagi!');
+            }
+        });
+    }
+</script>
 @endpush

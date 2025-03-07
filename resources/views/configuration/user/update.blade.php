@@ -18,6 +18,10 @@
                         <input class="form-control" type="text" id="email" placeholder="Masukkan email" name="email" value="{{ $user->email }}" required>
                     </div>
                     <div class="mb-2">
+                        <label for="instansi" class="form-label">Instansi</label>
+                        <input class="form-control" type="text" id="instansi" placeholder="Masukkan instansi" name="instansi" value="{{ $user->instansi }}" required>
+                    </div>
+                    <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
                         <input class="form-control" type="password" id="password" placeholder="Masukkan password" name="password">
                     </div>
@@ -31,7 +35,7 @@
                                     {{ $data->name }}
                                 </option>
                             @endforeach
-                        </select>                    
+                        </select>
                     </div>
                 </div>
             </div>

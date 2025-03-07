@@ -57,6 +57,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255',
                 'email' => 'required|string|max:255|unique:users',
+                'instansi' => 'required|string|max:255',
                 'password' => 'required|string',
                 'role' => 'required',
             ]);
@@ -65,6 +66,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'username' => $request->username,
                 'email' => $request->email,
+                'instansi' => $request->instansi,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -103,6 +105,7 @@ class UserController extends Controller
                     'max:255',
                     Rule::unique('users')->ignore($user),
                 ],
+                'instansi' => 'required|string|max:255',
                 'password' => 'nullable|string',
                 'role' => 'required',
             ]);
@@ -110,6 +113,7 @@ class UserController extends Controller
             $user->name = $request->name;
             $user->username = $request->username;
             $user->email = $request->email;
+            $user->instansi = $request->instansi;
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }
@@ -153,32 +157,3 @@ class UserController extends Controller
     }
 
 }
-
-// ->editColumn('active', function($model) {
-                //     if ($model->active) {
-                //         $html = '<div class="form-group">
-                //                 <label class="switch">
-                //                 <input type="checkbox" name="active" id="active-'.$model->id.'" value="0" onchange="non_active('.$model->id.', \''.$model->title.'\')" checked>
-                //                     <span class="slider round"></span>
-                //                 </label>
-                //             </div>
-                //             ';
-                //     } else {
-                //         $html = '<div class="form-group">
-                //             <label class="switch">
-                //             <input type="checkbox" name="active" id="active-'.$model->id.'" value="1" onchange="active('.$model->id.', \''.$model->title.'\')">
-                //                 <span class="slider round"></span>
-                //             </label>
-                //         </div>
-                //         ';
-                //     }
-                //     return $html;
-                // })
-                // ->addColumn('_', function($model) {
-                //      return '<button class="btn btn-info">Edit</button>';
-                //     $html = present()->button('view', '<i class="fas fa-eye"></i>', 'view("'.$model->id.'")', 'class="btn btn-info btn-icon mr-2" title="Lihat"');
-                //     $html .= present()->button('edit', '<i class="fas fa-edit"></i>', 'edit("'.$model->id.'")', 'class="btn btn-warning btn-icon mr-2" title="Ubah"');
-                //     $html .= present()->button('delete', '<i class="far fa-trash-alt"></i>', 'destroy("'.$model->id.'")', 'class="btn btn-danger btn-icon mr-2" title="Hapus"');
-                //     return $html;
-                // })
-                // ->rawColumns(['_', 'active'])

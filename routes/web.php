@@ -36,7 +36,7 @@ Route::controller(DashboardController::class)->prefix('dashboard')->name('dashbo
 Route::prefix('pesanan')->name('pesanan.')->group(function () {
     Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
         Route::post('/store', 'store')->name('store');
-        Route::get('/confirm/{id?}', 'confirm')->name('confirm');
+        Route::post('/confirm', 'confirm')->name('confirm');
         Route::get('/delete/{id?}', 'delete')->name('delete');
         Route::get('/view/{id?}', 'view')->name('view');
     });

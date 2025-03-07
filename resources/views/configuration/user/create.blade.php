@@ -11,11 +11,15 @@
                     </div>
                     <div class="mb-2">
                         <label for="username" class="form-label">Username</label>
-                        <input class="form-control" type="text" id="username" placeholder="Masukkan nsername" name="username" required>
+                        <input class="form-control" type="text" id="username" placeholder="Masukkan username" name="username" required>
                     </div>
                     <div class="mb-2">
                         <label for="email" class="form-label">Email</label>
                         <input class="form-control" type="text" id="email" placeholder="Masukkan email" name="email" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="instansi" class="form-label">Instansi</label>
+                        <input class="form-control" type="text" id="instansi" placeholder="Masukkan instansi" name="instansi" required>
                     </div>
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>

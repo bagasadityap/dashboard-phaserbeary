@@ -26,6 +26,7 @@
                             <th>Name</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>Instansi</th>
                             <th>Role</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -51,6 +52,7 @@
                     {data: 'name', name: 'users.name'},
                     {data: 'username', name: 'users.username'},
                     {data: 'email', name: 'users.email'},
+                    {data: 'instansi', name: 'users.instansi'},
                     {data: 'role'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center nowrap'},
                 ]

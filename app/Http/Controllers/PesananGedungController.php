@@ -82,11 +82,34 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function confirm($id) {
-        $model = PesananGedung::findOrFail($id);
-        $model->status = 1;
-        $model->is_confirmed = 1;
-        $model->save();
+    public function confirm(Request $request) {
+        try {
+            $model = PesananGedung::findOrFail($request->id);
+            if ($request->status == 'konfirmasi') {
+                $model->status = 1;
+                $model->is_confirmed = 1;
+            } else {
+                $model->status = 4;
+            }
+            $model->save();
+            session()->flash('success', 'Status pesanan berhasil diubah.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Status pesanan berhasil diubah'
+            ]);
+        } catch (ValidationException $e) {
+            session()->flash('error', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal'
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat konfirmasi data.'
+            ]);
+        }
     }
 
     public function confirmPayment($id) {
