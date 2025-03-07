@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::controller(HomeController::class)->name('home.')->group( function () {
     Route::get('/home', 'index')->name('index');
     Route::get('/pesanan-saya', 'pesanan_saya')->name('pesanan-saya');
-    Route::get('/detail-pesanan', 'detail_pesanan')->name('detail-pesanan');
+    Route::get('/detail-pesanan/{id}', 'detail_pesanan')->name('detail-pesanan');
     Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
     Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');
 });
@@ -35,11 +35,25 @@ Route::controller(DashboardController::class)->prefix('dashboard')->name('dashbo
 
 Route::prefix('pesanan')->name('pesanan.')->group(function () {
     Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
-       Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/confirm/{id?}', 'confirm')->name('confirm');
+        Route::get('/delete/{id?}', 'delete')->name('delete');
+        Route::get('/view/{id?}', 'view')->name('view');
     });
-    
+
     Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
-       Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
+    });
+});
+
+Route::prefix('pesanan')->name('pesanan.')->group(function () {
+    Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/detail', 'detail')->name('detail');
+    });
+
+    Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 });
 

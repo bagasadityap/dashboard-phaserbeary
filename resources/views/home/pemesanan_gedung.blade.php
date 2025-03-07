@@ -11,7 +11,8 @@
             </div>
         </div>
         <div class="card-body pt-0">
-            <form>
+            <form action="{{ route('pesanan.gedung.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="mb-3">
                     <label for="judul" class="form-label">Judul Acara</label>
                     <input type="text" class="form-control" name="judul" id="judul" required>
@@ -26,12 +27,12 @@
                     <small class="form-text text-muted">Format No. HP: 08XXXXXXXXXX</small>
                 </div>
                 <div class="mb-3">
-                    <label for="dokumen" class="form-label">Dokumen</label>
-                    <input type="file" class="form-control" name="dokumen" id="dokumen" required>
+                    <label for="surat_permohonan_acara" class="form-label">Surat Permohonan Acara</label>
+                    <input type="file" class="form-control" name="surat_permohonan_acara" id="surat_permohonan_acara" required>
                 </div>
                 <div class="mb-3">
                     <label for="catatan" class="form-label">Catatan Pesanan</label>
-                    <textarea class="form-control" rows="5" name="catatan" id="catatan" required></textarea>
+                    <textarea class="form-control" rows="5" name="catatan" id="catatan"></textarea>
                 </div>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" id="flexCheckDefaultdemo" required>

@@ -20,7 +20,11 @@ class AuthController extends Controller
                 'password' => 'required',
             ]);
             if (Auth::attempt($validatedData)) {
-                return redirect('/dashboard');
+                if (auth()->user()->getRoleNames()->first() != 'Customer') {
+                    return redirect('/dashboard');
+                } else {
+                    return redirect('/home');
+                }
             }
             else {
                 return redirect()->back()->with('error', 'Username atau Password salah.');
@@ -29,7 +33,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
-    
+
     public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();

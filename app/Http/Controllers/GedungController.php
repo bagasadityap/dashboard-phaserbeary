@@ -33,8 +33,8 @@ class GedungController extends Controller
                 ->editColumn('harga', function($model) {
                     $harga = number_format($model->harga, 0, ',', '.');
                     $html = 'Rp. ' . $harga;
-                    return $html; 
-                })                
+                    return $html;
+                })
                 ->rawColumns(['_'])
                 ->make(true);
         }
@@ -49,7 +49,7 @@ class GedungController extends Controller
 
         return view('gedung.view', compact('page', 'model'));
     }
-    
+
     public function view_360($id) {
         $model = Gedung::findOrFail($id);
 
