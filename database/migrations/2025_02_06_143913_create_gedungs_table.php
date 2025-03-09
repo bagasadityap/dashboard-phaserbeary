@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('lokasi');
             $table->integer('kapasitas');
             $table->integer('harga');
-            $table->string('gambar');
+            $table->text('deskripsi');
+            $table->json('gambar');
             $table->string('gambar_vr');
             $table->timestamps();
         });

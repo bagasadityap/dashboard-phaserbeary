@@ -27,8 +27,7 @@
                     <div class="col-lg-5 mb-2">
                         <div class="px-3">
                             <h1 class="my-4 font-weight-bold"> {{ $model->nama }} </h1>
-                            <p class="fs-14 text-muted">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corrupti, iusto eveniet vero aliquid, sapiente quibusdam autem, distinctio id voluptatum omnis labore aliquam unde mollitia odit temporibus nulla inventore praesentium cupiditate.
-                            </p>
+                            <p class="fs-14 text-muted" style="text-align: justify;">{!! nl2br(e($model->deskripsi)) !!}</p>
                             <table class="table table-borderless">
                                 <tr>
                                     <td class="align-middle" style="width: 8rem">
@@ -63,20 +62,20 @@
                     <div class="col-lg-7 text-center mt-4">
                         <div id="carouselExampleIndicators" class="carousel slide">
                             <div class="carousel-indicators">
-                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                @foreach (json_decode($model->gambar, true) as $index => $image)
+                                    <button type="button" data-bs-target="#carouselExampleIndicators"
+                                        data-bs-slide-to="{{ $index }}"
+                                        class="{{ $index == 0 ? 'active' : '' }}"
+                                        aria-current="{{ $index == 0 ? 'true' : 'false' }}"
+                                        aria-label="Slide {{ $index + 1 }}"></button>
+                                @endforeach
                             </div>
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjt4_LMrGTfxkhOXdhfMc-fg1SkRcoFahtp6KQ4islNriREee-SrQUV1tK6PGKjdfapRkTbhooVsXO6OdMRcRsR585zioqhi9QiJooJmHqaT-ctkR2xHcp3PF0A4VGT_GaNh73lR6le5IhD/s1600/13116750_812514478878639_361392773_n.jpg" class="d-block w-100" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://images.genpi.co/resize/1080x720-100/uploads/jatim/arsip/normal/2021/11/21/gedung-rektorat-universitas-brawijaya-antaraendang-sukare-vsku.webp" class="d-block w-100" alt="...">
-                                </div>
-                                <div class="carousel-item">
-                                    <img src="https://assets.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/2022/01/26/1461115235.jpg" class="d-block w-100" alt="...">
-                                </div>
+                                @foreach (json_decode($model->gambar) as $index => $image)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <img src="{{ asset('storage/' . $image) }}" class="d-block w-100" alt="Slide {{ $index + 1 }}">
+                                    </div>
+                                @endforeach
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                               <span class="carousel-control-prev-icon" aria-hidden="true"></span>

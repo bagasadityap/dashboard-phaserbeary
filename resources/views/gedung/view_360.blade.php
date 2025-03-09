@@ -33,17 +33,17 @@
 </head>
 <body>
     <a-scene>
-        <a-sky src="{{ asset('image/GS__1802_1731587700173.JPG') }}" rotation="0 0 0"></a-sky>
-        
-        {{-- <a-entity geometry="primitive: plane; width: 2; height: 1" 
-                  material="color: #007BFF" 
-                  position="0 3 -5" 
+        <a-sky src="{{ asset('storage/' . $model) }}" rotation="0 0 0"></a-sky>
+
+        {{-- <a-entity geometry="primitive: plane; width: 2; height: 1"
+                  material="color: #007BFF"
+                  position="0 3 -5"
                   rotation="0 0 0"
                   text="value: Labirin; align: center; width: 4;"
                   class="button"
                   event-set__enter="scale: 1.1 1.1 1"
                   event-set__leave="scale: 1 1 1"
-                  raycastable 
+                  raycastable
                   clickable>
         </a-entity> --}}
 

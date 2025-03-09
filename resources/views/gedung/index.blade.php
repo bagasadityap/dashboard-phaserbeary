@@ -63,7 +63,8 @@
                 success: function(response) {
                     bootbox.dialog({
                         title: 'Buat Gedung ',
-                        message: response
+                        message: response,
+                        size: 'large',
                     });
                 },
                 error: function(response) {
@@ -79,7 +80,8 @@
                 success: function(response) {
                     bootbox.dialog({
                         title: 'Edit Gedung ',
-                        message: response
+                        message: response,
+                        size: 'large',
                     });
                 },
                 error: function(response) {
