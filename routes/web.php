@@ -12,13 +12,24 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return redirect(Auth::check() ? '/dashboard' : '/auth/index');
+    if (!Auth::check()) {
+        return redirect('/auth/index');
+    }
+
+    $user = Auth::user();
+
+    if ($user->hasRole('Customer')) {
+        return redirect('/home');
+    }
+
+    return redirect('/dashboard');
 });
 
 Route::controller(HomeController::class)->name('home.')->group( function () {
     Route::get('/home', 'index')->name('index');
-    Route::get('/pesanan-saya', 'pesanan_saya')->name('pesanan-saya');
-    Route::get('/detail-pesanan/{id}', 'detail_pesanan')->name('detail-pesanan');
+    Route::get('/pesanan-saya', 'pesananSaya')->name('pesanan-saya');
+    Route::get('/detail-pesanan/{id?}', 'detail_pesanan')->name('detail-pesanan');
+    Route::get('/pilih-gedung/{id?}', 'pilihGedung')->name('pilih-gedung');
     Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
     Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');
 });
@@ -36,7 +47,8 @@ Route::controller(DashboardController::class)->prefix('dashboard')->name('dashbo
 Route::prefix('pesanan')->name('pesanan.')->group(function () {
     Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
         Route::post('/store', 'store')->name('store');
-        Route::post('/confirm', 'confirm')->name('confirm');
+        Route::post('/input-gedung/{id?}', 'inputGedung')->name('inputGedung');
+        Route::post('/confirm/{id?}', 'confirm')->name('confirm');
         Route::get('/delete/{id?}', 'delete')->name('delete');
         Route::get('/view/{id?}', 'view')->name('view');
     });

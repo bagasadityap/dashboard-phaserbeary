@@ -17,4 +17,15 @@ class Gedung extends Model
         'gambar',
         'gambar_vr',
     ];
+
+    public static function pilih($id) {
+        return Gedung::whereHas('pesanan', function ($query) use ($id) {
+            $query->where('pesanan_gedung_id', $id);
+        });
+    }
+
+    public function pesanan()
+    {
+        return $this->belongsToMany(PesananGedung::class, 'gedung_pesanans', 'gedung_id', 'pesanan_gedung_id');
+    }
 }

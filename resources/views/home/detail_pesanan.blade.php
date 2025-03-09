@@ -70,7 +70,7 @@
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
-                                        @if (!$model->is_verified)
+                                        @if (!$model->gedung_id)
                                             <span class="text-danger font-13">Silakan pilih gedung ketika sudah diverifikasi oleh admin</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
@@ -88,7 +88,7 @@
                     </table>
                 </div>
                 <hr class="hr mt-0">
-                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung()" {{ $model->is_verified  && !$model->gedung_id ? '' : 'disabled' }}>Pilih Gedung</button>
+                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung({{ $model->id }})" {{ $model->is_verified  && !$model->gedung_id ? '' : 'disabled' }}>Pilih Gedung</button>
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
@@ -113,7 +113,6 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <h4 class="card-title align-items-center d-flex fw-bold">
-                                        {{-- <i class="iconoir-money-square fs-20 me-1"></i> --}}
                                          Metode Pembayaran</h4>
                                 </div>
                             </div>
@@ -222,3 +221,11 @@
     @include('home.progress')
 </div> --}}
 @endsection
+
+@push('script')
+<script>
+    function pilihGedung(id) {
+        window.location.href = '{{ route('home.pilih-gedung') }}/' + id;
+    }
+</script>
+@endpush

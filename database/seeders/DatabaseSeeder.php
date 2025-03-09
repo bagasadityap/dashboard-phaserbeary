@@ -17,8 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $default_user_value = [
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -28,12 +26,24 @@ class DatabaseSeeder extends Seeder
         $super_admin = User::create(
             array_merge([
                 'email' => 'admin@gmail.com',
-                'name' => 'admin',
+                'name' => 'Super Admin',
                 'username' => 'admin',
+                'instansi' => 'Universitas Brawijaya'
+            ], $default_user_value)
+        );
+
+        $customer = User::create(
+            array_merge([
+                'email' => 'yamal@gmail.com',
+                'name' => 'Lamine Yamal',
+                'username' => 'yamal',
+                'instansi' => 'Barcelona'
             ], $default_user_value)
         );
 
         $roleSuperAdmin = Role::create(['name' => 'Super Admin']);
+        $roleOperator = Role::create(['name' => 'Operator']);
+        $roleCustomer = Role::create(['name' => 'Customer']);
 
         $menus = ['Dashboard', 'Configuration', 'Gedung'];
 

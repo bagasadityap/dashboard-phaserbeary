@@ -1,13 +1,13 @@
 <div class="card">
     <div class="card-header">
         <div class="row align-items-center">
-            <div class="col">                      
-                <h4 class="card-title">Status Pesanan</h4>                      
+            <div class="col">
+                <h4 class="card-title">Status Pesanan</h4>
             </div>
-            <div class="col-auto">                      
-                <a href="" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>                     
+            <div class="col-auto">
+                <a href="" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>
             </div>
-        </div>                     
+        </div>
     </div>
     <div class="card-body pt-0">
         <div class="position-relative" style="margin: 2.5rem 5.5rem 2.5rem 5.5rem;">
@@ -46,7 +46,7 @@
                 <h7 class="mb-1">Selesai</h7>
                 <p class="mb-0 text-muted fs-10 fw-medium">20 Feb 2024, 01:00 PM</p>
             </div>
-        </div>                                
+        </div>
         {{-- <div class="bg-primary-subtle p-2 border-dashed border-primary rounded mt-3">
             <span class="text-primary fw-semibold">Note :</span><span class="text-primary fw-normal"> Ship all the ordered item together by monday and i send you an email please check. Thanks!</span>
         </div> --}}

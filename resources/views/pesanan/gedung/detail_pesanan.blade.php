@@ -2,6 +2,7 @@
 
 @push('css')
 <link href="{{ asset('assets/libs/mobius1-selectr/selectr.min.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endpush
 
 @section('content')
@@ -22,6 +23,7 @@
     .step-6 { left: 100%; }
 </style>
 <div class="row">
+    @include('template.alert')
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header" style="background-color: #e9ecef">
@@ -70,8 +72,8 @@
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
-                                        @if (!$model->is_verified)
-                                        <span class="text-danger font-13">Belum ada gedung yang dipilih</span>
+                                        @if (!$model->gedung_id)
+                                            <span class="text-danger font-13">Belum ada gedung yang dipilih</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
@@ -82,23 +84,32 @@
                         </tbody>
                     </table>
                 </div>
+                <div>
+                    <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded mt-2">
+                        <span class="text-secondary fw-semibold">Catatan : <br></span><span class="text-secondary fw-normal">{{ $model->catatan }}</span>
+                    </div>
+                </div>
                 <hr class="hr mt-0">
                 @if (!$model->is_verified)
                     <div class="col my-2 d-flex">
-                        <button type="button" class="btn rounded-pill btn-primary" onclick="confirm()">Konfirmasi Pesanan</button>
+                        <button type="button" class="btn rounded-pill btn-primary" onclick="confirm({{ $model->id }})">Konfirmasi Pesanan</button>
                     </div>
                 @else
-                    <form action="" class="row mb-4">
+                    <form action="{{ route('pesanan.gedung.inputGedung', ['id' => $model->id]) }}" method="POST" class="row mb-4">
+                        @csrf
                         <label class="mb-2 text-dark fw-medium">Pilih Gedung</label>
                         <div class="col-md-10">
-                            <select id="multiSelect">
-                                <option value="value-1">Value 1</option>
-                                <option value="value-2">Value 2</option>
-                                <option value="value-3">Value 3</option>
+                            <select id="multiSelect" name="gedungs[]" multiple>
+                                @foreach ($gedungs as $gedung)
+                                    <option value="{{ $gedung->id }}"
+                                        @if(in_array($gedung->id, $selectedGedung)) selected @endif>
+                                        {{ $gedung->nama }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn rounded-pill btn-primary" disabled>Kirim</button>
+                            <button type="submit" class="btn rounded-pill btn-primary">Kirim</button>
                         </div>
                     </form>
                 @endif
@@ -120,7 +131,7 @@
                     </div>
                 </div>
                 <div class="col mt-3 d-flex justify-content-end">
-                    <button type="button" class="btn rounded-pill btn-primary" disabled>Konfirmasi Pembayaran</button>
+                    <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})" disabled>Konfirmasi Pembayaran</button>
                 </div>
             </div>
         </div>
@@ -196,6 +207,7 @@
 <script src="{{ asset('assets/js/moment.js') }}"></script>
 <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages/forms-advanced.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
     function confirm(id) {
         bootbox.dialog({
@@ -221,21 +233,58 @@
     }
 
     function sendStatus(id, status) {
+        let url = "{{ route('pesanan.gedung.confirm') }}/" + id;
+        console.log("Generated URL:", url);
+
         $.ajax({
-            url: '/pesanan/gedung/confirm',
-            type: 'POST',
+            url: url,
+            method: "POST",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                id: id,
+                _token: '{{ csrf_token() }}',
                 status: status
             },
             success: function(response) {
-                toastr.success('Pesanan berhasil diperbarui menjadi ' + status);
+                console.log("Response:", response);
                 window.location.reload();
                 bootbox.hideAll();
             },
-            error: function() {
-                toastr.error('Terjadi kesalahan, coba lagi!');
+            error: function(xhr, status, error) {
+                console.error("Error Details:", xhr.responseText);
+                toastr.error("Terjadi kesalahan: " + xhr.responseText);
+            }
+        });
+    }
+
+    function confirmPayment(id) {
+        bootbox.confirm({
+            title: '<span class="text-danger">Perhatian!</span>',
+            message: 'Apakah anda yakin menghapus data ini?',
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '{{ route('gedung.delete') }}/' + id,
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                            bootbox.hideAll();
+                        },
+                        error: function() {
+                            toastr.error('An error occurred while deleting the data.');
+                        }
+                    });
+                }
             }
         });
     }

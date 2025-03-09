@@ -82,17 +82,35 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function confirm(Request $request) {
+    public function inputGedung(Request $request, $id)
+    {
         try {
-            $model = PesananGedung::findOrFail($request->id);
+            $request->validate([
+                'gedungs' => 'required|array',
+                'gedungs.*' => 'exists:gedungs,id'
+            ]);
+
+            $pesanan = PesananGedung::findOrFail($id);
+            $pesanan->gedungTersedia()->sync($request->gedungs);
+
+            return redirect()->route('pesanan.gedung.view', ['id' => $id])->with('success', 'Data berhasil disimpan.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
+    }
+
+    public function confirm(Request $request, $id) {
+        try {
+            $model = PesananGedung::findOrFail($id);
             if ($request->status == 'konfirmasi') {
                 $model->status = 1;
-                $model->is_confirmed = 1;
+                $model->is_verified = 1;
             } else {
                 $model->status = 4;
             }
             $model->save();
-            session()->flash('success', 'Status pesanan berhasil diubah.');
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
@@ -121,9 +139,11 @@ class PesananGedungController extends Controller
     public function view($id) {
         $page = "Pesanan \ Gedung \ Detail";
         $model = PesananGedung::findOrFail($id);
+        $selectedModel = PesananGedung::findOrFail($id);
         $gedungs = Gedung::all();
+        $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
 
-        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs'));
+        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung'));
     }
 
     public function delete($id) {

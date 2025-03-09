@@ -26,7 +26,7 @@ class PesananGedung extends Model
         'status',
     ];
 
-    public static function pesanan_saya() {
+    public static function pesananSaya() {
         $user_id = auth()->user()->id;
 
         return PesananGedung::where('user_id', $user_id)->get();
@@ -34,5 +34,19 @@ class PesananGedung extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function gedungPesanan()
+    {
+        return $this->hasMany(GedungPesanan::class, 'pesanan_gedung_id');
+    }
+
+    public function gedungTersedia()
+    {
+        return $this->belongsToMany(Gedung::class, 'gedung_pesanans', 'pesanan_gedung_id', 'gedung_id');
+    }
+
+    public function gedung() {
+        return $this->belongsTo(Gedung::class, 'gedung_id', 'id');
     }
 }

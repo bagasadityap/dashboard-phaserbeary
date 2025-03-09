@@ -1,6 +1,8 @@
-@if (!auth()->user()->hasRole('Customer'))
-    @extends('template.dashboard')
-@endif
+@php
+    $layout = auth()->user()->hasRole('Customer') ? 'template.home' : 'template.dashboard';
+@endphp
+
+@extends($layout)
 
 @section('content')
 <style>
@@ -44,7 +46,7 @@
                                     </td>
                                     <td class="align-middle fw-bold">
                                         Rp. {{ number_format($model->harga, 0, ',', '.') }}
-                                    </td>                                    
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle" style="width: 8rem">
@@ -54,7 +56,7 @@
                                     </td>
                                     <td class="align-middle fw-bold">{{ $model->lokasi }}</td>
                                 </tr>
-                            </table>                                                       
+                            </table>
                             <button onclick="view_360({{ $model->id }})" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center"><i class="iconoir-view-360 fs-20 me-1"></i>Lihat Tampilan 360</button>
                         </div>
                     </div>
@@ -84,7 +86,7 @@
                               <span class="carousel-control-next-icon" aria-hidden="true"></span>
                               <span class="visually-hidden">Next</span>
                             </button>
-                        </div>                                       
+                        </div>
                     </div>
                 </div>
             </div>
