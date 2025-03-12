@@ -113,9 +113,7 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                if (response.success) {
-                                    window.location.reload();
-                                }
+                                window.location.reload();
                                 bootbox.hideAll();
                             },
                             error: function() {

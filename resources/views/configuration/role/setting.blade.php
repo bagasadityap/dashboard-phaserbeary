@@ -27,23 +27,40 @@
                 </tr>
 
                 @foreach ($permissionsChild as $permissionChild)
-                    @if (Str::contains($permissionChild->name, $permission->name))
+                    @if (Str::contains($permissionChild->name, '-') && Str::contains($permissionChild->name, $permission->name))
                         @php
                             $split = explode("-", $permissionChild->name);
                             $permissionChildName = $split[0];
-                            $menus = ['Barang', 'User'];
-                            $menus2 = ['Carline', 'Conveyor', 'Equipment', 'Role'];
+                            $menus = ['Gedung', 'User'];
+                            $menus2 = ['Role'];
+                            $menus3 = ['Pesanan Gedung', 'Pesanan Publikasi']
                         @endphp
-                        <tr>
-                            <td class="text-nowrap fw-medium">{{ $permissionChildName }}</td>
-                            <td>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="{{ $permissionChild->name }}" id="{{ $permissionChild->name }}" value="{{ $permissionChild->name }}" {{ $role->hasPermissionTo($permissionChild->name) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="{{ $permissionChild->name }}"></label>
-                                </div>
-                            </td>
-                        </tr>
-                        @if (!Str::contains($permissionChildName, 'Part') && Str::contains($permissionChildName, $menus))
+                        @if ($permissionChildName != 'Gedung')
+                            @if (!Str::contains($permission->name, 'Gedung'))
+                                <tr>
+                                    <td class="text-nowrap fw-medium">{{ $permissionChildName }}</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="{{ $permissionChild->name }}" id="{{ $permissionChild->name }}" value="{{ $permissionChild->name }}" {{ $role->hasPermissionTo($permissionChild->name) ? 'checked' : '' }} />
+                                            <label class="form-check-label" for="{{ $permissionChild->name }}"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endif
+                        @if (Str::contains($permissionChildName, 'Pesanan') && Str::contains($permissionChildName, $menus3))
+                            <tr>
+                                <td class="text-nowrap fw-medium"></td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div class="form-check col-md-2 mr-3 mr-lg-5">
+                                            <input class="form-check-input" type="checkbox" name="{{ $permissionChildName . ' Read' }}" id="{{ $permissionChildName . ' Read' }}" value="{{ $permissionChildName . ' Read' }}" {{ $role->hasPermissionTo($permissionChildName . ' Read') ? 'checked' : '' }} />
+                                            <label class="form-check-label me-3 mb-1" for="{{ $permissionChildName . ' Read' }}">Read</label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @elseif (!Str::contains($permissionChildName, 'Pesanan') && Str::contains($permissionChildName, $menus))
                             <tr>
                                 <td class="text-nowrap fw-medium"></td>
                                 <td>
@@ -68,7 +85,7 @@
                                 </td>
                             </tr>
                         @endif
-                        @if (!Str::contains($permissionChildName, 'Part') && Str::contains($permissionChildName, $menus2))
+                        @if (!Str::contains($permissionChildName, 'Pesanan') && Str::contains($permissionChildName, $menus2))
                             <tr>
                                 <td class="text-nowrap fw-medium"></td>
                                 <td>

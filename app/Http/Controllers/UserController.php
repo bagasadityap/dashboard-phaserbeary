@@ -24,12 +24,6 @@ class UserController extends Controller
                 })
                 ->addColumn('_', function($model) {
                     $html = '';
-                    // $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
-                    // $html .= '<button href="" class="btn btn-outline-warning px-2 me-1 d-inline-flex align-items-center" onclick="edit(\'' . $model->id . '\')"><i class="iconoir-edit fs-14"></i></button>';
-                    // $html .= '<button href="" class="btn btn-outline-danger px-2 d-inline-flex align-items-center" onclick="remove(\'' . $model->id . '\')"><i class="iconoir-trash fs-14"></i></button>';
-                    if (auth()->user()->can('User Read')) {
-                        $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
-                    }
                     if (auth()->user()->can('User Edit')) {
                         $html .= '<button href="" class="btn btn-outline-warning px-2 me-1 d-inline-flex align-items-center" onclick="edit(\'' . $model->id . '\')"><i class="iconoir-edit fs-14"></i></button>';
                     }
@@ -134,21 +128,28 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             if ($user) {
+                if ($user->username == 'admin' || $user->id == auth()->user()->id) {
+                    session()->flash('error', 'Anda tidak dapat menghapus user ini.');
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Anda tidak dapat menghapus user ini'
+                    ]);
+                }
                 $user->delete();
+                session()->flash('success', 'Data berhasil dihapus.');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
             }
-            session()->flash('success', 'Data berhasil dihapus.');
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil dihapus'
-            ]);
         } catch (ValidationException $e) {
-            session()->flash('success', 'Terjadi kesalahan.');
+            session()->flash('error', 'Terjadi kesalahan.');
             return response()->json([
                 'success' => false,
                 'message' => 'Validasi gagal'
             ]);
         } catch (\Exception $e) {
-            session()->flash('success', 'Terjadi kesalahan.');
+            session()->flash('error', 'Terjadi kesalahan.');
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menghapus data.'

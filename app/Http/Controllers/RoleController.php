@@ -113,7 +113,7 @@ class RoleController extends Controller
 
     public function delete($id) {
         try {
-            $role = Role::where('id', $id)->firstOrFail();
+            $role = Role::findOrFail($id);
 
             if ($role->users()->exists()) {
                 session()->flash('error', 'Role tidak dapat dihapus karena terdapat user yang ditempatkan pada role ini.');

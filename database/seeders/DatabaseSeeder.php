@@ -45,13 +45,15 @@ class DatabaseSeeder extends Seeder
         $roleOperator = Role::create(['name' => 'Operator']);
         $roleCustomer = Role::create(['name' => 'Customer']);
 
-        $menus = ['Dashboard', 'Configuration', 'Gedung'];
+        $menus = ['Dashboard', 'Gedung', 'Pesanan', 'Configuration'];
 
-        $menus1 = ['User-Configuration', 'Role-Configuration'];
+        $menus1 = ['Gedung-Gedung', 'Pesanan Gedung-Pesanan', 'Pesanan Publikasi Acara-Pesanan', 'User-Configuration', 'Role-Configuration'];
 
-        $menus2 = ['User', 'Gedung'];
+        $menus2 = ['Gedung', 'User'];
 
         $menus3 = ['Role'];
+
+        $menus4 = ['Pesanan Gedung', 'Pesanan Publikasi Acara'];
 
         foreach ($menus as $key => $menu) {
             Permission::create(['name' => $menu, 'order' => $key + 1]);
@@ -83,6 +85,12 @@ class DatabaseSeeder extends Seeder
             $roleSuperAdmin->givePermissionTo($m3 . ' Create');
             $roleSuperAdmin->givePermissionTo($m3 . ' Edit');
             $roleSuperAdmin->givePermissionTo($m3 . ' Delete');
+        }
+
+        foreach ($menus4 as $m4) {
+            Permission::create(['name' => $m4 . ' Read']);
+
+            $roleSuperAdmin->givePermissionTo($m4 . ' Read');
         }
 
         Permission::create(['name' => 'Role Setting']);

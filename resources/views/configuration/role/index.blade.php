@@ -24,14 +24,12 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
-                            {{-- <th>Status</th> --}}
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
                 </div>
-                {{-- @include('configuration.user.update') --}}
             </div>
         </div>
     </div>
@@ -48,22 +46,10 @@
                 ajax: '',
                 columns: [
                     {data: 'name', name: 'roles.name'},
-                    // {data: 'created_at', name: 'roles.created_at'},
-                    // {data: 'active', searchable : false, orderable: false, class: 'column-wrap text-center'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center nowrap'},
                 ]
             });
         })
-
-        // $(document).ready(function() {
-        // function edit(id) {
-        //     $.ajax({
-        //         url: '{{ route('configuration.user.edit') }}/'+id,
-        //         success: function(response) {
-        //             window.location.href = '{{ route('configuration.user.edit') }}/'+id;
-        //         },
-        //     })
-        // }
 
         function create() {
             $.ajax({
