@@ -97,7 +97,7 @@
 @push('script')
     <script>
         function view_360(id) {
-            window.location.href = '{{ route('gedung.view-360') }}/' + id;
+            window.open('{{ route('gedung.view-360') }}/' + id);
         }
     </script>
 @endpush

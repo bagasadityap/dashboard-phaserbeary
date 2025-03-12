@@ -10,7 +10,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function(obj) { this.__WB_source = obj; re
   let frames = _____WB$wombat$assign$function_____("frames");
   let opener = _____WB$wombat$assign$function_____("opener");
 
-var series = 
+var series =
 {
   "monthDataSeries1": {
     "prices": [

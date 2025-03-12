@@ -11,11 +11,11 @@
             <div class="card-header">
                 @include('template.alert')
                 <div class="row justify-content-between align-items-center">
-                    {{-- @can('Gedung  Create') --}}
+                    {{-- @can('Gedung  Create')
                         <div class="col-md-2 text-start ms-2">
                             <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
                         </div>
-                    {{-- @endcan --}}
+                    @endcan --}}
                 </div>
             </div>
             <div class="card-body pt-0">
@@ -23,10 +23,10 @@
                     <table class="table datatable" id="table">
                     <thead>
                         <tr>
-                            <th>Nama</th>
-                            <th>Lokasi</th>
-                            <th>Kapasitas</th>
-                            <th>Harga</th>
+                            <th>Judul</th>
+                            <th>Customer</th>
+                            <th>Tanggal Dibuat</th>
+                            <th>Tanggal Acara</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -48,83 +48,17 @@
                 serverSide: true,
                 ajax: '',
                 columns: [
-                    {data: 'nama', name: 'nama'},
-                    {data: 'lokasi', name: 'lokasi'},
-                    {data: 'kapasitas', name: 'kapasitas'},
-                    {data: 'harga', name: 'harga'},
+                    {data: 'judul', name: 'judul'},
+                    {data: 'user.name', name: 'user.name'},
+                    {data: 'created_at', name: 'created_at'},
+                    {data: 'tanggal', name: 'tanggal'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
                 ]
             });
         })
 
-        function create() {
-            $.ajax({
-                url: '{{ route('gedung.create') }}',
-                success: function(response) {
-                    bootbox.dialog({
-                        title: 'Buat Gedung ',
-                        message: response
-                    });
-                },
-                error: function(response) {
-                }
-            }).done(function() {
-                $('#table').unblock();
-            });
-        }
-
-        function edit(id) {
-            $.ajax({
-                url: '{{ route('gedung.edit') }}/'+id,
-                success: function(response) {
-                    bootbox.dialog({
-                        title: 'Edit Gedung ',
-                        message: response
-                    });
-                },
-                error: function(response) {
-                }
-            }).done(function() {
-                $('#table').unblock();
-            });
-        }
-
-        function remove(id) {
-            bootbox.confirm({
-                title: '<span class="text-danger">Perhatian!</span>',
-                message: 'Apakah anda yakin menghapus data ini?',
-                buttons: {
-                    confirm: {
-                        label: 'Yes',
-                        className: 'btn-danger'
-                    },
-                    cancel: {
-                        label: 'No',
-                        className: 'btn-secondary'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        $.ajax({
-                            url: '{{ route('gedung.delete') }}/' + id,
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                window.location.reload();
-                                bootbox.hideAll();
-                            },
-                            error: function() {
-                                toastr.error('An error occurred while deleting the data.');
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
         function view(id) {
-            window.location.href = '{{ route('gedung.view') }}/' + id;
+            window.location.href = '{{ route('pesanan.publikasi.view') }}/' + id;
         }
 
     </script>

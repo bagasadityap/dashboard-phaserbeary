@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('no_hp');
             $table->string('surat_permohonan_acara');
             $table->string('dokumen_opsional')->nullable();
+            $table->string('bukti_pembayaran')->nullable();
             $table->string('data_partisipan')->nullable();
             $table->text('catatan')->nullable();
             $table->foreignId('user_id')->references('id')->on('users');

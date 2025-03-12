@@ -56,14 +56,14 @@
             });
         })
 
-        function remove(id) {
+        function pilih(id, id2) {
             bootbox.confirm({
-                title: '<span class="text-danger">Perhatian!</span>',
-                message: 'Apakah anda yakin menghapus data ini?',
+                title: '<span class="text-light">Pilih Gedung?</span>',
+                message: 'Gedung yang sudah dipilih tidak dapat diubah.',
                 buttons: {
                     confirm: {
                         label: 'Yes',
-                        className: 'btn-danger'
+                        className: 'btn-success'
                     },
                     cancel: {
                         label: 'No',
@@ -73,12 +73,12 @@
                 callback: function(result) {
                     if (result) {
                         $.ajax({
-                            url: '{{ route('gedung.delete') }}/' + id,
+                            url: '{{ route('home.pilih') }}/' + id + '/' + id2,
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                window.location.reload();
+                                window.location.href = '{{ route('home.detail-pesanan') }}/' + id;
                                 bootbox.hideAll();
                             },
                             error: function() {

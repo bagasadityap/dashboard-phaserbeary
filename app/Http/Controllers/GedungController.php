@@ -106,8 +106,7 @@ class GedungController extends Controller
     }
 
     public function update(Request $request, $id) {
-        // dd($request);
-        // try {
+        try {
             $request->validate([
                 'nama' => 'required|string|max:255',
                 'lokasi' => 'required|string|max:255',
@@ -142,7 +141,7 @@ class GedungController extends Controller
                 if ($gambarVrPath) {
                     Storage::disk('public')->delete($gambarVrPath);
                 }
-                $gambarVrPath = $request->file('gambar_vr')->store('gedung', 'public');
+                $gambarVrPath = $request->file('gambar_vr')->store('dokumen/gedung', 'public');
             }
 
             $model->nama = $request->nama;
@@ -155,11 +154,11 @@ class GedungController extends Controller
             $model->save();
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
-        // } catch (ValidationException $e) {
-        //     return redirect()->back()->with('error', 'Terjadi kesalahan');
-        // } catch (\Exception $e) {
-        //     return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        // }
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        }
     }
 
     public function delete($id) {

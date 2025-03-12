@@ -6,7 +6,7 @@
     @foreach ($models as $model)
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between py-2" style="background-color: #e9ecef">
-                <h4 class="card-title d-flex align-items-center">Pesanan Gedung
+                <h4 class="card-title d-flex align-items-center">{{ $model->type == 'gedung' ? 'Pesanan Gedung' : 'Pesanan Publikasi' }}
                     @switch($model->status)
                         @case(0)
                             <span class="badge rounded-pill bg-warning-subtle text-warning ms-2">Pending</span>
@@ -35,17 +35,25 @@
                                 {{ $model->judul }}
                             </h5>
                             <div class="d-flex align-item-center">
-                                <i class="iconoir-building fs-18 me-1"></i>
+                            @if ($model->type == 'gedung')
+                                    <i class="iconoir-building fs-18 me-1"></i>
                                 @if (!$model->gedung_id)
                                     <p class="card-text text-danger mb-0">*Belum ada gedung yang dipilih</p>
                                 @else
                                     <p class="card-text mb-0">{{ $model->gedung->name }}</p>
                                 @endif
+                            @else
+                                {{-- <i class="iconoir-building fs-18 me-1"></i> --}}
+                            @endif
                             </div>
                             <p class="card-text mb-0"><small class="text-muted">{{ \Carbon\Carbon::parse($model->created_at)->translatedFormat('d F Y H:i') }}</small></p>
                         </div>
                         <div class="col-1 d-flex align-items-center justify-content-end">
-                            <button type="button" onclick="detail({{ $model->id }})" class="btn btn-sm btn-outline-success">Detail</button>
+                            @if($model->type == 'gedung')
+                                <button type="button" onclick="detailGedung({{ $model->id }})" class="btn btn-sm btn-outline-success">Detail</button>
+                            @else
+                                <button type="button" onclick="detailPublikasi({{ $model->id }})" class="btn btn-sm btn-outline-success">Detail</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -57,8 +65,11 @@
 
 @push('script')
     <script>
-        function detail(id) {
-            window.location.href = '{{ url('detail-pesanan') }}/' + id;
+        function detailGedung(id) {
+            window.location.href = '{{ url('detail-pesanan-gedung') }}/' + id;
+        }
+        function detailPublikasi(id) {
+            window.location.href = '{{ url('detail-pesanan-publikasi') }}/' + id;
         }
     </script>
 @endpush

@@ -1,8 +1,8 @@
-@extends('template.dashboard')
+@extends('template.home')
 
-@push('css')
-<link href="{{ asset('assets/libs/mobius1-selectr/selectr.min.css') }}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+@push('css2')
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/block-ui.js') }}"></script>
 @endpush
 
 @section('content')
@@ -21,6 +21,10 @@
     .step-4 { left: 60%; }
     .step-5 { left: 80%; }
     .step-6 { left: 100%; }
+
+    .btn-sm {
+        transform: scale(0.85);
+    }
 </style>
 <div class="row">
     @include('template.alert')
@@ -73,12 +77,17 @@
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
                                         @if (!$model->gedung_id)
-                                            <span class="text-danger font-13">Belum ada gedung yang dipilih</span>
+                                            <span class="text-danger font-13">Silakan pilih gedung ketika sudah diverifikasi oleh admin</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
                                         <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
                                     </p>
+                                </td>
+                                <td class="d-flex justify-content-end">
+                                    <div class="col-auto">
+                                        <a href="" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -91,29 +100,7 @@
                     </div>
                 </div>
                 <hr class="hr mt-0">
-                @if (!$model->is_verified)
-                    <div class="col my-2 d-flex">
-                        <button type="button" class="btn rounded-pill btn-primary" onclick="confirm({{ $model->id }})">Konfirmasi Pesanan</button>
-                    </div>
-                @elseif(!$model->gedung_id)
-                    <form action="{{ route('pesanan.gedung.inputGedung', ['id' => $model->id]) }}" method="POST" class="row mb-4">
-                        @csrf
-                        <label class="mb-2 text-dark fw-medium">Pilih Gedung</label>
-                        <div class="col-md-10">
-                            <select id="multiSelect" name="gedungs[]" multiple>
-                                @foreach ($gedungs as $gedung)
-                                    <option value="{{ $gedung->id }}"
-                                        @if(in_array($gedung->id, $selectedGedung)) selected @endif>
-                                        {{ $gedung->nama }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn rounded-pill btn-primary">Kirim</button>
-                        </div>
-                    </form>
-                @endif
+                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung({{ $model->id }})" {{ $model->is_verified  && !$model->gedung_id ? '' : 'disabled' }}>Pilih Gedung</button>
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
@@ -131,11 +118,51 @@
                         <h5 class="mb-0">Rp. {{ $model->total_biaya ? $model->total_biaya : '0' }}</h5>
                     </div>
                 </div>
-                @if ($model->gedung_id && !$model->is_paid)
-                    <div class="col mt-3 d-flex justify-content-end">
-                        <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})">Konfirmasi Pembayaran</button>
+                <hr class="hr mb-0">
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="card-title align-items-center d-flex fw-bold">
+                                         Metode Pembayaran</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h5 class="accordion-header m-0" id="flush-headingOne">
+                                        <button class="accordion-button collapsed fw-semibold d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                            Tranfer Bank <i class="iconoir-data-transfer-both fs-18 ms-1"></i>
+                                        </button>
+                                    </h5>
+                                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+                                            tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice
+                                            lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h5 class="accordion-header m-0" id="flush-headingTwo">
+                                        <button class="accordion-button collapsed fw-semibold d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                            Kantor DPKA <i class="iconoir-house-rooms fs-18 ms-1"></i>
+                                        </button>
+                                    </h5>
+                                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+                                            tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice
+                                            lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     </div>
@@ -172,8 +199,9 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <div class="col">
+                    <div class="d-flex justify-content-between">
                         <h4 class="card-title">Dokumen</h4>
+                        <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0" onclick="tambahDokumen({{ $model->id }})"><i class="iconoir-plus fs-18"></i></button>
                     </div>
                 </div>
             </div>
@@ -207,6 +235,7 @@
                                 : 'Data Partisipan' !!}
                         </p>
                     </div>
+                    <p class="text-danger">*Mohon kirimkan data partisipan acara, setelah acara selesai</p>
                 </div>
             </div>
         </div>
@@ -218,88 +247,25 @@
 @endsection
 
 @push('script')
-<script src="{{ asset('assets/libs/mobius1-selectr/selectr.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.js') }}"></script>
-<script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
-<script src="{{ asset('assets/js/pages/forms-advanced.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{{ asset('js/bootbox.min.js') }}"></script>
 <script>
-    function confirm(id) {
-        bootbox.dialog({
-            title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin untuk melakukan konfirmasi/menolak pesanan ini?',
-            buttons: {
-                confirm: {
-                    label: 'Konfirmasi',
-                    className: 'btn-success',
-                    callback: function() {
-                        sendStatus(id, 'konfirmasi');
-                    }
-                },
-                reject: {
-                    label: 'Tolak',
-                    className: 'btn-danger',
-                    callback: function() {
-                        sendStatus(id, 'tolak');
-                    },
-                },
-            },
-        });
+    function pilihGedung(id) {
+        window.location.href = '{{ route('home.pilih-gedung') }}/' + id;
     }
 
-    function sendStatus(id, status) {
-        let url = "{{ route('pesanan.gedung.confirm') }}/" + id;
-        console.log("Generated URL:", url);
-
+    function tambahDokumen(id) {
         $.ajax({
-            url: url,
-            method: "POST",
-            data: {
-                _token: '{{ csrf_token() }}',
-                status: status
-            },
+            url: '{{ route('home.tambah-dokumen') }}/' + id + '?type=gedung',
             success: function(response) {
-                console.log("Response:", response);
-                window.location.reload();
-                bootbox.hideAll();
+                bootbox.dialog({
+                    title: 'Tambah Dokumen',
+                    message: response,
+                });
             },
-            error: function(xhr, status, error) {
-                toastr.error("Terjadi kesalahan.");
+            error: function(response) {
             }
-        });
-    }
-
-    function confirmPayment(id) {
-        bootbox.confirm({
-            title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin mengonfirmasi pembayaran pesanan ini?',
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-secondary'
-                }
-            },
-            callback: function(result) {
-                if (result) {
-                    $.ajax({
-                        url: '{{ route('pesanan.gedung.confirm-payment') }}/' + id,
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            window.location.reload();
-                            bootbox.hideAll();
-                        },
-                        error: function() {
-                            toastr.error('Terjadi kesalahan.');
-                        }
-                    });
-                }
-            }
+        }).done(function() {
+            $('#table').unblock();
         });
     }
 </script>

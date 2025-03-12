@@ -69,12 +69,6 @@ class RoleController extends Controller
         return view('configuration.role.update', compact('role'));
     }
 
-    public function view($id) {
-        $role = Role::where('id', $id)->firstOrFail();
-
-        return view('configuration.role.view', compact('role'));
-    }
-
     public function update(Request $request, $id) {
         try {
             $request->validate([

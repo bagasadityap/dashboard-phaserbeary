@@ -15,6 +15,7 @@ class PesananGedung extends Model
         'no_hp',
         'surat_permohonan_acara',
         'dokumen_opsional',
+        'bukti_pembayran',
         'data_partisipan',
         'catatan',
         'user_id',
@@ -26,11 +27,25 @@ class PesananGedung extends Model
         'status',
     ];
 
-    public static function pesananSaya() {
+    public static function pesananSaya()
+    {
         $user_id = auth()->user()->id;
 
-        return PesananGedung::where('user_id', $user_id)->get();
+        $pesanan = PesananGedung::where('user_id', $user_id)
+            ->select('id', 'status', 'judul', 'created_at', 'gedung_id')
+            ->get()
+            ->map(function ($item) {
+                $item->type = 'gedung';
+                return $item;
+            });
+        return $pesanan;
     }
+
+    // public static function pesananSaya() {
+    //     $user_id = auth()->user()->id;
+
+    //     return PesananGedung::where('user_id', $user_id)->get();
+    // }
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');

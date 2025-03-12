@@ -228,11 +228,6 @@
     <!-- Javascript  -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/data/stock-prices.js') }}"></script> --}}
-    {{-- <script src="{{ asset('assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jsvectormap/maps/world.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/index.init.js') }}"></script> --}}
-
     @stack('script')
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('js/bootbox.min.js') }}"></script>

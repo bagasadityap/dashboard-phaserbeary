@@ -1,5 +1,10 @@
 @extends('template.home')
 
+@push('css2')
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/block-ui.js') }}"></script>
+@endpush
+
 @section('content')
 <style>
     .progress-step {
@@ -22,12 +27,13 @@
     }
 </style>
 <div class="row">
+    @include('template.alert')
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header" style="background-color: #e9ecef">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h4 class="card-title">Pesanan Gedung</h4>
+                        <h4 class="card-title">Pesanan Publikasi Acara</h4>
                         <p class="mb-0 text-muted mt-1">Dibuat {{ \Carbon\Carbon::parse($model->created_at)->translatedFormat('d F Y H:i') }}</p>
                     </div>
                     <div class="col-auto">
@@ -67,15 +73,10 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <i class="iconoir-building me-1 fs-20"></i>
+                                    <i class="iconoir-post me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
-                                        @if (!$model->gedung_id)
-                                            <span class="text-danger font-13">Silakan pilih gedung ketika sudah diverifikasi oleh admin</span>
-                                        @else
-                                            <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
-                                        @endif
-                                        <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
+                                        <span class="text-muted font-13">Tanggal Publikasi:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
                                     </p>
                                 </td>
                                 <td class="d-flex justify-content-end">
@@ -87,23 +88,28 @@
                         </tbody>
                     </table>
                 </div>
+                <div>
+                    <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded my-2">
+                        <span class="text-secondary fw-semibold">Catatan : </span><br>
+                        <span class="text-secondary fw-normal text-break">{{ $model->catatan }}</span>
+                    </div>
+                </div>
                 <hr class="hr mt-0">
-                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung({{ $model->id }})" {{ $model->is_verified  && !$model->gedung_id ? '' : 'disabled' }}>Pilih Gedung</button>
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
-                            <p class="text-body fw-semibold">Biaya Gedung :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga : '0' }}</p>
+                            <p class="text-body fw-semibold">Biaya Publikasi Acara :</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biaya ? $model->biaya : '0' }}</p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">PPN 10% :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga/100 : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biaya ? $model->biaya/100 : '0' }}</p>
                         </div>
                     </div>
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->gedung_id ? $model->total_harga : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->total_biaya ? $model->total_biaya : '0' }}</h5>
                     </div>
                 </div>
                 <hr class="hr mb-0">
@@ -189,7 +195,7 @@
                 <div class="row align-items-center">
                     <div class="d-flex justify-content-between">
                         <h4 class="card-title">Dokumen</h4>
-                        <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0"><i class="iconoir-plus fs-18"></i></button>
+                        <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0" onclick="tambahDokumen({{ $model->id }})"><i class="iconoir-plus fs-18"></i></button>
                     </div>
                 </div>
             </div>
@@ -203,15 +209,26 @@
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>Bukti Pembayaran</p>
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->poster_acara
+                                ? '<a href="' . asset('storage/' . $model->poster_acara) . '" target="_blank">Poster</a>'
+                                : 'Poster' !!}
+                        </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>Dokumen (Opsional)</p>
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->bukti_pembayaran
+                                ? '<a href="' . asset('storage/' . $model->bukti_pembayaran) . '" target="_blank">Bukti Pembayaran</a>'
+                                : 'Bukti Pembayaran' !!}
+                        </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>Data Partisipan</p>
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->dokumen_opsional
+                                ? '<a href="' . asset('storage/' . $model->dokumen_opsional) . '" target="_blank">Dokumen (Opsional)</a>'
+                                : 'Dokumen (Opsional)' !!}
+                        </p>
                     </div>
-                    <p class="text-danger">*Mohon kirimkan data partisipan acara, setelah acara selesai</p>
                 </div>
             </div>
         </div>
@@ -223,9 +240,22 @@
 @endsection
 
 @push('script')
+<script src="{{ asset('js/bootbox.min.js') }}"></script>
 <script>
-    function pilihGedung(id) {
-        window.location.href = '{{ route('home.pilih-gedung') }}/' + id;
+    function tambahDokumen(id) {
+        $.ajax({
+            url: '{{ route('home.tambah-dokumen') }}/' + id + '?type=publikasi',
+            success: function(response) {
+                bootbox.dialog({
+                    title: 'Tambah Dokumen',
+                    message: response,
+                });
+            },
+            error: function(response) {
+            }
+        }).done(function() {
+            $('#table').unblock();
+        });
     }
 </script>
 @endpush

@@ -6,6 +6,7 @@ use App\Models\Gedung;
 use App\Models\PesananGedung;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -60,8 +61,8 @@ class PesananGedungController extends Controller
             ]);
 
             $dokumen = $request->file('surat_permohonan_acara');
-            $filename = 'dokumen/gedung/' . time() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/gedung', $filename, 'public');
+            $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
+            $dokumenPath = $dokumen->storeAs('dokumen/publikasi', $filename, 'public');
 
             $model = PesananGedung::create([
                 'judul' => $request->judul,
@@ -72,9 +73,7 @@ class PesananGedungController extends Controller
                 'user_id' => auth()->user()->id,
             ]);
 
-            $model->save();
-
-            return redirect()->route('home.pesanan-saya')->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Data berhasil ditambahkan');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
@@ -131,9 +130,29 @@ class PesananGedungController extends Controller
     }
 
     public function confirmPayment($id) {
-        $model = PesananGedung::findOrFail($id);
-        $model->is_paid = 1;
-        $model->save();
+        try {
+            $model = PesananGedung::findOrFail($id);
+            $model->is_paid = 1;
+            $model->status = 3;
+            $model->save();
+            session()->flash('success', 'Status pesanan berhasil diubah.');
+            return response()->json([
+                'success' => true,
+                'message' => 'Status pesanan berhasil diubah'
+            ]);
+        } catch (ValidationException $e) {
+            session()->flash('error', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal'
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat konfirmasi data.'
+            ]);
+        }
     }
 
     public function view($id) {

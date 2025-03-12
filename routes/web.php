@@ -28,8 +28,12 @@ Route::get('/', function () {
 Route::controller(HomeController::class)->name('home.')->group( function () {
     Route::get('/home', 'index')->name('index');
     Route::get('/pesanan-saya', 'pesananSaya')->name('pesanan-saya');
-    Route::get('/detail-pesanan/{id?}', 'detail_pesanan')->name('detail-pesanan');
+    Route::get('/detail-pesanan-gedung/{id?}', 'detailPesananGedung')->name('detail-pesanan-gedung');
+    Route::get('/detail-pesanan-publikasi/{id?}', 'detailPesananPublikasi')->name('detail-pesanan-publikasi');
+    Route::get('/tambah-dokumen/{id?}', 'tambahDokumen')->name('tambah-dokumen');
+    Route::post('/store-dokumen/{id?}', 'storeDokumen')->name('store-dokumen');
     Route::get('/pilih-gedung/{id?}', 'pilihGedung')->name('pilih-gedung');
+    Route::get('/pilih/{id?}/{id2?}', 'pilih')->name('pilih');
     Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
     Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');
 });
@@ -49,12 +53,17 @@ Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::post('/input-gedung/{id?}', 'inputGedung')->name('inputGedung');
         Route::post('/confirm/{id?}', 'confirm')->name('confirm');
+        Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
         Route::get('/delete/{id?}', 'delete')->name('delete');
         Route::get('/view/{id?}', 'view')->name('view');
     });
 
     Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
-        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::post('/confirm/{id?}', 'confirm')->name('confirm');
+        Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
+        Route::get('/delete/{id?}', 'delete')->name('delete');
+        Route::get('/view/{id?}', 'view')->name('view');
     });
 });
 
