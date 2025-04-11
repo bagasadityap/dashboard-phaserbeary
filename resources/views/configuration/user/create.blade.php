@@ -15,7 +15,7 @@
                     </div>
                     <div class="mb-2">
                         <label for="email" class="form-label">Email</label>
-                        <input class="form-control" type="text" id="email" placeholder="Masukkan email" name="email" required>
+                        <input class="form-control" type="email" id="email" placeholder="Masukkan email" name="email" required>
                     </div>
                     <div class="mb-2">
                         <label for="instansi" class="form-label">Instansi</label>

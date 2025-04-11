@@ -62,11 +62,11 @@
                 message: 'Gedung yang sudah dipilih tidak dapat diubah.',
                 buttons: {
                     confirm: {
-                        label: 'Yes',
+                        label: 'Pilih',
                         className: 'btn-success'
                     },
                     cancel: {
-                        label: 'No',
+                        label: 'Batal',
                         className: 'btn-secondary'
                     }
                 },
@@ -78,7 +78,7 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                window.location.href = '{{ route('home.detail-pesanan') }}/' + id;
+                                window.location.href = '{{ route('home.detail-pesanan-gedung') }}/' + id;
                                 bootbox.hideAll();
                             },
                             error: function() {

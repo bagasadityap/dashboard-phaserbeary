@@ -25,19 +25,10 @@ class DatabaseSeeder extends Seeder
 
         $super_admin = User::create(
             array_merge([
-                'email' => 'admin@gmail.com',
+                'email' => 'admin@email.com',
                 'name' => 'Super Admin',
                 'username' => 'admin',
                 'instansi' => 'Universitas Brawijaya'
-            ], $default_user_value)
-        );
-
-        $customer = User::create(
-            array_merge([
-                'email' => 'yamal@gmail.com',
-                'name' => 'Lamine Yamal',
-                'username' => 'yamal',
-                'instansi' => 'Barcelona'
             ], $default_user_value)
         );
 
@@ -45,7 +36,7 @@ class DatabaseSeeder extends Seeder
         $roleOperator = Role::create(['name' => 'Operator']);
         $roleCustomer = Role::create(['name' => 'Customer']);
 
-        $menus = ['Dashboard', 'Gedung', 'Pesanan', 'Configuration'];
+        $menus = ['Dashboard', 'Gedung', 'Pesanan', 'Configuration', 'Home'];
 
         $menus1 = ['Gedung-Gedung', 'Pesanan Gedung-Pesanan', 'Pesanan Publikasi Acara-Pesanan', 'User-Configuration', 'Role-Configuration'];
 

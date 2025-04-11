@@ -13,6 +13,7 @@ class PesananGedung extends Model
         'judul',
         'tanggal',
         'no_hp',
+        'jumlah_peserta',
         'surat_permohonan_acara',
         'dokumen_opsional',
         'bukti_pembayran',
@@ -32,7 +33,8 @@ class PesananGedung extends Model
         $user_id = auth()->user()->id;
 
         $pesanan = PesananGedung::where('user_id', $user_id)
-            ->select('id', 'status', 'judul', 'created_at', 'gedung_id')
+            ->with('gedung')
+            ->select('id', 'status', 'judul', 'created_at')
             ->get()
             ->map(function ($item) {
                 $item->type = 'gedung';

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->date('tanggal');
+            $table->int('jumlah_peserta');
             $table->string('no_hp');
             $table->string('surat_permohonan_acara');
             $table->string('dokumen_opsional')->nullable();

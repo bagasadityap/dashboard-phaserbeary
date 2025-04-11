@@ -55,6 +55,7 @@ class PesananGedungController extends Controller
             $request->validate([
                 'judul' => 'required|string|max:255',
                 'tanggal' => 'required|date',
+                'jumlah_peserta' => 'required|integer',
                 'no_hp' => 'required|string|max:255',
                 'surat_permohonan_acara' => 'required|file',
                 'catatan' => 'nullable|string',
@@ -67,13 +68,14 @@ class PesananGedungController extends Controller
             $model = PesananGedung::create([
                 'judul' => $request->judul,
                 'tanggal' => $request->tanggal,
+                'jumlah_peserta' => $request->jumlah_peserta,
                 'no_hp' => $request->no_hp,
                 'surat_permohonan_acara' => $dokumenPath,
                 'catatan' => $request->catatan,
                 'user_id' => auth()->user()->id,
             ]);
 
-            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {

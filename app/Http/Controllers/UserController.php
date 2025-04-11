@@ -128,7 +128,7 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             if ($user) {
-                if ($user->username == 'admin' || $user->id == auth()->user()->id) {
+                if ($user->username == 'admin' || $id == auth()->user()->id) {
                     session()->flash('error', 'Anda tidak dapat menghapus user ini.');
                     return response()->json([
                         'success' => false,

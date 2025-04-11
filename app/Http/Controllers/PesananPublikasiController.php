@@ -67,7 +67,7 @@ class PesananPublikasiController extends Controller
                 'user_id' => auth()->user()->id,
             ]);
 
-            return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {

@@ -22,7 +22,6 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="number" name="harga" class="form-control" required>
-                                <span class="input-group-text">.00</span>
                             </div>
                         </div>
                     </div>

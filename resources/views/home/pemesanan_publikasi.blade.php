@@ -18,14 +18,16 @@
                     <label for="judul" class="form-label">Judul Acara</label>
                     <input type="text" class="form-control" name="judul" id="judul" required>
                 </div>
-                <div class="mb-3">
-                    <label for="tanggal" class="form-label">Tanggal Publikasi Acara</label>
-                    <input type="date" class="form-control" name="tanggal" id="tanggal" required>
-                </div>
-                <div class="mb-3">
-                    <label for="no_hp" class="form-label">No. HP yang Dapat Dihubungi</label>
-                    <input type="text" class="form-control" name="no_hp" id="no_hp" required>
-                    <small class="form-text text-muted">Format No. HP: 08XXXXXXXXXX</small>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="tanggal" class="form-label">Tanggal Publikasi Acara</label>
+                        <input type="date" class="form-control" name="tanggal" id="tanggal" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="no_hp" class="form-label">No. HP yang Dapat Dihubungi</label>
+                        <input type="text" class="form-control" name="no_hp" id="no_hp" required>
+                        <small class="form-text text-muted">Format No. HP: 08XXXXXXXXXX</small>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="surat_permohonan_acara" class="form-label">Surat Permohonan Acara</label>

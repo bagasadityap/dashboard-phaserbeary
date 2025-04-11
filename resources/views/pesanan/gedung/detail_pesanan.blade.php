@@ -78,6 +78,7 @@
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
                                         <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
+                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlah_peserta }}</span>
                                     </p>
                                 </td>
                             </tr>
@@ -275,11 +276,11 @@
             message: 'Apakah anda yakin mengonfirmasi pembayaran pesanan ini?',
             buttons: {
                 confirm: {
-                    label: 'Yes',
+                    label: 'Konfirmasi',
                     className: 'btn-success'
                 },
                 cancel: {
-                    label: 'No',
+                    label: 'Batal',
                     className: 'btn-secondary'
                 }
             },

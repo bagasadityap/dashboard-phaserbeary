@@ -22,7 +22,6 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="number" name="harga" class="form-control" value="{{ $model->harga }}">
-                                <span class="input-group-text">.00</span>
                             </div>
                         </div>
                     </div>

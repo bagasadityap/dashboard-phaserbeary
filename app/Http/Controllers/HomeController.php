@@ -17,13 +17,21 @@ class HomeController extends Controller
         return view('home.index');
     }
 
-    public function pesananSaya() {
+    public function pesananSaya()
+    {
+        // Mengaktifkan query log
+        \DB::enableQueryLog();
+
         $pesananGedung = PesananGedung::pesananSaya();
         $pesananPublikasi = PesananPublikasi::pesananSaya();
 
-        $models = $pesananGedung->merge($pesananPublikasi)->sortByDesc('created_at');
+        $models = collect($pesananGedung)->concat($pesananPublikasi)->sortByDesc('created_at');
 
-        return view('home.pesanan_saya', compact('models'));
+        // Mendapatkan semua query yang dieksekusi
+        $queries = \DB::getQueryLog();
+
+        // Mengembalikan data ke view
+        return view('home.pesanan_saya', compact('models', 'queries'));
     }
 
     public function detailPesananGedung($id) {
@@ -127,9 +135,9 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         }
     }
 

@@ -82,6 +82,7 @@
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
                                         <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
+                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlah_peserta }}</span>
                                     </p>
                                 </td>
                                 <td class="d-flex justify-content-end">
