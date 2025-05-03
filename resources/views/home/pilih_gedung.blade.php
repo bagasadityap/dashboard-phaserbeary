@@ -78,7 +78,7 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                window.location.href = '{{ route('home.detail-pesanan-gedung') }}/' + id;
+                                window.location.href = '{{ route('home.detail-pesanan-gedung') }}/' + id2;
                                 bootbox.hideAll();
                             },
                             error: function() {

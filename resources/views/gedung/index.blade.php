@@ -62,7 +62,7 @@
                 url: '{{ route('gedung.create') }}',
                 success: function(response) {
                     bootbox.dialog({
-                        title: 'Buat Gedung ',
+                        title: 'Tambah Data Gedung ',
                         message: response,
                         size: 'large',
                     });

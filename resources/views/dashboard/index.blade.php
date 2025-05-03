@@ -11,7 +11,17 @@
         let chart;
 
         const categories = @json($months);
-        const series = @json($series);
+        // const series = @json($series);
+        const series = [
+            {
+                name: 'Gedung',
+                data: [5, 2, 3, 4, 5, 3, 6, 10, 8, 7, 5, 8]
+            },
+            {
+                name: 'Publikasi',
+                data: [6, 6, 2, 7, 8, 4, 2, 8, 10, 6, 8, 5]
+            }
+        ];
 
         function loadData(timeframe) {
             const options = {
@@ -62,7 +72,8 @@
         loadData('thisYear');
     </script>
     <script>
-        const chartData = @json($chartData);
+        // const chartData = @json($chartData);
+        const chartData = [10, 8, 20, 30, 5];
 
         var options = {
             chart: {
