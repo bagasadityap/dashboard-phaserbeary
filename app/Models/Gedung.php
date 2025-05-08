@@ -16,7 +16,7 @@ class Gedung extends Model
         'harga',
         'deskripsi',
         'gambar',
-        'gambar_vr',
+        'gambarVR',
     ];
 
     public static function pilih($id) {

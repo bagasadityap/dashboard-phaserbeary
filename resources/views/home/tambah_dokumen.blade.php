@@ -6,27 +6,27 @@
                 <div class="card-body pt-0">
                     <input type="hidden" name="type" value="{{ $type }}">
                     <div class="mb-3">
-                        <label class="form-label" for="surat_permohonan_acara">Surat Permohonan Acara</label>
-                        <input type="file" class="form-control" name="surat_permohonan_acara" id="surat_permohonan_acara" accept=".pdf">
+                        <label class="form-label" for="suratPermohonanAcara">Surat Permohonan Acara</label>
+                        <input type="file" class="form-control" name="suratPermohonanAcara" id="suratPermohonanAcara" accept=".pdf">
                     </div>
                     @if ($type == 'publikasi')
                         <div class="mb-3">
-                            <label class="form-label" for="poster_acara">Poster Acara</label>
-                            <input type="file" class="form-control" name="poster_acara" id="poster_acara" accept="">
+                            <label class="form-label" for="posterAcara">Poster Acara</label>
+                            <input type="file" class="form-control" name="posterAcara" id="posterAcara" accept="">
                         </div>
                     @endif
                     <div class="mb-3">
-                        <label class="form-label" for="bukti_pembayaran">Bukti Pembayaran</label>
-                        <input type="file" class="form-control" name="bukti_pembayaran" id="bukti_pembayaran" accept=".jpg, .jpeg, .png, .heic">
+                        <label class="form-label" for="buktiPembayaran">Bukti Pembayaran</label>
+                        <input type="file" class="form-control" name="buktiPembayaran" id="buktiPembayaran" accept=".jpg, .jpeg, .png, .heic">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="dokumen_opsional">Dokumen (Opsional)</label>
-                        <input type="file" class="form-control" name="dokumen_opsional" id="dokumen_opsional" accept=".pdf">
+                        <label class="form-label" for="dokumenOpsional">Dokumen (Opsional)</label>
+                        <input type="file" class="form-control" name="dokumenOpsional" id="dokumenOpsional" accept=".pdf">
                     </div>
                     @if ($type == 'gedung')
                         <div class="mb-3">
-                            <label class="form-label" for="data_partisipan">Data Partisipan</label>
-                            <input type="file" class="form-control" name="data_partisipan" id="data_partisipan" accept=".xls, .xlsx">
+                            <label class="form-label" for="dataPartisipan">Data Partisipan</label>
+                            <input type="file" class="form-control" name="dataPartisipan" id="dataPartisipan" accept=".xls, .xlsx">
                         </div>
                     @endif
                 </div>

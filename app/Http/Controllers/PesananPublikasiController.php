@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananGedung;
 use App\Models\PesananPublikasi;
 use Carbon\Carbon;
@@ -49,22 +50,22 @@ class PesananPublikasiController extends Controller
             $request->validate([
                 'judul' => 'required|string|max:255',
                 'tanggal' => 'required|date',
-                'no_hp' => 'required|string|max:255',
-                'surat_permohonan_acara' => 'required|file',
+                'noHP' => 'required|string|max:255',
+                'suratPermohonanAcara' => 'required|file',
                 'catatan' => 'nullable|string',
             ]);
 
-            $dokumen = $request->file('surat_permohonan_acara');
+            $dokumen = $request->file('suratPermohonanAcara');
             $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
             $dokumenPath = $dokumen->storeAs('dokumen/gedung', $filename, 'public');
 
             $model = PesananPublikasi::create([
                 'judul' => $request->judul,
                 'tanggal' => $request->tanggal,
-                'no_hp' => $request->no_hp,
-                'surat_permohonan_acara' => $dokumenPath,
+                'noHP' => $request->noHP,
+                'suratPermohonanAcara' => $dokumenPath,
                 'catatan' => $request->catatan,
-                'user_id' => auth()->user()->id,
+                'userId' => auth()->user()->id,
             ]);
 
             return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
@@ -80,7 +81,7 @@ class PesananPublikasiController extends Controller
             $model = PesananPublikasi::findOrFail($id);
             if ($request->status == 'konfirmasi') {
                 $model->status = 1;
-                $model->is_verified = 1;
+                $model->isConfirmed = 1;
             } else {
                 $model->status = 4;
             }
@@ -107,7 +108,7 @@ class PesananPublikasiController extends Controller
     public function confirmPayment($id) {
         try {
             $model = PesananPublikasi::findOrFail($id);
-            $model->is_paid = 1;
+            $model->isPaid = 1;
             $model->status = 3;
             $model->save();
             session()->flash('success', 'Status pesanan berhasil diubah.');
@@ -130,11 +131,57 @@ class PesananPublikasiController extends Controller
         }
     }
 
+    public function tambahBiayaPesanan($id) {
+        $model = PesananPublikasi::findOrFail($id);
+        $models = OpsiTambahanPesananPublikasi::where('pesananId', $model->id)->get();
+
+        return view('pesanan.publikasi.tambah_opsional_pesanan', compact('model', 'models'));
+    }
+
+    public function storeBiayaPesanan(Request $request, $id) {
+        try {
+            $request->validate([
+                'biayaPublikasi' => 'required|int',
+                'nama' => 'array',
+                'biaya' => 'array'
+            ]);
+
+            $pesanan = PesananPublikasi::findOrFail($id);
+            $pesanan->biayaPublikasi = $request->biayaPublikasi;
+            $pesanan->save();
+
+            $oldOption = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
+
+            if ($request->nama && $request->biaya) {
+                for ($i=0; $i < count($request->nama); $i++) {
+                    OpsiTambahanPesananPublikasi::create([
+                        'nama' => $request->nama[$i],
+                        'biaya' => $request->biaya[$i],
+                        'pesananId' => $pesanan->id,
+                    ]);
+                }
+            }
+
+            $opsiTambahanTotal = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->sum('biaya');
+            $totalBiaya = $pesanan->biayaPublikasi + $opsiTambahanTotal;
+            $pesanan->update([
+                'PPN' => $totalBiaya * 10/100,
+                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+            ]);
+
+            return redirect()->back()->with('success', 'Data berhasil disimpan.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
+    }
+
     public function view($id) {
         $page = "Pesanan \ Publikasi \ Detail";
         $model = PesananPublikasi::findOrFail($id);
-        // $model = PesananGedung::findOrFail($id);
+        $opsiTambahan = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
 
-        return view('pesanan.publikasi.detail_pesanan', compact('page', 'model'));
+        return view('pesanan.publikasi.detail_pesanan', compact('page', 'model', 'opsiTambahan'));
     }
 }

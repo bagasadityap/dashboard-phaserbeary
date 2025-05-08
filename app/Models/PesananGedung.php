@@ -12,18 +12,20 @@ class PesananGedung extends Model
     protected $fillable = [
         'judul',
         'tanggal',
-        'no_hp',
-        'jumlah_peserta',
-        'surat_permohonan_acara',
-        'dokumen_opsional',
-        'bukti_pembayran',
-        'data_partisipan',
+        'noHP',
+        'jumlahPeserta',
+        'suratPermohonanAcara',
+        'dokumenOpsional',
+        'buktiPembayaran',
+        'dataPartisipan',
         'catatan',
-        'user_id',
-        'gedung_id',
-        'total_biaya',
-        'is_verified',
-        'is_paid',
+        'userId',
+        'gedungId',
+        'biayaGedung',
+        'PPN',
+        'totalBiaya',
+        'isConfirmed',
+        'isPaid',
         'invoice',
         'status',
     ];
@@ -32,7 +34,7 @@ class PesananGedung extends Model
     {
         $user_id = auth()->user()->id;
 
-        $pesanan = PesananGedung::where('user_id', $user_id)
+        $pesanan = PesananGedung::where('userId', $user_id)
             ->with('gedung')
             ->select('id', 'status', 'judul', 'created_at')
             ->get()
@@ -43,14 +45,8 @@ class PesananGedung extends Model
         return $pesanan;
     }
 
-    // public static function pesananSaya() {
-    //     $user_id = auth()->user()->id;
-
-    //     return PesananGedung::where('user_id', $user_id)->get();
-    // }
-
     public function user() {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'userId', 'id');
     }
 
     public function gedungPesanan()
@@ -64,6 +60,11 @@ class PesananGedung extends Model
     }
 
     public function gedung() {
-        return $this->belongsTo(Gedung::class, 'gedung_id', 'id');
+        return $this->belongsTo(Gedung::class, 'gedungId', 'id');
+    }
+
+    public function opsiTambahan()
+    {
+        return $this->hasMany(OpsiTambahanPesananGedung::class, 'pesananId');
     }
 }

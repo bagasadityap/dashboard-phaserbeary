@@ -11,11 +11,6 @@
             <div class="card-header">
                 @include('template.alert')
                 <div class="row justify-content-between align-items-center">
-                    {{-- @can('Gedung  Create')
-                        <div class="col-md-2 text-start ms-2">
-                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
-                        </div>
-                    @endcan --}}
                 </div>
             </div>
             <div class="card-body pt-0">

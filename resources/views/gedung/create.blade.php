@@ -35,8 +35,8 @@
                     </div>
                     <div id="preview-container" class="d-flex flex-wrap gap-2"></div>
                     <div class="mb-3">
-                        <label class="form-label" for="gambar_vr">Gambar VR</label>
-                        <input type="file" class="form-control" name="gambar_vr" id="gambar_vr" accept=".jpg, .jpeg, .png">
+                        <label class="form-label" for="gambarVR">Gambar VR</label>
+                        <input type="file" class="form-control" name="gambarVR" id="gambarVR" accept=".jpg, .jpeg, .png">
                     </div>
                 </div>
             </div>

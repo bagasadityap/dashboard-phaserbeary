@@ -33,7 +33,7 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h4 class="card-title">Status Barang</h4>
+                        <h4 class="card-title">Status Pesanan</h4>
                     </div>
                     <div class="col-auto">
                         <div class="text-center">

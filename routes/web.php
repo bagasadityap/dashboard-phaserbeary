@@ -54,7 +54,8 @@ Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::post('/input-gedung/{id?}', 'inputGedung')->name('inputGedung');
         Route::post('/confirm/{id?}', 'confirm')->name('confirm');
         Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
-        Route::get('/delete/{id?}', 'delete')->name('delete');
+        Route::get('/add-optional/{id?}', 'tambahOptional')->name('add-optional');
+        Route::post('/store-optional/{id?}', 'storeOptional')->name('store-optional');
         Route::get('/view/{id?}', 'view')->name('view');
     });
 
@@ -62,7 +63,8 @@ Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::post('/confirm/{id?}', 'confirm')->name('confirm');
         Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
-        Route::get('/delete/{id?}', 'delete')->name('delete');
+        Route::get('/add-order-cost/{id?}', 'tambahBiayaPesanan')->name('add-order-cost');
+        Route::post('/store-order-cost/{id?}', 'storeBiayaPesanan')->name('store-order-cost');
         Route::get('/view/{id?}', 'view')->name('view');
     });
 });

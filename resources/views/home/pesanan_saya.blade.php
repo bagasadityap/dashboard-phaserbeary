@@ -37,7 +37,7 @@
                                 <div class="d-flex align-item-center">
                                 @if ($model->type == 'gedung')
                                         <i class="iconoir-building fs-18 me-1"></i>
-                                    @if (!$model->gedung_id)
+                                    @if (!$model->gedungId)
                                         <p class="card-text text-danger mb-0">*Belum ada gedung yang dipilih</p>
                                     @else
                                         <p class="card-text mb-0">{{ $model->gedung->name }}</p>
@@ -74,9 +74,5 @@
         function detailPublikasi(id) {
             window.location.href = '{{ url('detail-pesanan-publikasi') }}/' + id;
         }
-    </script>
-    <script>
-        const queries = @json($queries);
-        console.log('Executed Queries:', queries);
     </script>
 @endpush

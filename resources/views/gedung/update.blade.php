@@ -46,8 +46,8 @@
                     <div id="preview-container" class="d-flex flex-wrap gap-2 mb-2"></div>
                     <input type="hidden" name="deleted_images" id="deleted-images" value="">
                     <div class="mb-3">
-                        <label class="form-label" for="gambar_vr">Gambar VR <p class="text-danger mb-0">*tidak perlu menambahkan gambar VR ulang jika tidak ada perubahan</p></label>
-                        <input type="file" class="form-control" name="gambar_vr" id="gambar_vr" accept=".jpg, .jpeg, .png">
+                        <label class="form-label" for="gambarVR">Gambar VR <p class="text-danger mb-0">*tidak perlu menambahkan gambar VR ulang jika tidak ada perubahan</p></label>
+                        <input type="file" class="form-control" name="gambarVR" id="gambarVR" accept=".jpg, .jpeg, .png">
                     </div>
                     <label class="text-danger"></label>
                 </div>

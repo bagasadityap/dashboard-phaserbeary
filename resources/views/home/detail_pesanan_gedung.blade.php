@@ -76,13 +76,13 @@
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
-                                        @if (!$model->gedung_id)
+                                        @if (!$model->gedungId)
                                             <span class="text-danger font-13">Silakan pilih gedung ketika sudah diverifikasi oleh admin</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
                                         <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
-                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlah_peserta }}</span>
+                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlahPeserta }}</span>
                                     </p>
                                 </td>
                                 <td class="d-flex justify-content-end">
@@ -101,22 +101,28 @@
                     </div>
                 </div>
                 <hr class="hr mt-0">
-                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung({{ $model->id }})" {{ $model->is_verified  && !$model->gedung_id ? '' : 'disabled' }}>Pilih Gedung</button>
+                <button type="button" class="btn rounded-pill btn-primary mb-2" onclick="pilihGedung({{ $model->id }})" {{ $model->isConfirmed  && !$model->gedungId ? '' : 'disabled' }}>Pilih Gedung</button>
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">Biaya Gedung :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaGedung ? $model->biayaGedung : '0' }}</p>
                         </div>
+                        @foreach ($opsiTambahan as $opsi)
+                            <div class="d-flex justify-content-between">
+                                <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                            </div>
+                        @endforeach
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">PPN 10% :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga/100 : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->PPN ? $model->PPN : '0' }}</p>
                         </div>
                     </div>
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->total_biaya ? $model->total_biaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
                     </div>
                 </div>
                 <hr class="hr mb-0">
@@ -192,7 +198,7 @@
                       </div>
                       <div class="d-flex justify-content-between mb-1">
                           <p class="text-body fw-semibold"><i class="iconoir-phone text-secondary fs-20 align-middle me-1"></i>No HP :</p>
-                          <p class="text-body-emphasis fw-semibold">{{ $model->no_hp }}</p>
+                          <p class="text-body-emphasis fw-semibold">{{ $model->noHP }}</p>
                       </div>
                 </div>
             </div>
@@ -242,9 +248,6 @@
         </div>
     </div>
 </div>
-{{-- <div class="col-lg-12">
-    @include('home.progress')
-</div> --}}
 @endsection
 
 @push('script')

@@ -51,7 +51,7 @@ class GedungController extends Controller
     }
 
     public function view_360($id) {
-        $model = Gedung::findOrFail($id)->gambar_vr;
+        $model = Gedung::findOrFail($id)->gambarVR;
 
         return view('gedung.view_360', compact('model'));
     }
@@ -70,14 +70,14 @@ class GedungController extends Controller
                 'deskripsi' => 'required|string',
                 'gambar' => 'required',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
-                'gambar_vr' => 'required|file|mimes:jpg,jpeg,png',
+                'gambarVR' => 'required|file|mimes:jpg,jpeg,png',
             ]);
 
             $gambarPaths = [];
             foreach ($request->file('gambar') as $file) {
                 $gambarPaths[] = $file->store('gedung', 'public');
             }
-            $gambarVrPath = $request->file('gambar_vr')->store('gedung', 'public');
+            $gambarVrPath = $request->file('gambarVR')->store('gedung', 'public');
 
             $model = Gedung::create([
                 'nama' => $request->nama,
@@ -86,7 +86,7 @@ class GedungController extends Controller
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
                 'gambar' => json_encode($gambarPaths),
-                'gambar_vr' => $gambarVrPath,
+                'gambarVR' => $gambarVrPath,
             ]);
 
             $model->save();
@@ -115,7 +115,7 @@ class GedungController extends Controller
                 'deskripsi' => 'required|string',
                 'gambar' => 'nullable',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
-                'gambar_vr' => 'nullable|file|mimes:jpg,jpeg,png',
+                'gambarVR' => 'nullable|file|mimes:jpg,jpeg,png',
             ]);
 
             $model = Gedung::findOrFail($id);
@@ -136,12 +136,12 @@ class GedungController extends Controller
                 }
             }
 
-            $gambarVrPath = $model->gambar_vr;
-            if  ($request->hasFile('gambar_vr')) {
+            $gambarVrPath = $model->gambarVR;
+            if  ($request->hasFile('gambarVR')) {
                 if ($gambarVrPath) {
                     Storage::disk('public')->delete($gambarVrPath);
                 }
-                $gambarVrPath = $request->file('gambar_vr')->store('dokumen/gedung', 'public');
+                $gambarVrPath = $request->file('gambarVR')->store('dokumen/gedung', 'public');
             }
 
             $model->nama = $request->nama;
@@ -150,7 +150,7 @@ class GedungController extends Controller
             $model->harga = $request->harga;
             $model->deskripsi = $request->deskripsi;
             $model->gambar = json_encode($existingImages);
-            $model->gambar_vr = $gambarVrPath;
+            $model->gambarVR = $gambarVrPath;
             $model->save();
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
@@ -168,8 +168,8 @@ class GedungController extends Controller
             if ($model->gambar && Storage::disk('public')->exists($model->gambar)) {
                 Storage::disk('public')->delete($model->gambar);
             }
-            if ($model->gambar_vr && Storage::disk('public')->exists($model->gambar_vr)) {
-                Storage::disk('public')->delete($model->gambar_vr);
+            if ($model->gambarVR && Storage::disk('public')->exists($model->gambarVR)) {
+                Storage::disk('public')->delete($model->gambarVR);
             }
 
             $model->delete();

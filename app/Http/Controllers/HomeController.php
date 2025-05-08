@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gedung;
+use App\Models\OpsiTambahanPesananGedung;
+use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananGedung;
 use App\Models\PesananPublikasi;
 use Illuminate\Http\Request;
@@ -19,31 +21,26 @@ class HomeController extends Controller
 
     public function pesananSaya()
     {
-        // Mengaktifkan query log
-        \DB::enableQueryLog();
-
         $pesananGedung = PesananGedung::pesananSaya();
         $pesananPublikasi = PesananPublikasi::pesananSaya();
 
         $models = collect($pesananGedung)->concat($pesananPublikasi)->sortByDesc('created_at');
 
-        // Mendapatkan semua query yang dieksekusi
-        $queries = \DB::getQueryLog();
-
-        // Mengembalikan data ke view
-        return view('home.pesanan_saya', compact('models', 'queries'));
+        return view('home.pesanan_saya', compact('models'));
     }
 
     public function detailPesananGedung($id) {
         $model = PesananGedung::findOrFail($id);
+        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
 
-        return view('home.detail_pesanan_gedung', compact('model'));
+        return view('home.detail_pesanan_gedung', compact('model', 'opsiTambahan'));
     }
 
     public function detailPesananPublikasi($id) {
         $model = PesananPublikasi::findOrFail($id);
+        $opsiTambahan = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
 
-        return view('home.detail_pesanan_publikasi', compact('model'));
+        return view('home.detail_pesanan_publikasi', compact('model', 'opsiTambahan'));
     }
 
     public function pemesanan_gedung() {
@@ -169,10 +166,17 @@ class HomeController extends Controller
         try {
             $model = PesananGedung::findOrFail($id2);
             $gedung = Gedung::findOrFail($id);
-            $model->gedung_id = $gedung->id;
-            $model->total_biaya = $gedung->harga + ($gedung->harga * 10/100);
+            $model->gedungId = $gedung->id;
+            $model->biayaGedung = $gedung->harga;
             $model->status = 2;
             $model->save();
+            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $model->id)->sum('biaya');
+            $biayaGedung = $model->biayaGedung ?? 0;
+            $totalBiaya = $biayaGedung + $opsiTambahanTotal;
+            $model->update([
+                'PPN' => $totalBiaya * 10/100,
+                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+            ]);
             session()->flash('success', 'Gedung berhasil dipilih.');
             return response()->json([
                 'success' => true,

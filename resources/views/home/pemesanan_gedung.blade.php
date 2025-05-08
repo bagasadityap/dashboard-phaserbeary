@@ -24,19 +24,19 @@
                         <input type="date" class="form-control" name="tanggal" id="tanggal" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="jumlah_peserta" class="form-label">Jumlah Peserta</label>
-                        <input type="number" class="form-control" name="jumlah_peserta" id="jumlah_peserta" required>
+                        <label for="jumlahPeserta" class="form-label">Jumlah Peserta</label>
+                        <input type="number" class="form-control" name="jumlahPeserta" id="jumlahPeserta" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="no_hp" class="form-label">No. HP yang Dapat Dihubungi</label>
-                        <input type="text" class="form-control" name="no_hp" id="no_hp" required>
+                        <label for="noHP" class="form-label">No. HP yang Dapat Dihubungi</label>
+                        <input type="text" class="form-control" name="noHP" id="noHP" required>
                         <small class="form-text text-muted">Format No. HP: 08XXXXXXXXXX</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="surat_permohonan_acara" class="form-label">Surat Permohonan Acara</label>
-                        <input type="file" class="form-control" name="surat_permohonan_acara" id="surat_permohonan_acara" required>
+                        <label for="suratPermohonanAcara" class="form-label">Surat Permohonan Acara</label>
+                        <input type="file" class="form-control" name="suratPermohonanAcara" id="suratPermohonanAcara" required>
                     </div>
                 </div>
                 <div class="mb-3">

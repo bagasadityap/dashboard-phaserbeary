@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gedung;
+use App\Models\OpsiTambahanPesananGedung;
 use App\Models\PesananGedung;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,12 +24,6 @@ class PesananGedungController extends Controller
                     if (auth()->user()->can('Gedung Read')) {
                         $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
                     }
-                    // if (auth()->user()->can('Gedung Edit')) {
-                    //     $html .= '<button href="" class="btn btn-outline-warning px-2 me-1 d-inline-flex align-items-center" onclick="confirm(\'' . $model->id . '\')"><i class="iconoir-edit fs-14"></i></button>';
-                    // }
-                    // if (auth()->user()->can('Gedung Delete')) {
-                    //     $html .= '<button href="" class="btn btn-outline-danger px-2 d-inline-flex align-items-center" onclick="remove(\'' . $model->id . '\')"><i class="iconoir-trash fs-14"></i></button>';
-                    // }
                     return $html;
                 })
                 ->editColumn('created_at', function($model) {
@@ -44,35 +39,29 @@ class PesananGedungController extends Controller
         return view('pesanan.gedung.index', compact('page'));
     }
 
-    public function detail() {
-        $page = 'Pesanan \ Gedung \ Detail';
-
-        return view('pesanan.gedung.detail_pesanan', compact('page'));
-    }
-
     public function store(Request $request) {
         try {
             $request->validate([
                 'judul' => 'required|string|max:255',
                 'tanggal' => 'required|date',
-                'jumlah_peserta' => 'required|integer',
-                'no_hp' => 'required|string|max:255',
-                'surat_permohonan_acara' => 'required|file',
+                'jumlahPeserta' => 'required|integer',
+                'noHP' => 'required|string|max:255',
+                'suratPermohonanAcara' => 'required|file',
                 'catatan' => 'nullable|string',
             ]);
 
-            $dokumen = $request->file('surat_permohonan_acara');
+            $dokumen = $request->file('suratPermohonanAcara');
             $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
             $dokumenPath = $dokumen->storeAs('dokumen/publikasi', $filename, 'public');
 
             $model = PesananGedung::create([
                 'judul' => $request->judul,
                 'tanggal' => $request->tanggal,
-                'jumlah_peserta' => $request->jumlah_peserta,
-                'no_hp' => $request->no_hp,
-                'surat_permohonan_acara' => $dokumenPath,
+                'jumlahPeserta' => $request->jumlahPeserta,
+                'noHP' => $request->noHP,
+                'suratPermohonanAcara' => $dokumenPath,
                 'catatan' => $request->catatan,
-                'user_id' => auth()->user()->id,
+                'userId' => auth()->user()->id,
             ]);
 
             return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
@@ -107,7 +96,7 @@ class PesananGedungController extends Controller
             $model = PesananGedung::findOrFail($id);
             if ($request->status == 'konfirmasi') {
                 $model->status = 1;
-                $model->is_verified = 1;
+                $model->isConfirmed = 1;
             } else {
                 $model->status = 4;
             }
@@ -134,7 +123,7 @@ class PesananGedungController extends Controller
     public function confirmPayment($id) {
         try {
             $model = PesananGedung::findOrFail($id);
-            $model->is_paid = 1;
+            $model->isPaid = 1;
             $model->status = 3;
             $model->save();
             session()->flash('success', 'Status pesanan berhasil diubah.');
@@ -157,17 +146,55 @@ class PesananGedungController extends Controller
         }
     }
 
+    public function tambahOptional($id) {
+        $model = PesananGedung::findOrFail($id);
+        $models = OpsiTambahanPesananGedung::where('pesananId', $model->id)->get();
+
+        return view('pesanan.gedung.tambah_opsional_pesanan', compact('model', 'models'));
+    }
+
+    public function storeOptional(Request $request, $id) {
+        try {
+            $request->validate([
+                'nama' => 'required|array',
+                'biaya' => 'required|array'
+            ]);
+
+            $pesanan = PesananGedung::findOrFail($id);
+            $oldOption = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->delete();
+
+            for ($i=0; $i < count($request->nama); $i++) {
+                OpsiTambahanPesananGedung::create([
+                    'nama' => $request->nama[$i],
+                    'biaya' => $request->biaya[$i],
+                    'pesananId' => $pesanan->id,
+                ]);
+            }
+
+            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('biaya');
+            $biayaGedung = $pesanan->biayaGedung ?? 0;
+            $totalBiaya = $biayaGedung + $opsiTambahanTotal;
+            $pesanan->update([
+                'PPN' => $totalBiaya * 10/100,
+                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+            ]);
+
+            return redirect()->back()->with('success', 'Data berhasil disimpan.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
+    }
+
     public function view($id) {
         $page = "Pesanan \ Gedung \ Detail";
         $model = PesananGedung::findOrFail($id);
         $selectedModel = PesananGedung::findOrFail($id);
         $gedungs = Gedung::all();
         $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
+        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
 
-        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung'));
-    }
-
-    public function delete($id) {
-
+        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
     }
 }

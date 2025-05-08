@@ -78,7 +78,7 @@
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
                                         @endif
                                         <br><span class="text-muted font-13">Tanggal Acara:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
-                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlah_peserta }}</span>
+                                        <br><span class="text-muted font-13">Jumlah Peserta: {{ $model->jumlahPeserta }}</span>
                                     </p>
                                 </td>
                             </tr>
@@ -90,9 +90,14 @@
                         <span class="text-secondary fw-semibold">Catatan : </span><br>
                         <span class="text-secondary fw-normal text-break">{{ $model->catatan }}</span>
                     </div>
+                    @if ($model->isConfirmed && !$model->isPaid)
+                        <div class="col my-2 d-flex">
+                            <button type="button" class="btn rounded-pill btn-primary" onclick="addOptional({{ $model->id }})">Tambah Opsional Pesanan</button>
+                        </div>
+                    @endif
                 </div>
                 <hr class="hr mt-0">
-                @if (!$model->is_verified)
+                @if (!$model->isConfirmed)
                     <div class="col my-2 d-flex">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirm({{ $model->id }})">Konfirmasi Pesanan</button>
                     </div>
@@ -119,20 +124,26 @@
                     <div>
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">Biaya Gedung :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaGedung ? $model->biayaGedung : '0' }}</p>
                         </div>
+                        @foreach ($opsiTambahan as $opsi)
+                            <div class="d-flex justify-content-between">
+                                <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                            </div>
+                        @endforeach
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">PPN 10% :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->gedung_id ? $model->gedung->harga/100 : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->PPN ? $model->PPN : '0' }}</p>
                         </div>
                     </div>
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->total_biaya ? $model->total_biaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
                     </div>
                 </div>
-                @if ($model->gedung_id && !$model->is_paid)
+                @if ($model->gedung_id && !$model->isPaid)
                     <div class="col mt-3 d-flex justify-content-end">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})">Konfirmasi Pembayaran</button>
                     </div>
@@ -165,7 +176,7 @@
                       </div>
                       <div class="d-flex justify-content-between mb-1">
                           <p class="text-body fw-semibold"><i class="iconoir-phone text-secondary fs-20 align-middle me-1"></i>No HP :</p>
-                          <p class="text-body-emphasis fw-semibold">{{ $model->no_hp }}</p>
+                          <p class="text-body-emphasis fw-semibold">{{ $model->noHP }}</p>
                       </div>
                 </div>
             </div>
@@ -213,9 +224,6 @@
         </div>
     </div>
 </div>
-{{-- <div class="col-lg-12">
-    @include('home.progress')
-</div> --}}
 @endsection
 
 @push('script')
@@ -301,6 +309,23 @@
                     });
                 }
             }
+        });
+    }
+
+    function addOptional(id) {
+        $.ajax({
+            url: '{{ route('pesanan.gedung.add-optional') }}/' + id,
+            success: function(response) {
+                bootbox.dialog({
+                    title: 'Tambah Opsional Pesanan',
+                    message: response,
+                    size: 'large',
+                });
+            },
+            error: function(response) {
+            }
+        }).done(function() {
+            $('#table').unblock();
         });
     }
 </script>

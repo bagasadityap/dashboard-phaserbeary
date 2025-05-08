@@ -99,17 +99,23 @@
                     <div>
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">Biaya Publikasi Acara :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biaya ? $model->biaya : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaPublikasi ? $model->biayaPublikasi : '0' }}</p>
                         </div>
+                        @foreach ($opsiTambahan as $opsi)
+                            <div class="d-flex justify-content-between">
+                                <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                            </div>
+                        @endforeach
                         <div class="d-flex justify-content-between">
                             <p class="text-body fw-semibold">PPN 10% :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biaya ? $model->biaya/100 : '0' }}</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->PPN ? $model->PPN : '0' }}</p>
                         </div>
                     </div>
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->total_biaya ? $model->total_biaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
                     </div>
                 </div>
                 <hr class="hr mb-0">
@@ -185,7 +191,7 @@
                       </div>
                       <div class="d-flex justify-content-between mb-1">
                           <p class="text-body fw-semibold"><i class="iconoir-phone text-secondary fs-20 align-middle me-1"></i>No HP :</p>
-                          <p class="text-body-emphasis fw-semibold">{{ $model->no_hp }}</p>
+                          <p class="text-body-emphasis fw-semibold">{{ $model->noHP }}</p>
                       </div>
                 </div>
             </div>
@@ -203,29 +209,29 @@
                 <div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->surat_permohonan_acara
-                                ? '<a href="' . asset('storage/' . $model->surat_permohonan_acara) . '" target="_blank">Surat Permohonan Acara</a>'
+                            {!! $model->suratPermohonanAcara
+                                ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
                                 : 'Surat Permohonan Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->poster_acara
-                                ? '<a href="' . asset('storage/' . $model->poster_acara) . '" target="_blank">Poster</a>'
+                            {!! $model->posterAcara
+                                ? '<a href="' . asset('storage/' . $model->posterAcara) . '" target="_blank">Poster</a>'
                                 : 'Poster' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->bukti_pembayaran
-                                ? '<a href="' . asset('storage/' . $model->bukti_pembayaran) . '" target="_blank">Bukti Pembayaran</a>'
+                            {!! $model->buktiPembayaran
+                                ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
                                 : 'Bukti Pembayaran' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->dokumen_opsional
-                                ? '<a href="' . asset('storage/' . $model->dokumen_opsional) . '" target="_blank">Dokumen (Opsional)</a>'
+                            {!! $model->dokumenOpsional
+                                ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
                                 : 'Dokumen (Opsional)' !!}
                         </p>
                     </div>
@@ -234,9 +240,6 @@
         </div>
     </div>
 </div>
-{{-- <div class="col-lg-12">
-    @include('home.progress')
-</div> --}}
 @endsection
 
 @push('script')

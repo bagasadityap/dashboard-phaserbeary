@@ -2,20 +2,27 @@
 
 @push('css')
     @include('template.datatable')
+    @include('template.button')
 @endpush
 
 @section('content')
+<style>
+    .dt-button {
+        border: none !important;
+        background-image: none !important;
+        color: inherit !important;
+    }
+    .btn-excel {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+</style>
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
                 @include('template.alert')
                 <div class="row justify-content-between align-items-center">
-                    {{-- @can('Gedung  Create')
-                        <div class="col-md-2 text-start ms-2">
-                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
-                        </div>
-                    @endcan --}}
                 </div>
             </div>
             <div class="card-body pt-0">
@@ -53,7 +60,19 @@
                     {data: 'created_at', name: 'created_at'},
                     {data: 'tanggal', name: 'tanggal'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
-                ]
+                ],
+                // dom: 'Bfrtip',
+                // buttons: [
+                //     {
+                //         extend: 'excelHtml5',
+                //         title: 'Rekap Pesanan Gedung ' + new Date().toLocaleDateString(),
+                //         className: 'btn btn-excel',
+                //         text: '<i class="fas fa-file-excel"></i> Export Excel',
+                //         exportOptions: {
+                //             columns: ':not(:last-child)'
+                //         }
+                //     },
+                // ]
             });
         })
 
