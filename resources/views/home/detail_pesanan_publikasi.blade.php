@@ -81,7 +81,7 @@
                                 </td>
                                 <td class="d-flex justify-content-end">
                                     <div class="col-auto">
-                                        <a href="" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>
+                                        <a href="{{ route('pesanan.publikasi.download-invoice', ['id' => $model->id]) }}" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>
                                     </div>
                                 </td>
                             </tr>

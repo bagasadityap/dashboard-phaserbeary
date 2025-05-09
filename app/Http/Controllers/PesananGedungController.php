@@ -7,8 +7,10 @@ use App\Models\OpsiTambahanPesananGedung;
 use App\Models\PesananGedung;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananGedungController extends Controller
@@ -196,5 +198,31 @@ class PesananGedungController extends Controller
         $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
 
         return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
+    }
+
+    public function downloadExcel() {
+        
+    }
+
+    public function downloadInvoice($id)  {
+        try {
+            $model = PesananGedung::findOrFail($id);
+            $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+
+            $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional'))->render();
+
+            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+            $path = storage_path("app/public/$filename");
+
+            Browsershot::html($html)
+                ->noSandbox()
+                ->format('A4')
+                ->margins(10, 10, 10, 10)
+                ->savePdf($path);
+
+            return response()->download($path)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
+        }
     }
 }

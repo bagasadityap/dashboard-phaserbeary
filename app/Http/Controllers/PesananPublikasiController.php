@@ -7,8 +7,10 @@ use App\Models\PesananGedung;
 use App\Models\PesananPublikasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananPublikasiController extends Controller
@@ -183,5 +185,27 @@ class PesananPublikasiController extends Controller
         $opsiTambahan = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
 
         return view('pesanan.publikasi.detail_pesanan', compact('page', 'model', 'opsiTambahan'));
+    }
+
+    public function downloadInvoice($id)  {
+        try {
+            $model = PesananPublikasi::findOrFail($id);
+            $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
+
+            $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional'))->render();
+
+            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+            $path = storage_path("app/public/$filename");
+
+            Browsershot::html($html)
+                ->noSandbox()
+                ->format('A4')
+                ->margins(10, 10, 10, 10)
+                ->savePdf($path);
+
+            return response()->download($path)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
+        }
     }
 }

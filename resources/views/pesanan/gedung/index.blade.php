@@ -61,18 +61,16 @@
                     {data: 'tanggal', name: 'tanggal'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
                 ],
-                // dom: 'Bfrtip',
-                // buttons: [
-                //     {
-                //         extend: 'excelHtml5',
-                //         title: 'Rekap Pesanan Gedung ' + new Date().toLocaleDateString(),
-                //         className: 'btn btn-excel',
-                //         text: '<i class="fas fa-file-excel"></i> Export Excel',
-                //         exportOptions: {
-                //             columns: ':not(:last-child)'
-                //         }
-                //     },
-                // ]
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        text: '<i class="fas fa-file-excel me-1"></i> Export Excel',
+                        className: 'btn btn-excel',
+                        action: function () {
+                            window.location.href = '{{ route('pesanan.gedung.download-excel') }}';
+                        }
+                    }
+                ]
             });
         })
 

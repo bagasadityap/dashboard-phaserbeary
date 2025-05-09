@@ -57,6 +57,8 @@ Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/add-optional/{id?}', 'tambahOptional')->name('add-optional');
         Route::post('/store-optional/{id?}', 'storeOptional')->name('store-optional');
         Route::get('/view/{id?}', 'view')->name('view');
+        Route::get('/download-excel/{id?}', 'downloadExcel')->name('download-excel');
+        Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
     });
 
     Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
@@ -66,6 +68,8 @@ Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/add-order-cost/{id?}', 'tambahBiayaPesanan')->name('add-order-cost');
         Route::post('/store-order-cost/{id?}', 'storeBiayaPesanan')->name('store-order-cost');
         Route::get('/view/{id?}', 'view')->name('view');
+        Route::get('/download-excel/{id?}', 'downloadExcel')->name('download-excel');
+        Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
     });
 });
 
