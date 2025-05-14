@@ -21,14 +21,14 @@ return new class extends Migration
             $table->string('buktiPembayaran')->nullable();
             $table->string('posterAcara')->nullable();
             $table->text('catatan')->nullable();
-            $table->foreignId('userId')->references('id')->on('users');
-            $table->integer('biayaPublikasi')->nullable();
-            $table->integer('PPN')->nullable();
-            $table->integer('totalBiaya')->nullable();
+            $table->decimal('hargaPublikasi', 15, 2)->nullable();
+            $table->decimal('PPN', 15, 2)->nullable();
+            $table->decimal('totalHarga', 15, 2)->nullable();
             $table->boolean('isConfirmed')->default(0);
             $table->boolean('isPaid')->default(0);
             $table->string('invoice')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->foreignId('userId')->references('id')->on('users');
             $table->timestamps();
         });
     }

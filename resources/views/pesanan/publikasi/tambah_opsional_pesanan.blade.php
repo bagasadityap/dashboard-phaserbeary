@@ -2,14 +2,14 @@
     @csrf
     <div id="opsi-container">
         <div class="col-md-8 mb-2">
-            <label class="form-label">Biaya Publikasi Acara</label>
+            <label class="form-label">Harga Publikasi Acara</label>
             <div class="input-group mb-2">
                 <span class="input-group-text">Rp.</span>
-                <input type="number" name="biayaPublikasi" class="form-control" value="{{ $model->biayaPublikasi }}" required>
+                <input type="number" name="hargaPublikasi" class="form-control" value="{{ $model->hargaPublikasi }}" required>
             </div>
         </div>
         <hr>
-        <label class="text-dark fs-14 mb-2"><strong>Biaya Tambahan</strong></label>
+        <label class="text-dark fs-14 mb-2"><strong>Opsi Tambahan</strong></label>
         @forelse ($models as $model)
         <div class="row opsi-field">
             <div class="col-md-5 mb-2">
@@ -17,10 +17,10 @@
                 <input type="text" class="form-control" name="nama[]" value="{{ $model->nama }}" required>
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Biaya</label>
+                <label class="form-label">Harga</label>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Rp.</span>
-                    <input type="number" name="biaya[]" class="form-control" value="{{ $model->biaya }}" required>
+                    <input type="number" name="harga[]" class="form-control" value="{{ $model->harga }}" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -34,10 +34,10 @@
                 <input type="text" class="form-control" name="nama[]" required>
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Biaya</label>
+                <label class="form-label">Harga</label>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Rp.</span>
-                    <input type="number" name="biaya[]" class="form-control" required>
+                    <input type="number" name="harga[]" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -63,10 +63,10 @@
         <input type="text" class="form-control" name="nama[]" required>
       </div>
       <div class="col-md-5 mb-2">
-        <label class="form-label">Biaya</label>
+        <label class="form-label">Harga</label>
         <div class="input-group mb-2">
             <span class="input-group-text">Rp.</span>
-            <input type="number" name="biaya[]" class="form-control" required>
+            <input type="number" name="harga[]" class="form-control" required>
         </div>
       </div>
       <div class="col-md-2 d-flex align-items-center">

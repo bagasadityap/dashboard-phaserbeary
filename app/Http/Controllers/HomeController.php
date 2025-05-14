@@ -51,84 +51,92 @@ class HomeController extends Controller
         return view('home.pemesanan_publikasi');
     }
 
-    public function tambahDokumen(Request $request, $id) {
+    public function tambahDokumenGedung(Request $request, $id) {
         $type = $request->query('type');
-        if ($type == 'gedung') {
+        $model = PesananGedung::findOrFail($id);
+        return view('home.tambah_dokumen_gedung', compact('model'));
+    }
+
+    public function tambahDokumenPublikasi(Request $request, $id) {
+        $model = PesananGedung::findOrFail($id);
+        return view('home.tambah_dokumen_publikasi', compact('model'));
+    }
+
+    public function storeDokumenGedung(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'suratPermohonanAcara' => 'nullable|file|mimes:pdf',
+                'buktiPembayaran' => 'nullable|file|mimes:jpg,jpeg,png,heic',
+                'dokumenOpsional' => 'nullable|file|mimes:pdf',
+                'dataPartisipan' => 'nullable|file|mimes:xls,xlsx',
+            ]);
+
+            $fileFields = [
+                'suratPermohonanAcara',
+                'buktiPembayaran',
+                'dokumenOpsional',
+                'dataPartisipan',
+            ];
+
             $model = PesananGedung::findOrFail($id);
-            return view('home.tambah_dokumen', compact('model', 'type'));
-        } else {
-            $model = PesananPublikasi::findOrFail($id);
-            return view('home.tambah_dokumen', compact('model', 'type'));
+
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+                    if ($model->$field && file_exists(storage_path('app/public/dokumen/gedung/' . $model->$field))) {
+                        Storage::disk('public')->delete($model->$field);
+                    }
+
+                    $file = $request->file($field);
+                    $filename = time() . '_' . Str::uuid() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('dokumen/gedung', $filename, 'public');
+                    $model->$field = $filePath;
+                }
+            }
+
+            $model->save();
+
+            return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         }
     }
 
-    public function storeDokumen(Request $request, $id)
+    public function storeDokumenPublikasi(Request $request, $id)
     {
         try {
-            if ($request->type == 'gedung') {
-                $request->validate([
-                    'type' => 'required',
-                    'surat_permohonan_acara' => 'nullable|file|mimes:pdf',
-                    'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,heic',
-                    'dokumen_opsional' => 'nullable|file|mimes:pdf',
-                    'data_partisipan' => 'nullable|file|mimes:xls,xlsx',
-                ]);
+            $request->validate([
+                'suratPermohonanAcara' => 'nullable|file|mimes:pdf',
+                'posterAcara' => 'nullable|string|max:255',
+                'buktiPembayaran' => 'nullable|file|mimes:jpg,jpeg,png,heic',
+                'dokumen' => 'nullable|file|mimes:pdf',
+            ]);
 
-                $fileFields = [
-                    'surat_permohonan_acara',
-                    'bukti_pembayaran',
-                    'dokumen_opsional',
-                    'data_partisipan',
-                ];
-
-                $model = PesananGedung::findOrFail($id);
-
-                foreach ($fileFields as $field) {
-                    if ($request->hasFile($field)) {
-                        if ($model->$field && file_exists(storage_path('app/public/dokumen/gedung/' . $model->$field))) {
-                            Storage::disk('public')->delete($model->$field);
-                        }
-
-                        $file = $request->file($field);
-                        $filename = time() . '_' . Str::uuid() . '_' . $file->getClientOriginalName();
-                        $filePath = $file->storeAs('dokumen/gedung', $filename, 'public');
-                        $model->$field = $filePath;
-                    }
-                }
-                $model->save();
-            } else {
-                $request->validate([
-                    'type' => 'required',
-                    'surat_permohonan_acara' => 'nullable|file|mimes:pdf',
-                    'poster_acara' => 'nullable|file',
-                    'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,heic',
-                    'dokumen' => 'nullable|file|mimes:pdf',
-                ]);
-
-                $fileFields = [
-                    'surat_permohonan_acara',
-                    'poster_acara',
-                    'bukti_pembayaran',
-                    'dokumen_opsional',
-                ];
-                $model = PesananPublikasi::findOrFail($id);
-
-                foreach ($fileFields as $field) {
-                    if ($request->hasFile($field)) {
-                        if ($model->$field && file_exists(storage_path('app/public/dokumen/publikasi/' . $model->$field))) {
-                            Storage::disk('public')->delete($model->$field);
-                        }
-
-                        $file = $request->file($field);
-                        $filename = time() . '_' . Str::uuid() . '_' . $file->getClientOriginalName();
-                        $filePath = $file->storeAs('dokumen/publikasi', $filename, 'public');
-                        $model->$field = $filePath;
-                    }
-                }
-                $model->save();
+            $fileFields = [
+                'suratPermohonanAcara',
+                'buktiPembayaran',
+                'dokumenOpsional',
+            ];
+            $model = PesananPublikasi::findOrFail($id);
+            if ($request->posterAcara) {
+                $model->posterAcara = $request->posterAcara;
             }
 
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+                    if ($model->$field && file_exists(storage_path('app/public/dokumen/publikasi/' . $model->$field))) {
+                        Storage::disk('public')->delete($model->$field);
+                    }
 
+                    $file = $request->file($field);
+                    $filename = time() . '_' . Str::uuid() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('dokumen/publikasi', $filename, 'public');
+                    $model->$field = $filePath;
+                }
+            }
+            $model->save();
 
             return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
         } catch (ValidationException $e) {
@@ -166,34 +174,18 @@ class HomeController extends Controller
         try {
             $model = PesananGedung::findOrFail($id2);
             $gedung = Gedung::findOrFail($id);
-            $model->gedungId = $gedung->id;
-            $model->biayaGedung = $gedung->harga;
-            $model->status = 2;
-            $model->save();
-            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $model->id)->sum('biaya');
-            $biayaGedung = $model->biayaGedung ?? 0;
-            $totalBiaya = $biayaGedung + $opsiTambahanTotal;
+            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $model->id)->sum('harga');
+            $totalHarga = $gedung->harga + $opsiTambahanTotal;
             $model->update([
-                'PPN' => $totalBiaya * 10/100,
-                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+                'gedungId' => $gedung->id,
+                'hargaGedung' => $gedung->harga,
+                'status' => 2,
+                'PPN' => $totalHarga * 10/100,
+                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
             ]);
             session()->flash('success', 'Gedung berhasil dipilih.');
-            return response()->json([
-                'success' => true,
-                'message' => 'Gedung berhasil dipilih.'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
-            ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat memilih gedung.'
-            ]);
         }
     }
 }

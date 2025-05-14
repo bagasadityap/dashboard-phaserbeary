@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nama');
-            $table->integer('biaya');
+            $table->decimal('harga', 15, 2);
             $table->foreignId('pesananId')->references('id')->on('pesanan_publikasis');
         });
     }

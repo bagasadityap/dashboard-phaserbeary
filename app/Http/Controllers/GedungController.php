@@ -65,8 +65,8 @@ class GedungController extends Controller
             $request->validate([
                 'nama' => 'required|string|max:255',
                 'lokasi' => 'required|string|max:255',
-                'kapasitas' => 'required|integer',
-                'harga' => 'required|integer',
+                'kapasitas' => 'required|numeric',
+                'harga' => 'required|numeric',
                 'deskripsi' => 'required|string',
                 'gambar' => 'required',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
@@ -110,8 +110,8 @@ class GedungController extends Controller
             $request->validate([
                 'nama' => 'required|string|max:255',
                 'lokasi' => 'required|string|max:255',
-                'kapasitas' => 'required|integer',
-                'harga' => 'required|integer',
+                'kapasitas' => 'required|numeric',
+                'harga' => 'required|numeric',
                 'deskripsi' => 'required|string',
                 'gambar' => 'nullable',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
@@ -155,7 +155,7 @@ class GedungController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
         } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan');
+            return redirect()->back()->with('error', 'Terjadi kesalahan.' . $e);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }

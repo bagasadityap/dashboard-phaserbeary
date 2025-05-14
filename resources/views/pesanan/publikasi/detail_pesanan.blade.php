@@ -86,7 +86,7 @@
                     </div>
                     @if ($model->isConfirmed && !$model->isPaid)
                         <div class="col my-2 d-flex">
-                            <button type="button" class="btn rounded-pill btn-primary" onclick="addOptional({{ $model->id }})">Tambah Biaya Pesanan</button>
+                            <button type="button" class="btn rounded-pill btn-primary" onclick="addOptional({{ $model->id }})">Tambah Harga Pesanan</button>
                         </div>
                     @endif
                 </div>
@@ -99,13 +99,13 @@
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
-                            <p class="text-body fw-semibold">Biaya Publikasi Acara :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaPublikasi ? $model->biayaPublikasi : '0' }}</p>
+                            <p class="text-body fw-semibold">Harga Publikasi Acara :</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->hargaPublikasi ? $model->hargaPublikasi : '0' }}</p>
                         </div>
                         @foreach ($opsiTambahan as $opsi)
                             <div class="d-flex justify-content-between">
                                 <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
-                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->harga ? $opsi->harga : '0' }}</p>
                             </div>
                         @endforeach
                         <div class="d-flex justify-content-between">
@@ -116,7 +116,7 @@
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
                 @if ($model->isConfirmed && !$model->isPaid)

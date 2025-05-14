@@ -23,7 +23,7 @@ class PesananGedungController extends Controller
             return DataTables::of($model)
                 ->addColumn('_', function($model) {
                     $html = '';
-                    if (auth()->user()->can('Gedung Read')) {
+                    if (auth()->user()->can('Pesanan Gedung Read')) {
                         $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
                     }
                     return $html;
@@ -54,7 +54,7 @@ class PesananGedungController extends Controller
 
             $dokumen = $request->file('suratPermohonanAcara');
             $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/publikasi', $filename, 'public');
+            $dokumenPath = $dokumen->storeAs('dokumen/Gedung', $filename, 'public');
 
             $model = PesananGedung::create([
                 'judul' => $request->judul,
@@ -74,11 +74,22 @@ class PesananGedungController extends Controller
         }
     }
 
+    public function view($id) {
+        $page = "Pesanan \ Gedung \ Detail";
+        $model = PesananGedung::findOrFail($id);
+        $selectedModel = PesananGedung::findOrFail($id);
+        $gedungs = Gedung::all();
+        $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
+        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+
+        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
+    }
+
     public function inputGedung(Request $request, $id)
     {
         try {
             $request->validate([
-                'gedungs' => 'required|array',
+                'gedungs' => 'nullable|array',
                 'gedungs.*' => 'exists:gedungs,id'
             ]);
 
@@ -148,18 +159,18 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function tambahOptional($id) {
+    public function tambahOpsional($id) {
         $model = PesananGedung::findOrFail($id);
         $models = OpsiTambahanPesananGedung::where('pesananId', $model->id)->get();
 
         return view('pesanan.gedung.tambah_opsional_pesanan', compact('model', 'models'));
     }
 
-    public function storeOptional(Request $request, $id) {
+    public function storeOpsional(Request $request, $id) {
         try {
             $request->validate([
                 'nama' => 'required|array',
-                'biaya' => 'required|array'
+                'harga' => 'required|array'
             ]);
 
             $pesanan = PesananGedung::findOrFail($id);
@@ -168,40 +179,29 @@ class PesananGedungController extends Controller
             for ($i=0; $i < count($request->nama); $i++) {
                 OpsiTambahanPesananGedung::create([
                     'nama' => $request->nama[$i],
-                    'biaya' => $request->biaya[$i],
+                    'harga' => $request->harga[$i],
                     'pesananId' => $pesanan->id,
                 ]);
             }
 
-            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('biaya');
-            $biayaGedung = $pesanan->biayaGedung ?? 0;
-            $totalBiaya = $biayaGedung + $opsiTambahanTotal;
+            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('harga');
+            $hargaGedung = $pesanan->hargaGedung ?? 0;
+            $totalHarga = $hargaGedung + $opsiTambahanTotal;
             $pesanan->update([
-                'PPN' => $totalBiaya * 10/100,
-                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+                'PPN' => $totalHarga * 10/100,
+                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan.');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.' . $e);
         }
     }
 
-    public function view($id) {
-        $page = "Pesanan \ Gedung \ Detail";
-        $model = PesananGedung::findOrFail($id);
-        $selectedModel = PesananGedung::findOrFail($id);
-        $gedungs = Gedung::all();
-        $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
-        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
-
-        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
-    }
-
     public function downloadExcel() {
-        
+
     }
 
     public function downloadInvoice($id)  {

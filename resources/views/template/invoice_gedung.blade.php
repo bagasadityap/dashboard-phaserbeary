@@ -155,20 +155,20 @@
                 <tbody>
                     <tr>
                         <td class="text-start">Biaya Gedung {{ $model->gedung->nama }}</td>
-                        <td class="text-end">{{ $model->biayaGedung }}</td>
+                        <td class="text-end">{{ $model->hargaGedung }}</td>
                     </tr>
                     @foreach ($tambahanOpsional as $opsi)
                         <tr>
                             <td class="text-start">{{ $opsi->nama }}</td>
-                            <td class="text-end">{{ $opsi->biaya }}</td>
+                            <td class="text-end">{{ $opsi->harga }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td class="text-start"><strong>Total Harga</strong></td>
                         @php
-                            $harga = $model->biayaGedung;
+                            $harga = $model->hargaGedung;
                             foreach ($tambahanOpsional as $opsi) {
-                                $harga += $opsi->biaya;
+                                $harga += $opsi->harga;
                             }
                         @endphp
                         <td class="text-end"><strong>Rp. {{ $harga }}</strong></td>
@@ -181,7 +181,7 @@
                 <tfoot>
                     <tr>
                         <td class="text-start"><strong>Grand Total</strong></td>
-                        <td><strong>Rp. {{ $model->totalBiaya }}</strong></td>
+                        <td><strong>Rp. {{ $model->totalHarga }}</strong></td>
                     </tr>
                 </tfoot>
             </table>
@@ -189,7 +189,7 @@
 
         <div class="amount">
             @include('template.fungsi_terbilang')
-            <p>Terbilang: {{ terbilang($model->totalBiaya) }} Rupiah</p>
+            <p>Terbilang: {{ terbilang($model->totalHarga) }} Rupiah</p>
         </div>
 
         <div class="footer">

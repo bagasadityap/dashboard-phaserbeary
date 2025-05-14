@@ -39,7 +39,6 @@
                         @else
                             <h4 class="mb-0 fw-bold text-truncate">\ {{ $page }} </h4>
                         @endif
-                        <!-- <h6 class="mb-0 fw-normal text-muted text-truncate fs-14">Here's your overview this week.</h6> -->
                     </li>
                 </ul>
                 <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
@@ -69,23 +68,14 @@
                         </script>
                     </li>
 
-                    {{-- <li class="topbar-item">
-                        <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
-                            <i class="icofont-sun dark-mode"></i>
-                            <i class="icofont-moon light-mode"></i>
-                        </a>
-                    </li> --}}
-
                     <li class="dropdown topbar-item">
                         <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
                             aria-haspopup="false" aria-expanded="false">
-                            {{-- <img src="" alt="" class="thumb-lg rounded-circle"> --}}
                             <i class="las la-user thumb-md rounded-circle"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end py-0">
                             <div class="d-flex align-items-center dropdown-item py-2 bg-secondary-subtle">
                                 <div class="flex-shrink-0">
-                                    {{-- <img src="" alt="" class="thumb-md rounded-circle"> --}}
                                     <i class="las la-user thumb-md rounded-circle"></i>
                                 </div>
                                 <div class="flex-grow-1 ms-2 text-truncate align-self-center">
@@ -114,10 +104,6 @@
                 <span>
                     <svg width="36px" height="36px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#22c55e"><path d="M7 9.01L7.01 8.99889" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 9.01L11.01 8.99889" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 13.01L7.01 12.9989" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 13.01L11.01 12.9989" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 17.01L7.01 16.9989" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11 17.01L11.01 16.9989" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 21H3.6C3.26863 21 3 20.7314 3 20.4V5.6C3 5.26863 3.26863 5 3.6 5H9V3.6C9 3.26863 9.26863 3 9.6 3H14.4C14.7314 3 15 3.26863 15 3.6V9M15 21H20.4C20.7314 21 21 20.7314 21 20.4V9.6C21 9.26863 20.7314 9 20.4 9H15M15 21V17M15 9V13M15 13H17M15 13V17M15 17H17" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </span>
-                {{-- <span>
-                    <img src="{{ asset('logo/stock-light.png') }}" alt="logo-large" class="logo-lg logo-light" style="max-width: 96px">
-                    <img src="{{ asset('logo/stock-dark.png') }}" alt="logo-large" class="logo-lg logo-dark" style="max-width: 96px">
-                </span> --}}
             </a>
         </div>
 
@@ -133,57 +119,57 @@
                             </a>
                         </li>
                         @endcan
-                        {{-- @can('Dashboard') --}}
+                        @can('Gedung')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('gedung.index') }}">
                                 <i class="iconoir-building menu-icon"></i>
                                 <span>Gedung</span>
                             </a>
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
                         <li class="nav-item">
-                            {{-- @can('Stock Control') --}}
+                            @can('Pesanan')
                             <a class="nav-link" href="#sidebarpesanan" data-bs-toggle="collapse" role="button"
                                 aria-expanded="false" aria-controls="sidebarPesanan">
                                 <i class="iconoir-data-transfer-both menu-icon"></i>
                                 <span>Pesanan</span>
                             </a>
-                            {{-- @endcan --}}
+                            @endcan
                             <div class="collapse " id="sidebarpesanan">
                                 <ul class="nav flex-column">
-                                    {{-- @can('Input Part-Stock Control') --}}
+                                    @can('Pesanan Gedung-Pesanan')
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('pesanan.gedung.index') }}">Gedung</a>
                                     </li>
-                                    {{-- @endcan --}}
-                                    {{-- @can('Output Part-Stock Control') --}}
+                                    @endcan
+                                    @can('Pesanan Publikasi Acara-Pesanan')
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('pesanan.publikasi.index') }}">Publikasi Acara</a>
-                                    {{-- @endcan --}}
+                                    @endcan
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
-                            {{-- @can('Configuration') --}}
+                            @can('Configuration')
                             <a class="nav-link" href="#sidebarConfiguration" data-bs-toggle="collapse" role="button"
                                 aria-expanded="false" aria-controls="sidebarConfiguration">
                                 <i class="iconoir-settings menu-icon"></i>
                                 <span>Configuration</span>
                             </a>
-                            {{-- @endcan --}}
+                            @endcan
                             <div class="collapse " id="sidebarConfiguration">
                                 <ul class="nav flex-column">
-                                    {{-- @can('User-Configuration') --}}
+                                    @can('User-Configuration')
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('configuration.user.index') }}">User</a>
                                     </li>
-                                    {{-- @endcan --}}
-                                    {{-- @can('Role-Configuration') --}}
+                                    @endcan
+                                    @can('Role-Configuration')
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('configuration.role.index') }}">Role & Permission</a>
                                     </li>
-                                    {{-- @endcan --}}
+                                    @endcan
                                 </ul>
                             </div>
                         </li>

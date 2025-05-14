@@ -8,10 +8,10 @@
                 <input type="text" class="form-control" name="nama[]" value="{{ $opsi->nama }}" required>
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Biaya</label>
+                <label class="form-label">Harga</label>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Rp.</span>
-                    <input type="number" name="biaya[]" class="form-control" value="{{ $opsi->biaya }}" required>
+                    <input type="number" name="harga[]" class="form-control" value="{{ $opsi->harga }}" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -25,10 +25,10 @@
                 <input type="text" class="form-control" name="nama[]" required>
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Biaya</label>
+                <label class="form-label">Harga</label>
                 <div class="input-group mb-2">
                     <span class="input-group-text">Rp.</span>
-                    <input type="number" name="biaya[]" class="form-control" required>
+                    <input type="number" name="harga[]" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -54,10 +54,10 @@
         <input type="text" class="form-control" name="nama[]" required>
       </div>
       <div class="col-md-5 mb-2">
-        <label class="form-label">Biaya</label>
+        <label class="form-label">Harga</label>
         <div class="input-group mb-2">
             <span class="input-group-text">Rp.</span>
-            <input type="number" name="biaya[]" class="form-control" required>
+            <input type="number" name="harga[]" class="form-control" required>
         </div>
       </div>
       <div class="col-md-2 d-flex align-items-center">

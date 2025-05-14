@@ -105,13 +105,13 @@
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
-                            <p class="text-body fw-semibold">Biaya Gedung :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaGedung ? $model->biayaGedung : '0' }}</p>
+                            <p class="text-body fw-semibold">Harga Gedung :</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->hargaGedung ? $model->hargaGedung : '0' }}</p>
                         </div>
                         @foreach ($opsiTambahan as $opsi)
                             <div class="d-flex justify-content-between">
                                 <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
-                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->harga ? $opsi->harga : '0' }}</p>
                             </div>
                         @endforeach
                         <div class="d-flex justify-content-between">
@@ -122,7 +122,7 @@
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
                 <hr class="hr mb-0">
@@ -259,7 +259,7 @@
 
     function tambahDokumen(id) {
         $.ajax({
-            url: '{{ route('home.tambah-dokumen') }}/' + id + '?type=gedung',
+            url: '{{ route('home.tambah-dokumen-gedung') }}/' + id,
             success: function(response) {
                 bootbox.dialog({
                     title: 'Tambah Dokumen',

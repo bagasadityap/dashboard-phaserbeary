@@ -98,13 +98,13 @@
                 <div class="mb-2">
                     <div>
                         <div class="d-flex justify-content-between">
-                            <p class="text-body fw-semibold">Biaya Publikasi Acara :</p>
-                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->biayaPublikasi ? $model->biayaPublikasi : '0' }}</p>
+                            <p class="text-body fw-semibold">Harga Publikasi Acara :</p>
+                            <p class="text-body-emphasis fw-semibold">Rp. {{ $model->hargaPublikasi ? $model->hargaPublikasi : '0' }}</p>
                         </div>
                         @foreach ($opsiTambahan as $opsi)
                             <div class="d-flex justify-content-between">
                                 <p class="text-body fw-semibold">{{ $opsi->nama }} :</p>
-                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->biaya ? $opsi->biaya : '0' }}</p>
+                                <p class="text-body-emphasis fw-semibold">Rp. {{ $opsi->harga ? $opsi->harga : '0' }}</p>
                             </div>
                         @endforeach
                         <div class="d-flex justify-content-between">
@@ -115,7 +115,7 @@
                     <hr class="hr-dashed mt-0">
                     <div class="d-flex justify-content-between">
                         <h5 class="mb-0">Total :</h5>
-                        <h5 class="mb-0">Rp. {{ $model->totalBiaya ? $model->totalBiaya : '0' }}</h5>
+                        <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
                 <hr class="hr mb-0">
@@ -217,8 +217,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->posterAcara
-                                ? '<a href="' . asset('storage/' . $model->posterAcara) . '" target="_blank">Poster</a>'
-                                : 'Poster' !!}
+                                ? '<a href="' . $model->posterAcara . '" target="_blank">Poster Acara</a>'
+                                : 'Poster Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -247,7 +247,7 @@
 <script>
     function tambahDokumen(id) {
         $.ajax({
-            url: '{{ route('home.tambah-dokumen') }}/' + id + '?type=publikasi',
+            url: '{{ route('home.tambah-dokumen-publikasi') }}/' + id,
             success: function(response) {
                 bootbox.dialog({
                     title: 'Tambah Dokumen',

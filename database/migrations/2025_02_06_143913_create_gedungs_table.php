@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('lokasi');
             $table->integer('kapasitas');
-            $table->integer('harga');
+            $table->decimal('harga', 15, 2);
             $table->text('deskripsi');
             $table->json('gambar');
             $table->string('gambarVR');

@@ -8,7 +8,7 @@ class OpsiTambahanPesananPublikasi extends Model
 {
     protected $fillable = [
         'nama',
-        'biaya',
+        'harga',
         'pesananId',
     ];
 

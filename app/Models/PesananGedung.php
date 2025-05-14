@@ -19,15 +19,15 @@ class PesananGedung extends Model
         'buktiPembayaran',
         'dataPartisipan',
         'catatan',
-        'userId',
-        'gedungId',
-        'biayaGedung',
+        'hargaGedung',
         'PPN',
-        'totalBiaya',
+        'totalHarga',
         'isConfirmed',
         'isPaid',
         'invoice',
         'status',
+        'userId',
+        'gedungId',
     ];
 
     public static function pesananSaya()

@@ -20,7 +20,7 @@ class AuthController extends Controller
                 'password' => 'required',
             ]);
             if (Auth::attempt($validatedData)) {
-                if (auth()->user()->getRoleNames()->first() != 'Customer') {
+                if (auth()->user()->getRoleNames()->first() != 'Customer') {    
                     return redirect('/dashboard');
                 } else {
                     return redirect('/home');

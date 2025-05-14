@@ -23,7 +23,7 @@ class PesananPublikasiController extends Controller
             return DataTables::of($model)
                 ->addColumn('_', function($model) {
                     $html = '';
-                    if (auth()->user()->can('Gedung Read')) {
+                    if (auth()->user()->can('Pesanan Publikasi Acara Read')) {
                         $html .= '<button href="" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center" onclick="view(\'' . $model->id . '\')"><i class="iconoir-eye fs-14"></i></button>';
                     }
                     return $html;
@@ -59,7 +59,7 @@ class PesananPublikasiController extends Controller
 
             $dokumen = $request->file('suratPermohonanAcara');
             $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/gedung', $filename, 'public');
+            $dokumenPath = $dokumen->storeAs('dokumen/publikasi', $filename, 'public');
 
             $model = PesananPublikasi::create([
                 'judul' => $request->judul,
@@ -133,42 +133,42 @@ class PesananPublikasiController extends Controller
         }
     }
 
-    public function tambahBiayaPesanan($id) {
+    public function tambahHargaPesanan($id) {
         $model = PesananPublikasi::findOrFail($id);
         $models = OpsiTambahanPesananPublikasi::where('pesananId', $model->id)->get();
 
         return view('pesanan.publikasi.tambah_opsional_pesanan', compact('model', 'models'));
     }
 
-    public function storeBiayaPesanan(Request $request, $id) {
+    public function storeHargaPesanan(Request $request, $id) {
         try {
             $request->validate([
-                'biayaPublikasi' => 'required|int',
+                'hargaPublikasi' => 'required|int',
                 'nama' => 'array',
-                'biaya' => 'array'
+                'harga' => 'array'
             ]);
 
             $pesanan = PesananPublikasi::findOrFail($id);
-            $pesanan->biayaPublikasi = $request->biayaPublikasi;
+            $pesanan->hargaPublikasi = $request->hargaPublikasi;
             $pesanan->save();
 
             $oldOption = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
 
-            if ($request->nama && $request->biaya) {
+            if ($request->nama && $request->harga) {
                 for ($i=0; $i < count($request->nama); $i++) {
                     OpsiTambahanPesananPublikasi::create([
                         'nama' => $request->nama[$i],
-                        'biaya' => $request->biaya[$i],
+                        'harga' => $request->harga[$i],
                         'pesananId' => $pesanan->id,
                     ]);
                 }
             }
 
-            $opsiTambahanTotal = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->sum('biaya');
-            $totalBiaya = $pesanan->biayaPublikasi + $opsiTambahanTotal;
+            $opsiTambahanTotal = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->sum('harga');
+            $totalHarga = $pesanan->hargaPublikasi + $opsiTambahanTotal;
             $pesanan->update([
-                'PPN' => $totalBiaya * 10/100,
-                'totalBiaya' => $totalBiaya + ($totalBiaya * 10/100)
+                'PPN' => $totalHarga * 10/100,
+                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan.');

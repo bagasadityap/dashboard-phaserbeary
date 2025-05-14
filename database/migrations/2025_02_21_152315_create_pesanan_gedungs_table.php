@@ -22,15 +22,15 @@ return new class extends Migration
             $table->string('buktiPembayaran')->nullable();
             $table->string('dataPartisipan')->nullable();
             $table->text('catatan')->nullable();
-            $table->foreignId('userId')->references('id')->on('users');
-            $table->foreignId('gedungId')->nullable()->references('id')->on('gedungs')->nullOnDelete();
-            $table->integer('biayaGedung')->nullable();
-            $table->integer('PPN')->nullable();
-            $table->integer('totalBiaya')->nullable();
+            $table->decimal('hargaGedung', 15, 2)->nullable();
+            $table->decimal('PPN', 15, 2)->nullable();
+            $table->decimal('totalHarga', 15, 2)->nullable();
             $table->boolean('isConfirmed')->default(0);
             $table->boolean('isPaid')->default(0);
             $table->string('invoice')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->foreignId('userId')->references('id')->on('users');
+            $table->foreignId('gedungId')->nullable()->references('id')->on('gedungs')->nullOnDelete();
             $table->timestamps();
         });
 

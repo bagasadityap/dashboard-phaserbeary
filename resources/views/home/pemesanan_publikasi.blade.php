@@ -45,8 +45,16 @@
                     </label>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="button" class="btn btn-danger">Cancel</button>
+                <button type="button" onclick="home()" class="btn btn-danger">Cancel</button>
             </form>
         </div>
 </div>
 @endsection
+
+@push('script')
+<script>
+    function home() {
+        window.location.href = '{{ route('home.index') }}';
+    }
+</script>
+@endpush

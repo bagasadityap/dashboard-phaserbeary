@@ -15,14 +15,14 @@ class PesananPublikasi extends Model
         'buktiPembayran',
         'posterAcara',
         'catatan',
-        'userId',
-        'biayaGedung',
+        'hargaGedung',
         'PPN',
-        'totalBiaya',
+        'totalHarga',
         'isConfirmed',
         'isPaid',
         'invoice',
         'status',
+        'userId',
     ];
 
     public static function pesananSaya()
