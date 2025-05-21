@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('dokumenOpsional')->nullable();
             $table->string('buktiPembayaran')->nullable();
             $table->string('posterAcara')->nullable();
+            $table->text('deskripsiAcara');
             $table->text('catatan')->nullable();
+            $table->text('alasanPenolakan')->nullable();
             $table->decimal('hargaPublikasi', 15, 2)->nullable();
             $table->decimal('PPN', 15, 2)->nullable();
             $table->decimal('totalHarga', 15, 2)->nullable();

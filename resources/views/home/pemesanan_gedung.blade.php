@@ -40,6 +40,10 @@
                     </div>
                 </div>
                 <div class="mb-3">
+                    <label for="deskripsiAcara" class="form-label">Deskripsi Event (*mohon jelaskan secara singkat event yang akan diselenggarakan)</label>
+                    <textarea class="form-control" rows="5" name="deskripsiAcara" id="deskripsiAcara"></textarea>
+                </div>
+                <div class="mb-3">
                     <label for="catatan" class="form-label">Catatan Pesanan</label>
                     <textarea class="form-control" rows="5" name="catatan" id="catatan"></textarea>
                 </div>

@@ -50,6 +50,7 @@ class PesananGedungController extends Controller
                 'noHP' => 'required|string|max:255',
                 'suratPermohonanAcara' => 'required|file',
                 'catatan' => 'nullable|string',
+                'deskripsiAcara' => 'nullable|string',
             ]);
 
             $dokumen = $request->file('suratPermohonanAcara');
@@ -63,6 +64,7 @@ class PesananGedungController extends Controller
                 'noHP' => $request->noHP,
                 'suratPermohonanAcara' => $dokumenPath,
                 'catatan' => $request->catatan,
+                'deskripsiAcara' => $request->deskripsiAcara,
                 'userId' => auth()->user()->id,
             ]);
 
@@ -112,17 +114,12 @@ class PesananGedungController extends Controller
                 $model->isConfirmed = 1;
             } else {
                 $model->status = 4;
+                $model->alasanPenolakan = $request->alasanPenolakan;
             }
             $model->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
             ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');
@@ -133,22 +130,21 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function confirmPayment($id) {
+    public function confirmPayment(Request $request, $id) {
         try {
             $model = PesananGedung::findOrFail($id);
-            $model->isPaid = 1;
-            $model->status = 3;
+            if ($request->status == 'konfirmasi') {
+                $model->isPaid = 1;
+                $model->status = 3;
+            } else {
+                $model->status = 5;
+                $model->alasanPenolakan = $request->alasanPenolakan;
+            }
             $model->save();
             session()->flash('success', 'Status pesanan berhasil diubah.');
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
             ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');

@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="deskripsi" class="form-label">Deskripsi</label>
+                        <label for="deskripsi" class="form-label" required>Deskripsi</label>
                         <textarea class="form-control" name="deskripsi" rows="5" id="deskripsi"></textarea>
                     </div>
                     <div class="mb-3">
@@ -36,8 +36,13 @@
                     <div id="preview-container" class="d-flex flex-wrap gap-2"></div>
                     <div class="mb-3">
                         <label class="form-label" for="gambarVR">Gambar VR</label>
-                        <input type="file" class="form-control" name="gambarVR" id="gambarVR" accept=".jpg, .jpeg, .png">
+                        <input type="file" class="form-control" name="gambarVR" id="gambarVR" accept=".jpg, .jpeg, .png" required>
                     </div>
+                    <hr>
+                    <label class="form-label" for="gambarVR">Fasilitas Gedung</label>
+                    <div class="opsi-container mb-2" id="opsi-container">
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="tambahOpsi()">+ Tambah Opsi</button>
                 </div>
             </div>
         </div>
@@ -48,7 +53,58 @@
     </div>
 </form>
 
+<script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
 <script>
+
+    async function check360Image(file) {
+        const metadata = await file.arrayBuffer();
+        const dataView = new DataView(metadata);
+        const str = new TextDecoder("utf-8").decode(dataView);
+        console.log(str);
+        return str.includes("ProjectionType=equirectangular");
+    };
+
+    $(document).ready(function () {
+        $('#gambarVR').change(async function(e) {
+            const povFile = e.target.files[0];
+            const reader = new FileReader();
+
+            const tags = await ExifReader.load(povFile)
+            console.log(tags);
+            if ((typeof tags['ProjectionType'] !== 'undefined' && tags['ProjectionType'] !==
+                    null) && tags['ProjectionType'].value === 'equirectangular') {
+                selectedBooth.gambarVR = povFile;
+                console.log(selectedBooth);
+            } else {
+                $('#gambarVR').val('');
+                alert('File yang Anda unggah bukan gambar 360 derajat. Mohon unggah file yang sesuai.');
+            }
+        });
+    });
+
+    function tambahOpsi() {
+        const container = document.getElementById('opsi-container');
+
+        const newField = document.createElement('div');
+        newField.classList.add('row', 'opsi-field');
+        newField.innerHTML = `
+        <div class="col-md-8">
+            <label class="form-label">Fasilitas</label>
+            <input type="text" class="form-control" name="fasilitas[]" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-danger" onclick="hapusOpsi(this)">-</button>
+        </div>
+        `;
+
+        container.appendChild(newField);
+    }
+
+    function hapusOpsi(button) {
+        const row = button.closest('.opsi-field');
+        row.remove();
+    }
+
     document.getElementById('gambar').addEventListener('change', function(event) {
         let previewContainer = document.getElementById('preview-container');
         previewContainer.innerHTML = '';

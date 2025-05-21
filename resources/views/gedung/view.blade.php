@@ -55,6 +55,18 @@
                                     </td>
                                     <td class="align-middle fw-bold">{{ $model->lokasi }}</td>
                                 </tr>
+                                <tr>
+                                    <td class="d-flex align-items-center" style="width: 8rem">
+                                        <p class="mb-0 d-flex align-items-center">
+                                            <i class="iconoir-map-pin me-1" style="font-size: 1.8rem;"></i> Fasilitas
+                                        </p>
+                                    </td>
+                                    <td class="align-middle fw-bold">
+                                        @foreach (json_decode($model->fasilitas, true) as $f)
+                                            <li>{{ $f }}</li>
+                                        @endforeach
+                                    </td>
+                                </tr>
                             </table>
                             <button onclick="view_360({{ $model->id }})" class="btn btn-outline-primary px-2 me-1 d-inline-flex align-items-center"><i class="iconoir-view-360 fs-20 me-1"></i>Lihat Tampilan 360</button>
                         </div>

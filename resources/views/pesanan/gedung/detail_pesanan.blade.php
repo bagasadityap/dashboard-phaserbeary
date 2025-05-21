@@ -59,6 +59,11 @@
                                     <span class="text-danger fw-semibold">DITOLAK</span>
                                 </div>
                                 @break
+                            @case(5)
+                                <div class="bg-danger-subtle p-2 border-dashed border-danger rounded">
+                                    <span class="text-danger fw-semibold">PEMBAYARAN DITOLAK</span>
+                                </div>
+                                @break
                         @endswitch
                     </div>
                 </div>
@@ -72,7 +77,7 @@
                                     <i class="iconoir-building me-1 fs-20"></i>
                                     <p class="d-inline-block align-middle mb-0">
                                         <span class="d-block align-middle mb-0 product-name text-body fs-14 fw-semibold">{{ $model->judul }}</span>
-                                        @if (!$model->gedung_id)
+                                        @if (!$model->gedungId)
                                             <span class="text-danger font-13">Belum ada gedung yang dipilih</span>
                                         @else
                                             <span class="text-muted font-13">{{ $model->gedung->nama }}</span>
@@ -84,12 +89,22 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="bg-white-subtle p-2 border border-secondary rounded my-2">
+                        {{-- <span class="text-secondary fw-semibold">Deskripsi Acara : </span><br> --}}
+                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->deskripsiAcara)) !!}</span>
+                    </div>
                 </div>
                 <div>
                     <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded my-2">
                         <span class="text-secondary fw-semibold">Catatan : </span><br>
-                        <span class="text-secondary fw-normal text-break">{{ $model->catatan }}</span>
+                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->catatan)) !!}</span>
                     </div>
+                    @if ($model->status == 4 || $model->status == 5)
+                        <div class="bg-danger-subtle p-2 border-dashed border-danger rounded my-2">
+                            <span class="text-danger fw-semibold">Alasan Penolakan : </span><br>
+                            <span class="text-danger fw-normal text-break">{{ $model->alasanPenolakan }}</span>
+                        </div>
+                    @endif
                     @if ($model->isConfirmed && !$model->isPaid)
                         <div class="col my-2 d-flex">
                             <button type="button" class="btn rounded-pill btn-primary" onclick="addOptional({{ $model->id }})">Tambah Opsional Pesanan</button>
@@ -101,7 +116,7 @@
                     <div class="col my-2 d-flex">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirm({{ $model->id }})">Konfirmasi Pesanan</button>
                     </div>
-                @elseif(!$model->gedung_id)
+                @elseif(!$model->gedungId)
                     <form action="{{ route('pesanan.gedung.inputGedung', ['id' => $model->id]) }}" method="POST" class="row mb-4">
                         @csrf
                         <label class="mb-2 text-dark fw-medium">Pilih Gedung</label>
@@ -143,7 +158,7 @@
                         <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
-                @if ($model->gedung_id && !$model->isPaid)
+                @if ($model->gedungId && !$model->isPaid)
                     <div class="col mt-3 d-flex justify-content-end">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})">Konfirmasi Pembayaran</button>
                     </div>
@@ -194,28 +209,70 @@
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->surat_permohonan_acara
-                                ? '<a href="' . asset('storage/' . $model->surat_permohonan_acara) . '" target="_blank">Surat Permohonan Acara</a>'
+                                ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
                                 : 'Surat Permohonan Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->bukti_pembayaran
-                                ? '<a href="' . asset('storage/' . $model->bukti_pembayaran) . '" target="_blank">Bukti Pembayaran</a>'
+                                ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
                                 : 'Bukti Pembayaran' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->dokumen_opsional
-                                ? '<a href="' . asset('storage/' . $model->dokumen_opsional) . '" target="_blank">Dokumen (Opsional)</a>'
+                                ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
                                 : 'Dokumen (Opsional)' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->data_partisipan
-                                ? '<a href="' . asset('storage/' . $model->data_partisipan) . '" target="_blank">Data Partisipan</a>'
+                                ? '<a href="' . asset('storage/' . $model->dataPartisipan) . '" target="_blank">Data Partisipan</a>'
+                                : 'Data Partisipan' !!}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title">Dokumen</h4>
+                        <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0" onclick="tambahDokumen({{ $model->id }})"><i class="iconoir-plus fs-18"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->surat_permohonan_acara
+                                ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
+                                : 'Surat Permohonan Acara' !!}
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->bukti_pembayaran
+                                ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
+                                : 'Bukti Pembayaran' !!}
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->dokumen_opsional
+                                ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
+                                : 'Dokumen (Opsional)' !!}
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                            {!! $model->data_partisipan
+                                ? '<a href="' . asset('storage/' . $model->dataPartisipan) . '" target="_blank">Data Partisipan</a>'
                                 : 'Data Partisipan' !!}
                         </p>
                     </div>
@@ -236,7 +293,13 @@
     function confirm(id) {
         bootbox.dialog({
             title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin untuk melakukan konfirmasi/menolak pesanan ini?',
+            message: `
+                <p>Apakah Anda yakin ingin mengonfirmasi/menolak pesanan ini?</p>
+                <div class="form-group">
+                    <label for="alasanPenolakan">Alasan Penolakan (hanya untuk penolakan pesanan)</label>
+                    <input type="text" id="alasanPenolakan" name="alasanPenolakan" class="form-control">
+                </div>
+            `,
             buttons: {
                 confirm: {
                     label: 'Konfirmasi',
@@ -249,14 +312,15 @@
                     label: 'Tolak',
                     className: 'btn-danger',
                     callback: function() {
-                        sendStatus(id, 'tolak');
+                        const alasan = document.getElementById('alasanPenolakan').value;
+                        sendStatus(id, 'tolak', alasan);
                     },
                 },
             },
         });
     }
 
-    function sendStatus(id, status) {
+    function sendStatus(id, status, alasan) {
         let url = "{{ route('pesanan.gedung.confirm') }}/" + id;
         console.log("Generated URL:", url);
 
@@ -265,7 +329,8 @@
             method: "POST",
             data: {
                 _token: '{{ csrf_token() }}',
-                status: status
+                status: status,
+                alasanPenolakan: alasan
             },
             success: function(response) {
                 console.log("Response:", response);
@@ -279,36 +344,32 @@
     }
 
     function confirmPayment(id) {
-        bootbox.confirm({
+        bootbox.dialog({
             title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin mengonfirmasi pembayaran pesanan ini?',
+            message: `
+                <p>Apakah Anda yakin ingin mengonfirmasi/menolak pembayaran pesanan ini?</p>
+                <div class="form-group">
+                    <label for="alasanPenolakan">Alasan Penolakan (hanya untuk penolakan pesanan)</label>
+                    <input type="text" id="alasanPenolakan" name="alasanPenolakan" class="form-control">
+                </div>
+            `,
             buttons: {
                 confirm: {
                     label: 'Konfirmasi',
-                    className: 'btn-success'
+                    className: 'btn-success',
+                    callback: function() {
+                        sendStatus(id, 'konfirmasi');
+                    }
                 },
-                cancel: {
-                    label: 'Batal',
-                    className: 'btn-secondary'
-                }
+                reject: {
+                    label: 'Tolak',
+                    className: 'btn-danger',
+                    callback: function() {
+                        const alasan = document.getElementById('alasanPenolakan').value;
+                        sendStatus(id, 'tolak', alasan);
+                    },
+                },
             },
-            callback: function(result) {
-                if (result) {
-                    $.ajax({
-                        url: '{{ route('pesanan.gedung.confirm-payment') }}/' + id,
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            window.location.reload();
-                            bootbox.hideAll();
-                        },
-                        error: function() {
-                            toastr.error('Terjadi kesalahan.');
-                        }
-                    });
-                }
-            }
         });
     }
 

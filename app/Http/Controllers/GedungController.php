@@ -68,16 +68,22 @@ class GedungController extends Controller
                 'kapasitas' => 'required|numeric',
                 'harga' => 'required|numeric',
                 'deskripsi' => 'required|string',
-                'gambar' => 'required',
-                'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
+                'gambar.*' => 'file|mimes:jpg,jpeg,png',
                 'gambarVR' => 'required|file|mimes:jpg,jpeg,png',
+                'fasilitas' => 'array',
             ]);
 
             $gambarPaths = [];
-            foreach ($request->file('gambar') as $file) {
+            $fasilitas = [];
+            foreach ((array)$request->file('gambar') as $file) {
                 $gambarPaths[] = $file->store('gedung', 'public');
             }
+
             $gambarVrPath = $request->file('gambarVR')->store('gedung', 'public');
+
+            foreach ((array)$request->fasilitas as $f) {
+                $fasilitas[] = $f;
+            }
 
             $model = Gedung::create([
                 'nama' => $request->nama,
@@ -87,14 +93,13 @@ class GedungController extends Controller
                 'deskripsi' => $request->deskripsi,
                 'gambar' => json_encode($gambarPaths),
                 'gambarVR' => $gambarVrPath,
+                'fasilitas' => json_encode($fasilitas),
             ]);
 
             $model->save();
 
             return redirect()->back()->with('success', 'Data berhasil ditambahkan');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }

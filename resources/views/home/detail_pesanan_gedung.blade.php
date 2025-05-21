@@ -217,28 +217,28 @@
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->surat_permohonan_acara
-                                ? '<a href="' . asset('storage/' . $model->surat_permohonan_acara) . '" target="_blank">Surat Permohonan Acara</a>'
+                                ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
                                 : 'Surat Permohonan Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->bukti_pembayaran
-                                ? '<a href="' . asset('storage/' . $model->bukti_pembayaran) . '" target="_blank">Bukti Pembayaran</a>'
+                                ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
                                 : 'Bukti Pembayaran' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->dokumen_opsional
-                                ? '<a href="' . asset('storage/' . $model->dokumen_opsional) . '" target="_blank">Dokumen (Opsional)</a>'
+                                ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
                                 : 'Dokumen (Opsional)' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->data_partisipan
-                                ? '<a href="' . asset('storage/' . $model->data_partisipan) . '" target="_blank">Data Partisipan</a>'
+                                ? '<a href="' . asset('storage/' . $model->dataPartisipan) . '" target="_blank">Data Partisipan</a>'
                                 : 'Data Partisipan' !!}
                         </p>
                     </div>

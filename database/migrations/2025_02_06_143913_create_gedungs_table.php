@@ -18,8 +18,9 @@ return new class extends Migration
             $table->integer('kapasitas');
             $table->decimal('harga', 15, 2);
             $table->text('deskripsi');
-            $table->json('gambar');
+            $table->json('gambar')->nullable();
             $table->string('gambarVR');
+            $table->json('fasilitas')->nullable();
             $table->timestamps();
         });
     }
