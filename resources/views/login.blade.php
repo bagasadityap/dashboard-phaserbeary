@@ -42,12 +42,12 @@
                                     <form class="my-4" action="{{ route('auth.login') }}">
                                         <div class="form-group mb-2">
                                             <label class="form-label" for="username">Username</label>
-                                            <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username">
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="form-label" for="password">Password</label>
-                                            <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan password">
+                                            <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan password" required>
                                         </div>
                                         <div class="form-group mb-0 row">
                                             <div class="col-12">

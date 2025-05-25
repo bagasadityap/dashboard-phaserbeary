@@ -89,12 +89,12 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="bg-white-subtle p-2 border border-secondary rounded my-2">
-                        {{-- <span class="text-secondary fw-semibold">Deskripsi Acara : </span><br> --}}
-                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->deskripsiAcara)) !!}</span>
-                    </div>
                 </div>
                 <div>
+                    <div class="bg-white-subtle p-2 border border-secondary rounded my-2">
+                        <span class="text-secondary fw-semibold">Deskripsi Acara : </span><br>
+                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->deskripsiAcara)) !!}</span>
+                    </div>
                     <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded my-2">
                         <span class="text-secondary fw-semibold">Catatan : </span><br>
                         <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->catatan)) !!}</span>
@@ -208,28 +208,28 @@
                 <div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->surat_permohonan_acara
+                            {!! $model->suratPermohonanAcara
                                 ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
                                 : 'Surat Permohonan Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->bukti_pembayaran
+                            {!! $model->buktiPembayaran
                                 ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
                                 : 'Bukti Pembayaran' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->dokumen_opsional
+                            {!! $model->dokumenOpsional
                                 ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
                                 : 'Dokumen (Opsional)' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->data_partisipan
+                            {!! $model->dataPartisipan
                                 ? '<a href="' . asset('storage/' . $model->dataPartisipan) . '" target="_blank">Data Partisipan</a>'
                                 : 'Data Partisipan' !!}
                         </p>
@@ -241,41 +241,30 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title">Dokumen</h4>
+                        <h4 class="card-title">Dokumen (Admin)</h4>
                         <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0" onclick="tambahDokumen({{ $model->id }})"><i class="iconoir-plus fs-18"></i></button>
                     </div>
                 </div>
             </div>
             <div class="card-body pt-0">
                 <div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->surat_permohonan_acara
-                                ? '<a href="' . asset('storage/' . $model->suratPermohonanAcara) . '" target="_blank">Surat Permohonan Acara</a>'
-                                : 'Surat Permohonan Acara' !!}
-                        </p>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->bukti_pembayaran
-                                ? '<a href="' . asset('storage/' . $model->buktiPembayaran) . '" target="_blank">Bukti Pembayaran</a>'
-                                : 'Bukti Pembayaran' !!}
-                        </p>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->dokumen_opsional
-                                ? '<a href="' . asset('storage/' . $model->dokumenOpsional) . '" target="_blank">Dokumen (Opsional)</a>'
-                                : 'Dokumen (Opsional)' !!}
-                        </p>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
-                            {!! $model->data_partisipan
-                                ? '<a href="' . asset('storage/' . $model->dataPartisipan) . '" target="_blank">Data Partisipan</a>'
-                                : 'Data Partisipan' !!}
-                        </p>
-                    </div>
+                    @php
+                        $dokumenOperator = json_decode($model->dokumenOperator, true) ?? [];
+                    @endphp
+                    @if (!$dokumenOperator)
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-danger fs-20 align-middle me-1"></i>
+                                Tidak ada dokumen yang dikirim
+                            </p>
+                        </div>
+                    @else
+                        @foreach ((array)$dokumenOperator as $dokumen)
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                                    <a href="{{ asset('storage/' . $dokumen['file']) }}" target="_blank">{{ $dokumen['nama'] }}</a>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -370,6 +359,23 @@
                     },
                 },
             },
+        });
+    }
+
+    function tambahDokumen(id) {
+        $.ajax({
+            url: '{{ route('pesanan.gedung.tambah-dokumen') }}/' + id,
+            success: function(response) {
+                bootbox.dialog({
+                    title: 'Tambah Dokumen',
+                    message: response,
+                    size: 'large',
+                });
+            },
+            error: function(response) {
+            }
+        }).done(function() {
+            $('#table').unblock();
         });
     }
 

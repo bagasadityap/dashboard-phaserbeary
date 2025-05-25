@@ -49,7 +49,27 @@
                         <label class="form-label" for="gambarVR">Gambar VR <p class="text-danger mb-0">*tidak perlu menambahkan gambar VR ulang jika tidak ada perubahan</p></label>
                         <input type="file" class="form-control" name="gambarVR" id="gambarVR" accept=".jpg, .jpeg, .png">
                     </div>
-                    <label class="text-danger"></label>
+                    <hr>
+                    <label class="form-label" for="gambarVR">Fasilitas Gedung</label>
+                    <div class="fasilitas-container mb-2" id="fasilitas-container">
+                        @php
+                            $fasilitas = json_decode($model->fasilitas, true) ?? [];
+                        @endphp
+                        @if (!empty($fasilitas))
+                            @foreach ((array)$fasilitas as $f)
+                                <div class="row fasilitas-field">
+                                    <div class="col-md-8">
+                                        <label class="form-label">Fasilitas</label>
+                                        <input type="text" class="form-control" name="fasilitas[]" value="{{ $f }}" required>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger" onclick="hapusFasilitas(this)">-</button>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="tambahFasilitas()">+ Tambah Fasilitas</button>
                 </div>
             </div>
         </div>
@@ -60,7 +80,57 @@
     </div>
 </form>
 
+<script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
 <script>
+    async function check360Image(file) {
+        const metadata = await file.arrayBuffer();
+        const dataView = new DataView(metadata);
+        const str = new TextDecoder("utf-8").decode(dataView);
+        console.log(str);
+        return str.includes("ProjectionType=equirectangular");
+    };
+
+    $(document).ready(function () {
+        $('#gambarVR').change(async function(e) {
+            const povFile = e.target.files[0];
+            const reader = new FileReader();
+
+            const tags = await ExifReader.load(povFile)
+            console.log(tags);
+            if ((typeof tags['ProjectionType'] !== 'undefined' && tags['ProjectionType'] !==
+                    null) && tags['ProjectionType'].value === 'equirectangular') {
+                selectedBooth.gambarVR = povFile;
+                console.log(selectedBooth);
+            } else {
+                $('#gambarVR').val('');
+                alert('File yang Anda unggah bukan gambar 360 derajat. Mohon unggah file yang sesuai.');
+            }
+        });
+    });
+
+    function tambahFasilitas() {
+        const container = document.getElementById('fasilitas-container');
+
+        const newField = document.createElement('div');
+        newField.classList.add('row', 'fasilitas-field');
+        newField.innerHTML = `
+        <div class="col-md-8">
+            <label class="form-label">Fasilitas</label>
+            <input type="text" class="form-control" name="fasilitas[]" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-danger" onclick="hapusFasilitas(this)">-</button>
+        </div>
+        `;
+
+        container.appendChild(newField);
+    }
+
+    function hapusFasilitas(button) {
+        const row = button.closest('.fasilitas-field');
+        row.remove();
+    }
+
     document.getElementById('gambar').addEventListener('change', function(event) {
         let previewContainer = document.getElementById('preview-container');
         previewContainer.innerHTML = '';

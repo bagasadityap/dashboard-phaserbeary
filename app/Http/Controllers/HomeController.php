@@ -52,7 +52,6 @@ class HomeController extends Controller
     }
 
     public function tambahDokumenGedung(Request $request, $id) {
-        $type = $request->query('type');
         $model = PesananGedung::findOrFail($id);
         return view('home.tambah_dokumen_gedung', compact('model'));
     }
@@ -83,7 +82,7 @@ class HomeController extends Controller
 
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    if ($model->$field && file_exists(storage_path('app/public/dokumen/gedung/' . $model->$field))) {
+                    if ($model->$field && Storage::disk('public')->exists($model->$field)) {
                         Storage::disk('public')->delete($model->$field);
                     }
 
@@ -98,8 +97,6 @@ class HomeController extends Controller
 
             return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
         } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         }
     }
@@ -126,7 +123,7 @@ class HomeController extends Controller
 
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    if ($model->$field && file_exists(storage_path('app/public/dokumen/publikasi/' . $model->$field))) {
+                    if ($model->$field && Storage::disk('public')->exists($model->$field)) {
                         Storage::disk('public')->delete($model->$field);
                     }
 

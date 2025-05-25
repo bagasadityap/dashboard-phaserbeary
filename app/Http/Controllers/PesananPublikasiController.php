@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\OpsiTambahanPesananPublikasi;
-use App\Models\PesananGedung;
 use App\Models\PesananPublikasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -41,10 +41,12 @@ class PesananPublikasiController extends Controller
         return view('pesanan.publikasi.index', compact('page'));
     }
 
-    public function detail() {
-        $page = 'Pesanan \ Publikasi \ Detail';
+    public function view($id) {
+        $page = "Pesanan \ Publikasi \ Detail";
+        $model = PesananPublikasi::findOrFail($id);
+        $opsiTambahan = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
 
-        return view('pesanan.gedung.detail_pesanan', compact('page'));
+        return view('pesanan.publikasi.detail_pesanan', compact('page', 'model', 'opsiTambahan'));
     }
 
     public function store(Request $request) {
@@ -54,6 +56,7 @@ class PesananPublikasiController extends Controller
                 'tanggal' => 'required|date',
                 'noHP' => 'required|string|max:255',
                 'suratPermohonanAcara' => 'required|file',
+                'deskripsiAcara' => 'required|string',
                 'catatan' => 'nullable|string',
             ]);
 
@@ -66,6 +69,7 @@ class PesananPublikasiController extends Controller
                 'tanggal' => $request->tanggal,
                 'noHP' => $request->noHP,
                 'suratPermohonanAcara' => $dokumenPath,
+                'deskripsiAcara' => $request->deskripsiAcara,
                 'catatan' => $request->catatan,
                 'userId' => auth()->user()->id,
             ]);
@@ -133,6 +137,73 @@ class PesananPublikasiController extends Controller
         }
     }
 
+    public function tambahDokumen(Request $request, $id) {
+        $model = PesananPublikasi::findOrFail($id);
+        return view('pesanan.publikasi.tambah_dokumen', compact('model'));
+    }
+
+    public function storeDokumen(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'nama' => 'array',
+                'file' => 'array',
+                'file.*' => 'file',
+            ]);
+
+            $model = PesananPublikasi::findOrFail($id);
+            $dokumenOperator = $model->dokumenOperator;
+            $oldDokumen = json_decode($dokumenOperator, true) ?? [];
+            $files = is_array($request->file('file')) ? $request->file('file') : [];
+            $namaBaru = is_array($request->nama) ? $request->nama : [];
+
+            foreach ($oldDokumen as $dokumen) {
+                if (!isset($dokumen['nama'], $dokumen['file'])) continue;
+
+                $namaLama = $dokumen['nama'];
+                $fileLama = $dokumen['file'];
+
+                $index = array_search($namaLama, $namaBaru);
+                $fileBaru = $files[$index] ?? null;
+
+                if ($index === false || $fileBaru) {
+                    if (Storage::disk('public')->exists($fileLama)) {
+                        Storage::disk('public')->delete($fileLama);
+                    }
+                }
+            }
+
+            $newDokumen = [];
+
+            for ($i = 0; $i < count($namaBaru); $i++) {
+                $nama = $request->nama[$i];
+                $fileInput = $request->file('file')[$i] ?? null;
+                $existing = collect($oldDokumen)->firstWhere('nama', $nama);
+
+                if ($fileInput) {
+                    $filename = time() . '_' . Str::uuid() . '_' . $fileInput->getClientOriginalName();
+                    $filePath = $fileInput->storeAs('dokumen/publikasi', $filename, 'public');
+                    $newDokumen[] = [
+                        'nama' => $nama,
+                        'file' => $filePath,
+                    ];
+                } elseif ($existing) {
+                    $newDokumen[] = [
+                        'nama' => $existing['nama'],
+                        'file' => $existing['file'],
+                    ];
+                }
+            }
+
+            $model->dokumenOperator = $newDokumen;
+            $model->save();
+
+            return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
+        }
+    }
+
     public function tambahHargaPesanan($id) {
         $model = PesananPublikasi::findOrFail($id);
         $models = OpsiTambahanPesananPublikasi::where('pesananId', $model->id)->get();
@@ -152,7 +223,7 @@ class PesananPublikasiController extends Controller
             $pesanan->hargaPublikasi = $request->hargaPublikasi;
             $pesanan->save();
 
-            $oldOption = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
+            OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
 
             if ($request->nama && $request->harga) {
                 for ($i=0; $i < count($request->nama); $i++) {
@@ -177,14 +248,6 @@ class PesananPublikasiController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
-    }
-
-    public function view($id) {
-        $page = "Pesanan \ Publikasi \ Detail";
-        $model = PesananPublikasi::findOrFail($id);
-        $opsiTambahan = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
-
-        return view('pesanan.publikasi.detail_pesanan', compact('page', 'model', 'opsiTambahan'));
     }
 
     public function downloadInvoice($id)  {

@@ -1,17 +1,20 @@
-<form action="{{ route('pesanan.gedung.store-optional', ['id' => $model->id]) }}" method="POST">
+<form action="{{ route('pesanan.gedung.store-dokumen', ['id' => $model->id]) }}" method="POST" enctype="multipart/form-data">
     @csrf
-    <div id="opsi-container">
-        @forelse ($models as $opsi)
-        <div class="row opsi-field">
+    <div id="dokumen-container">
+        <p class="text-danger">*File dokumen lama tidak perlu diunggah ulang jika tidak ada perubahan.</p>
+        @php
+            $dokumenOperator = json_decode($model->dokumenOperator, true) ?? [];
+        @endphp
+        @forelse ((array)$dokumenOperator as $dokumen)
+        <div class="row dokumen-field">
             <div class="col-md-5 mb-2">
-                <label class="form-label">Nama Barang atau Layanan</label>
-                <input type="text" class="form-control" name="nama[]" value="{{ $opsi->nama }}" required>
+                <label class="form-label">Nama Dokumen</label>
+                <input type="text" class="form-control" name="nama[]" value="{{ $dokumen['nama'] }}">
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Harga</label>
+                <label class="form-label">File</label>
                 <div class="input-group mb-2">
-                    <span class="input-group-text">Rp.</span>
-                    <input type="number" name="harga[]" class="form-control" value="{{ $opsi->harga }}" required>
+                    <input type="file" name="file[]" class="form-control" value="">
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -19,16 +22,15 @@
             </div>
         </div>
         @empty
-        <div class="row opsi-field">
+        <div class="row dokumen-field">
             <div class="col-md-5 mb-2">
-                <label class="form-label">Nama Barang atau Layanan</label>
+                <label class="form-label">Nama Dokumen</label>
                 <input type="text" class="form-control" name="nama[]" required>
             </div>
             <div class="col-md-5 mb-2">
-                <label class="form-label">Harga</label>
+                <label class="form-label">File</label>
                 <div class="input-group mb-2">
-                    <span class="input-group-text">Rp.</span>
-                    <input type="number" name="harga[]" class="form-control" required>
+                    <input type="file" name="file[]" class="form-control">
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -38,25 +40,24 @@
         @endforelse
     </div>
 
-    <button type="button" class="btn btn-secondary" onclick="tambahOpsi()">+ Tambah Fasilitas</button>
+    <button type="button" class="btn btn-secondary" onclick="tambahOpsi()">+ Tambah Dokumen</button>
     <button type="submit" class="btn btn-primary">Simpan</button>
 </form>
 
 <script>
     function tambahOpsi() {
-      const container = document.getElementById('opsi-container');
+      const container = document.getElementById('dokumen-container');
       const newField = document.createElement('div');
-      newField.classList.add('row', 'opsi-field');
+      newField.classList.add('row', 'dokumen-field');
       newField.innerHTML = `
         <div class="col-md-5 mb-2">
-          <label class="form-label">Nama Barang atau Layanan</label>
+          <label class="form-label">Nama Dokumen</label>
           <input type="text" class="form-control" name="nama[]" required>
         </div>
         <div class="col-md-5 mb-2">
-          <label class="form-label">Harga</label>
+          <label class="form-label">File</label>
           <div class="input-group mb-2">
-              <span class="input-group-text">Rp.</span>
-              <input type="number" name="harga[]" class="form-control" required>
+              <input type="file" name="file[]" class="form-control">
           </div>
         </div>
         <div class="col-md-2 d-flex align-items-center">
@@ -66,7 +67,7 @@
       container.appendChild(newField);
     }
     function hapusOpsi(button) {
-      const row = button.closest('.opsi-field');
+      const row = button.closest('.dokumen-field');
       row.remove();
     }
 </script>

@@ -18,6 +18,7 @@ class PesananGedung extends Model
         'dokumenOpsional',
         'buktiPembayaran',
         'dataPartisipan',
+        'dokumenOperator',
         'deskripsiAcara',
         'catatan',
         'alasanPenolakan',

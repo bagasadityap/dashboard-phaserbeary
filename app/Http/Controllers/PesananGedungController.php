@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Gedung;
 use App\Models\OpsiTambahanPesananGedung;
+use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananGedung;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -41,6 +43,17 @@ class PesananGedungController extends Controller
         return view('pesanan.gedung.index', compact('page'));
     }
 
+    public function view($id) {
+        $page = "Pesanan \ Gedung \ Detail";
+        $model = PesananGedung::findOrFail($id);
+        $selectedModel = PesananGedung::findOrFail($id);
+        $gedungs = Gedung::all();
+        $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
+        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+
+        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
+    }
+
     public function store(Request $request) {
         try {
             $request->validate([
@@ -55,7 +68,7 @@ class PesananGedungController extends Controller
 
             $dokumen = $request->file('suratPermohonanAcara');
             $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/Gedung', $filename, 'public');
+            $dokumenPath = $dokumen->storeAs('dokumen/gedung', $filename, 'public');
 
             $model = PesananGedung::create([
                 'judul' => $request->judul,
@@ -74,17 +87,6 @@ class PesananGedungController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
-    }
-
-    public function view($id) {
-        $page = "Pesanan \ Gedung \ Detail";
-        $model = PesananGedung::findOrFail($id);
-        $selectedModel = PesananGedung::findOrFail($id);
-        $gedungs = Gedung::all();
-        $selectedGedung = $selectedModel->gedungPesanan()->pluck('gedung_id')->toArray();
-        $opsiTambahan = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
-
-        return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
     }
 
     public function inputGedung(Request $request, $id)
@@ -155,6 +157,73 @@ class PesananGedungController extends Controller
         }
     }
 
+    public function tambahDokumen(Request $request, $id) {
+        $model = PesananGedung::findOrFail($id);
+        return view('pesanan.gedung.tambah_dokumen', compact('model'));
+    }
+
+    public function storeDokumen(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'nama' => 'array',
+                'file' => 'array',
+                'file.*' => 'file',
+            ]);
+
+            $model = PesananGedung::findOrFail($id);
+            $dokumenOperator = $model->dokumenOperator;
+            $oldDokumen = json_decode($dokumenOperator, true) ?? [];
+            $files = is_array($request->file('file')) ? $request->file('file') : [];
+            $namaBaru = is_array($request->nama) ? $request->nama : [];
+
+            foreach ($oldDokumen as $dokumen) {
+                if (!isset($dokumen['nama'], $dokumen['file'])) continue;
+
+                $namaLama = $dokumen['nama'];
+                $fileLama = $dokumen['file'];
+
+                $index = array_search($namaLama, $namaBaru);
+                $fileBaru = $files[$index] ?? null;
+
+                if ($index === false || $fileBaru) {
+                    if (Storage::disk('public')->exists($fileLama)) {
+                        Storage::disk('public')->delete($fileLama);
+                    }
+                }
+            }
+
+            $newDokumen = [];
+
+            for ($i = 0; $i < count($namaBaru); $i++) {
+                $nama = $request->nama[$i];
+                $fileInput = $request->file('file')[$i] ?? null;
+                $existing = collect($oldDokumen)->firstWhere('nama', $nama);
+
+                if ($fileInput) {
+                    $filename = time() . '_' . Str::uuid() . '_' . $fileInput->getClientOriginalName();
+                    $filePath = $fileInput->storeAs('dokumen/gedung', $filename, 'public');
+                    $newDokumen[] = [
+                        'nama' => $nama,
+                        'file' => $filePath,
+                    ];
+                } elseif ($existing) {
+                    $newDokumen[] = [
+                        'nama' => $existing['nama'],
+                        'file' => $existing['file'],
+                    ];
+                }
+            }
+
+            $model->dokumenOperator = $newDokumen;
+            $model->save();
+
+            return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
+        }
+    }
+
     public function tambahOpsional($id) {
         $model = PesananGedung::findOrFail($id);
         $models = OpsiTambahanPesananGedung::where('pesananId', $model->id)->get();
@@ -165,19 +234,21 @@ class PesananGedungController extends Controller
     public function storeOpsional(Request $request, $id) {
         try {
             $request->validate([
-                'nama' => 'required|array',
-                'harga' => 'required|array'
+                'nama' => 'array',
+                'harga' => 'array'
             ]);
 
             $pesanan = PesananGedung::findOrFail($id);
-            $oldOption = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->delete();
+            OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->delete();
 
-            for ($i=0; $i < count($request->nama); $i++) {
-                OpsiTambahanPesananGedung::create([
-                    'nama' => $request->nama[$i],
-                    'harga' => $request->harga[$i],
-                    'pesananId' => $pesanan->id,
-                ]);
+            if ($request->nama && $request->harga) {
+                for ($i=0; $i < count($request->nama); $i++) {
+                    OpsiTambahanPesananGedung::create([
+                        'nama' => $request->nama[$i],
+                        'harga' => $request->harga[$i],
+                        'pesananId' => $pesanan->id,
+                    ]);
+                }
             }
 
             $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('harga');
@@ -192,7 +263,7 @@ class PesananGedungController extends Controller
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.' . $e);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 

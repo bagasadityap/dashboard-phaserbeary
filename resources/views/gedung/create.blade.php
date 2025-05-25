@@ -40,9 +40,8 @@
                     </div>
                     <hr>
                     <label class="form-label" for="gambarVR">Fasilitas Gedung</label>
-                    <div class="opsi-container mb-2" id="opsi-container">
-                    </div>
-                    <button type="button" class="btn btn-secondary" onclick="tambahOpsi()">+ Tambah Opsi</button>
+                    <div class="fasilitas-container mb-2" id="fasilitas-container"></div>
+                    <button type="button" class="btn btn-secondary" onclick="tambahFasilitas()">+ Tambah Fasilitas</button>
                 </div>
             </div>
         </div>
@@ -55,7 +54,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js"></script>
 <script>
-
     async function check360Image(file) {
         const metadata = await file.arrayBuffer();
         const dataView = new DataView(metadata);
@@ -82,26 +80,26 @@
         });
     });
 
-    function tambahOpsi() {
-        const container = document.getElementById('opsi-container');
+    function tambahFasilitas() {
+        const container = document.getElementById('fasilitas-container');
 
         const newField = document.createElement('div');
-        newField.classList.add('row', 'opsi-field');
+        newField.classList.add('row', 'fasilitas-field');
         newField.innerHTML = `
         <div class="col-md-8">
             <label class="form-label">Fasilitas</label>
             <input type="text" class="form-control" name="fasilitas[]" required>
         </div>
         <div class="col-md-2 d-flex align-items-end">
-            <button type="button" class="btn btn-danger" onclick="hapusOpsi(this)">-</button>
+            <button type="button" class="btn btn-danger" onclick="hapusFasilitas(this)">-</button>
         </div>
         `;
 
         container.appendChild(newField);
     }
 
-    function hapusOpsi(button) {
-        const row = button.closest('.opsi-field');
+    function hapusFasilitas(button) {
+        const row = button.closest('.fasilitas-field');
         row.remove();
     }
 

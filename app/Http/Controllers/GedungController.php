@@ -121,6 +121,7 @@ class GedungController extends Controller
                 'gambar' => 'nullable',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
                 'gambarVR' => 'nullable|file|mimes:jpg,jpeg,png',
+                'fasilitas' => 'array',
             ]);
 
             $model = Gedung::findOrFail($id);
@@ -149,6 +150,13 @@ class GedungController extends Controller
                 $gambarVrPath = $request->file('gambarVR')->store('dokumen/gedung', 'public');
             }
 
+            $model->fasilitas = [];
+            $fasilitas = [];
+
+            foreach ((array)$request->fasilitas as $f) {
+                $fasilitas[] = $f;
+            }
+
             $model->nama = $request->nama;
             $model->lokasi = $request->lokasi;
             $model->kapasitas = $request->kapasitas;
@@ -156,11 +164,12 @@ class GedungController extends Controller
             $model->deskripsi = $request->deskripsi;
             $model->gambar = json_encode($existingImages);
             $model->gambarVR = $gambarVrPath;
+            $model->fasilitas = json_encode($fasilitas);
             $model->save();
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
         } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.' . $e);
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }

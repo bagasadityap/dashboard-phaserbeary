@@ -59,6 +59,11 @@
                                     <span class="text-danger fw-semibold">DITOLAK</span>
                                 </div>
                                 @break
+                            @case(5)
+                                <div class="bg-danger-subtle p-2 border-dashed border-danger rounded">
+                                    <span class="text-danger fw-semibold">PEMBAYARAN DITOLAK</span>
+                                </div>
+                                @break
                         @endswitch
                     </div>
                 </div>
@@ -80,10 +85,20 @@
                     </table>
                 </div>
                 <div>
+                    <div class="bg-white-subtle p-2 border border-secondary rounded my-2">
+                        <span class="text-secondary fw-semibold">Deskripsi Acara : </span><br>
+                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->deskripsiAcara)) !!}</span>
+                    </div>
                     <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded my-2">
                         <span class="text-secondary fw-semibold">Catatan : </span><br>
                         <span class="text-secondary fw-normal text-break">{{ $model->catatan }}</span>
                     </div>
+                    @if ($model->status == 4 || $model->status == 5)
+                        <div class="bg-danger-subtle p-2 border-dashed border-danger rounded my-2">
+                            <span class="text-danger fw-semibold">Alasan Penolakan : </span><br>
+                            <span class="text-danger fw-normal text-break">{{ $model->alasanPenolakan }}</span>
+                        </div>
+                    @endif
                     @if ($model->isConfirmed && !$model->isPaid)
                         <div class="col my-2 d-flex">
                             <button type="button" class="btn rounded-pill btn-primary" onclick="addOptional({{ $model->id }})">Tambah Harga Pesanan</button>
@@ -198,6 +213,37 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="card-title">Dokumen (Admin)</h4>
+                        <button type="button" class="btn rounded-pill btn-primary btn-sm mb-0" onclick="tambahDokumen({{ $model->id }})"><i class="iconoir-plus fs-18"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div>
+                    @php
+                        $dokumenOperator = json_decode($model->dokumenOperator, true) ?? [];
+                    @endphp
+                    @if (!$dokumenOperator)
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-danger fs-20 align-middle me-1"></i>
+                                Tidak ada dokumen yang dikirim
+                            </p>
+                        </div>
+                    @else
+                        @foreach ((array)$dokumenOperator as $dokumen)
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                                    <a href="{{ asset('storage/' . $dokumen['file']) }}" target="_blank">{{ $dokumen['nama'] }}</a>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -281,6 +327,23 @@
                     });
                 }
             }
+        });
+    }
+
+    function tambahDokumen(id) {
+        $.ajax({
+            url: '{{ route('pesanan.publikasi.tambah-dokumen') }}/' + id,
+            success: function(response) {
+                bootbox.dialog({
+                    title: 'Tambah Dokumen',
+                    message: response,
+                    size: 'large',
+                });
+            },
+            error: function(response) {
+            }
+        }).done(function() {
+            $('#table').unblock();
         });
     }
 

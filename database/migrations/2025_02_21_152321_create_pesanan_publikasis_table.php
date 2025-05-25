@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('dokumenOpsional')->nullable();
             $table->string('buktiPembayaran')->nullable();
             $table->string('posterAcara')->nullable();
+            $table->json('dokumenOperator')->nullable();
             $table->text('deskripsiAcara');
             $table->text('catatan')->nullable();
             $table->text('alasanPenolakan')->nullable();

@@ -63,6 +63,11 @@
                                     <span class="text-danger fw-semibold">DITOLAK</span>
                                 </div>
                                 @break
+                            @case(5)
+                                <div class="bg-danger-subtle p-2 border-dashed border-danger rounded">
+                                    <span class="text-danger fw-semibold">PEMBAYARAN DITOLAK</span>
+                                </div>
+                                @break
                         @endswitch
                     </div>
                 </div>
@@ -89,10 +94,20 @@
                     </table>
                 </div>
                 <div>
+                    <div class="bg-white-subtle p-2 border border-secondary rounded my-2">
+                        <span class="text-secondary fw-semibold">Deskripsi Acara : </span><br>
+                        <span class="text-secondary fw-normal text-break">{!! nl2br(e($model->deskripsiAcara)) !!}</span>
+                    </div>
                     <div class="bg-secondary-subtle p-2 border-dashed border-secondary rounded my-2">
                         <span class="text-secondary fw-semibold">Catatan : </span><br>
                         <span class="text-secondary fw-normal text-break">{{ $model->catatan }}</span>
                     </div>
+                    @if ($model->status == 4 || $model->status == 5)
+                        <div class="bg-danger-subtle p-2 border-dashed border-danger rounded my-2">
+                            <span class="text-danger fw-semibold">Alasan Penolakan : </span><br>
+                            <span class="text-danger fw-normal text-break">{{ $model->alasanPenolakan }}</span>
+                        </div>
+                    @endif
                 </div>
                 <hr class="hr mt-0">
                 <div class="mb-2">
@@ -235,6 +250,36 @@
                                 : 'Dokumen (Opsional)' !!}
                         </p>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Dokumen (Admin)</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div>
+                    @php
+                        $dokumenOperator = json_decode($model->dokumenOperator, true) ?? [];
+                    @endphp
+                    @if (!$dokumenOperator)
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-danger fs-20 align-middle me-1"></i>
+                                Tidak ada dokumen yang dikirim
+                            </p>
+                        </div>
+                    @else
+                        @foreach ((array)$dokumenOperator as $dokumen)
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
+                                    <a href="{{ asset('storage/' . $dokumen['file']) }}" target="_blank">{{ $dokumen['nama'] }}</a>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>

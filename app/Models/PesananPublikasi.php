@@ -14,6 +14,7 @@ class PesananPublikasi extends Model
         'dokumenOpsional',
         'buktiPembayran',
         'posterAcara',
+        'dokumenOperator',
         'deskripsiAcara',
         'catatan',
         'alasanPenolakan',
