@@ -1,12 +1,25 @@
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/username/laravel-app
+    - export DEPLOYPATH=/home/bagy3769/repositories/sistem-pemesanan-gedung
     - cd $DEPLOYPATH
+
+    # Install composer dependencies (production only)
     - /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader
+
+    # Generate app key if not set
+    - if ! grep -q "APP_KEY=.*" .env; then php artisan key:generate; fi
+
+    # Run migrations and seeder
     - php artisan migrate --force
     - php artisan db:seed --force
+
+    # Create storage symlink
     - php artisan storage:link
+
+    # Cache config, routes, and views
     - php artisan config:cache
     - php artisan route:cache
     - php artisan view:cache
+
+    # Fix permissions
     - chmod -R 775 storage bootstrap/cache
