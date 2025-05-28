@@ -90,17 +90,12 @@ class PesananPublikasiController extends Controller
                 $model->isConfirmed = 1;
             } else {
                 $model->status = 4;
+                $model->alasanPenolakan = $request->alasanPenolakan;
             }
             $model->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
             ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');
@@ -111,22 +106,21 @@ class PesananPublikasiController extends Controller
         }
     }
 
-    public function confirmPayment($id) {
+    public function confirmPayment(Request $request, $id) {
         try {
             $model = PesananPublikasi::findOrFail($id);
-            $model->isPaid = 1;
-            $model->status = 3;
+            if ($request->status == 'konfirmasi') {
+                $model->isPaid = 1;
+                $model->status = 3;
+            } else {
+                $model->status = 5;
+                $model->alasanPenolakan = $request->alasanPenolakan;
+            }
             $model->save();
             session()->flash('success', 'Status pesanan berhasil diubah.');
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
             ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');

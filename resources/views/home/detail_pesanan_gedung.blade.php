@@ -141,7 +141,7 @@
                     </div>
                 </div>
                 <hr class="hr mb-0">
-                @if ($model->totalBiaya)
+                {{-- @if ($model->totalBiaya) --}}
                     <div>
                         <div class="card">
                             <div class="card-header">
@@ -186,7 +186,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                {{-- @endif --}}
             </div>
         </div>
     </div>

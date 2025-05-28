@@ -254,7 +254,13 @@
     function confirm(id) {
         bootbox.dialog({
             title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin untuk melakukan konfirmasi/menolak pesanan ini?',
+            message: `
+                <p>Apakah Anda yakin ingin mengonfirmasi/menolak pesanan ini?</p>
+                <div class="form-group">
+                    <label for="alasanPenolakan">Alasan Penolakan (hanya untuk penolakan pesanan)</label>
+                    <input type="text" id="alasanPenolakan" name="alasanPenolakan" class="form-control">
+                </div>
+            `,
             buttons: {
                 confirm: {
                     label: 'Konfirmasi',
@@ -267,14 +273,15 @@
                     label: 'Tolak',
                     className: 'btn-danger',
                     callback: function() {
-                        sendStatus(id, 'tolak');
+                        const alasan = document.getElementById('alasanPenolakan').value;
+                        sendStatus(id, 'tolak', alasan);
                     },
                 },
             },
         });
     }
 
-    function sendStatus(id, status) {
+    function sendStatus(id, status, alasan) {
         let url = "{{ route('pesanan.publikasi.confirm') }}/" + id;
         console.log("Generated URL:", url);
 
@@ -284,6 +291,7 @@
             data: {
                 _token: '{{ csrf_token() }}',
                 status: status,
+                alasanPenolakan: alasan
             },
             success: function(response) {
                 console.log("Response:", response);
@@ -297,36 +305,32 @@
     }
 
     function confirmPayment(id) {
-        bootbox.confirm({
+        bootbox.dialog({
             title: '<span class="text-light">Perhatian!</span>',
-            message: 'Apakah anda yakin mengonfirmasi pembayaran pesanan ini?',
+            message: `
+                <p>Apakah Anda yakin ingin mengonfirmasi/menolak pembayaran pesanan ini?</p>
+                <div class="form-group">
+                    <label for="alasanPenolakan">Alasan Penolakan (hanya untuk penolakan pesanan)</label>
+                    <input type="text" id="alasanPenolakan" name="alasanPenolakan" class="form-control">
+                </div>
+            `,
             buttons: {
                 confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
+                    label: 'Konfirmasi',
+                    className: 'btn-success',
+                    callback: function() {
+                        sendStatus(id, 'konfirmasi');
+                    }
                 },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-secondary'
-                }
+                reject: {
+                    label: 'Tolak',
+                    className: 'btn-danger',
+                    callback: function() {
+                        const alasan = document.getElementById('alasanPenolakan').value;
+                        sendStatus(id, 'tolak', alasan);
+                    },
+                },
             },
-            callback: function(result) {
-                if (result) {
-                    $.ajax({
-                        url: '{{ route('pesanan.publikasi.confirm-payment') }}/' + id,
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            window.location.reload();
-                            bootbox.hideAll();
-                        },
-                        error: function() {
-                            toastr.error('Terjadi kesalahan.');
-                        }
-                    });
-                }
-            }
         });
     }
 
