@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/bagy3769/public_html/sistem-pemesanan-gedung
+    - export DEPLOYPATH=/home/bagy3769/public_html/sistempemesanangedung
     - /bin/cp -R * $DEPLOYPATH
