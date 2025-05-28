@@ -2,6 +2,3 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/bagy3769/repositories/sistem-pemesanan-gedung
     - cd $DEPLOYPATH
-
-    # Salin .env jika belum ada
-    - if [ ! -f .env ]; then cp .env.example .env; fi
