@@ -3,27 +3,23 @@ deployment:
     - export DEPLOYPATH=/home/bagy3769/repositories/sistem-pemesanan-gedung
     - cd $DEPLOYPATH
 
-    # Copy env.example ke .env jika belum ada
+    # Salin .env jika belum ada
     - if [ ! -f .env ]; then cp .env.example .env; fi
 
-    # Install dependencies
-    - /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader
+    # Install dependencies dengan optimal
+    - /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --no-scripts
 
     # Generate app key jika belum ada
     - if ! grep -q "APP_KEY=.*" .env; then php artisan key:generate; fi
 
-    # Jalankan migrasi dan seeder
-    - php artisan migrate --force
-    - php artisan db:seed --force
-
-    # Buat symlink public jika belum ada
+    # Buat symlink ke folder public jika belum ada
     - if [ ! -L /home/bagy3769/public_html/sistempemesanangedung ]; then ln -s $DEPLOYPATH/public /home/bagy3769/public_html/sistempemesanangedung; fi
 
-    # Buat storage link dan cache config
+    # Buat symlink ke storage dan cache konfigurasi
     - php artisan storage:link
     - php artisan config:cache
     - php artisan route:cache
     - php artisan view:cache
 
-    # Perbaiki permission
+    # Permission
     - chmod -R 775 storage bootstrap/cache
