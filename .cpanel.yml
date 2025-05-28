@@ -5,6 +5,3 @@ deployment:
 
     # Salin .env jika belum ada
     - if [ ! -f .env ]; then cp .env.example .env; fi
-
-    # Install dependencies dengan optimal
-    - /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --no-scripts
