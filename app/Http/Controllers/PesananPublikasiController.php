@@ -247,7 +247,7 @@ class PesananPublikasiController extends Controller
     }
 
     public function downloadInvoice($id)  {
-        // try {
+        try {
             $model = PesananPublikasi::findOrFail($id);
             $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
             $confirmedBy = $model->confirmedBy()->first()->name;
@@ -264,8 +264,8 @@ class PesananPublikasiController extends Controller
                 ->savePdf($path);
 
             return response()->download($path)->deleteFileAfterSend(true);
-        // } catch (\Exception $e) {
-        //     return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
-        // }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
+        }
     }
 }
