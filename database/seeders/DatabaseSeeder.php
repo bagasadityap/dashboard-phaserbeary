@@ -49,9 +49,9 @@ class DatabaseSeeder extends Seeder
 
         $menus1 = ['Gedung-Gedung', 'Pesanan Gedung-Pesanan', 'Pesanan Publikasi Acara-Pesanan', 'User-Configuration', 'Role-Configuration'];
 
-        $menus2 = ['Gedung', 'User'];
+        $menus2 = ['Gedung'];
 
-        $menus3 = ['Role'];
+        $menus3 = ['Role', 'User'];
 
         $menus4 = ['Pesanan Gedung', 'Pesanan Publikasi Acara'];
 

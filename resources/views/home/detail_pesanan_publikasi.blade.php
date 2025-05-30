@@ -134,7 +134,7 @@
                     </div>
                 </div>
                 <hr class="hr mb-0">
-                @if ($model->totalBiaya)
+                @if ($model )
                     <div>
                         <div class="card">
                             <div class="card-header">

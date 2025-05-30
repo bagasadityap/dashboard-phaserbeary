@@ -30,9 +30,9 @@ return new class extends Migration
             $table->decimal('totalHarga', 15, 2)->nullable();
             $table->boolean('isConfirmed')->default(0);
             $table->boolean('isPaid')->default(0);
-            $table->string('invoice')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->foreignId('userId')->references('id')->on('users');
+            $table->foreignId('confirmedBy')->nullable()->references('id')->on('users')->nullOnDelete();;
             $table->foreignId('gedungId')->nullable()->references('id')->on('gedungs')->nullOnDelete();
             $table->timestamps();
         });

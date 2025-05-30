@@ -30,6 +30,7 @@ class PesananGedung extends Model
         'invoice',
         'status',
         'userId',
+        'confirmedBy',
         'gedungId',
     ];
 
@@ -50,6 +51,10 @@ class PesananGedung extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'userId', 'id');
+    }
+
+    public function confirmedBy() {
+        return $this->belongsTo(User::class, 'confirmedBy', 'id');
     }
 
     public function gedungPesanan()

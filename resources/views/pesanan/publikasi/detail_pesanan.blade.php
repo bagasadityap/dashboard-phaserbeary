@@ -1,7 +1,6 @@
 @extends('template.dashboard')
 
 @push('css')
-{{-- <link href="{{ asset('assets/libs/mobius1-selectr/selectr.min.css') }}" rel="stylesheet" type="text/css" /> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endpush
 
@@ -134,7 +133,7 @@
                         <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
-                @if ($model->isConfirmed && !$model->isPaid)
+                @if ($model->totalHarga && !$model->isPaid)
                     <div class="col mt-3 d-flex justify-content-end">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})">Konfirmasi Pembayaran</button>
                     </div>
@@ -192,8 +191,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <p class="text-body fw-semibold mb-0"><i class="iconoir-empty-page text-secondary fs-20 align-middle me-1"></i>
                             {!! $model->posterAcara
-                                ? '<a href="' . asset('storage/' . $model->posterAcara) . '" target="_blank">Poster</a>'
-                                : 'Poster' !!}
+                                ? '<a href="' . $model->posterAcara . '" target="_blank">Poster Acara</a>'
+                                : 'Poster Acara' !!}
                         </p>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -319,7 +318,7 @@
                     label: 'Konfirmasi',
                     className: 'btn-success',
                     callback: function() {
-                        sendStatus(id, 'konfirmasi');
+                        sendStatusPayment(id, 'konfirmasi');
                     }
                 },
                 reject: {
@@ -327,10 +326,33 @@
                     className: 'btn-danger',
                     callback: function() {
                         const alasan = document.getElementById('alasanPenolakan').value;
-                        sendStatus(id, 'tolak', alasan);
+                        sendStatusPayment(id, 'tolak', alasan);
                     },
                 },
             },
+        });
+    }
+
+    function sendStatusPayment(id, status, alasan) {
+        let url = "{{ route('pesanan.publikasi.confirm-payment') }}/" + id;
+        console.log("Generated URL:", url);
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: status,
+                alasanPenolakan: alasan
+            },
+            success: function(response) {
+                console.log("Response:", response);
+                window.location.reload();
+                bootbox.hideAll();
+            },
+            error: function(xhr, status, error) {
+                toastr.error("Terjadi kesalahan.");
+            }
         });
     }
 

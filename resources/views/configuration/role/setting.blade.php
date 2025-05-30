@@ -31,11 +31,11 @@
                         @php
                             $split = explode("-", $permissionChild->name);
                             $permissionChildName = $split[0];
-                            $menus = ['Gedung', 'User'];
-                            $menus2 = ['Role'];
+                            $menus = ['Gedung'];
+                            $menus2 = ['Role', 'User'];
                             $menus3 = ['Pesanan Gedung', 'Pesanan Publikasi']
                         @endphp
-                        @if ($permissionChildName != 'Gedung')
+                        @if (!Str::contains($permission->name, $menus2))
                             @if (!Str::contains($permission->name, 'Gedung'))
                                 <tr>
                                     <td class="text-nowrap fw-medium">{{ $permissionChildName }}</td>
@@ -48,7 +48,7 @@
                                 </tr>
                             @endif
                         @endif
-                        @if (Str::contains($permissionChildName, 'Pesanan') && Str::contains($permissionChildName, $menus3))
+                        @if (Str::contains($permissionChildName, 'Pesanan') && Str::contains($permissionChildName, $menus3) && !Str::contains($permission->name, 'Gedung'))
                             <tr>
                                 <td class="text-nowrap fw-medium"></td>
                                 <td>

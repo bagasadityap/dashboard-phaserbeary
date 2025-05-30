@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananPublikasi;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -88,6 +89,7 @@ class PesananPublikasiController extends Controller
             if ($request->status == 'konfirmasi') {
                 $model->status = 1;
                 $model->isConfirmed = 1;
+                $model->confirmedBy = auth()->user()->id;
             } else {
                 $model->status = 4;
                 $model->alasanPenolakan = $request->alasanPenolakan;
@@ -245,11 +247,12 @@ class PesananPublikasiController extends Controller
     }
 
     public function downloadInvoice($id)  {
-        try {
+        // try {
             $model = PesananPublikasi::findOrFail($id);
             $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
+            $confirmedBy = $model->confirmedBy()->first()->name;
 
-            $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional'))->render();
+            $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
             $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
             $path = storage_path("app/public/$filename");
@@ -261,8 +264,8 @@ class PesananPublikasiController extends Controller
                 ->savePdf($path);
 
             return response()->download($path)->deleteFileAfterSend(true);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
-        }
+        // } catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
+        // }
     }
 }

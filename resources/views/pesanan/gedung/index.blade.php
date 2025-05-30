@@ -6,17 +6,6 @@
 @endpush
 
 @section('content')
-<style>
-    .dt-button {
-        border: none !important;
-        background-image: none !important;
-        color: inherit !important;
-    }
-    .btn-excel {
-        background-color: #28a745 !important;
-        color: white !important;
-    }
-</style>
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="card">
@@ -61,16 +50,6 @@
                     {data: 'tanggal', name: 'tanggal'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
                 ],
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: '<i class="fas fa-file-excel me-1"></i> Export Excel',
-                        className: 'btn btn-excel',
-                        action: function () {
-                            window.location.href = '{{ route('pesanan.gedung.download-excel') }}';
-                        }
-                    }
-                ]
             });
         })
 

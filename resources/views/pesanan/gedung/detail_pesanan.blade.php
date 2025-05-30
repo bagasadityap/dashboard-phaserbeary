@@ -158,7 +158,7 @@
                         <h5 class="mb-0">Rp. {{ $model->totalHarga ? $model->totalHarga : '0' }}</h5>
                     </div>
                 </div>
-                @if ($model->gedungId && !$model->isPaid)
+                @if ($model->totalHarga && !$model->isPaid)
                     <div class="col mt-3 d-flex justify-content-end">
                         <button type="button" class="btn rounded-pill btn-primary" onclick="confirmPayment({{ $model->id }})">Konfirmasi Pembayaran</button>
                     </div>
@@ -311,8 +311,6 @@
 
     function sendStatus(id, status, alasan) {
         let url = "{{ route('pesanan.gedung.confirm') }}/" + id;
-        console.log("Generated URL:", url);
-
         $.ajax({
             url: url,
             method: "POST",
@@ -347,7 +345,7 @@
                     label: 'Konfirmasi',
                     className: 'btn-success',
                     callback: function() {
-                        sendStatus(id, 'konfirmasi');
+                        sendStatusPayment(id, 'konfirmasi');
                     }
                 },
                 reject: {
@@ -355,10 +353,31 @@
                     className: 'btn-danger',
                     callback: function() {
                         const alasan = document.getElementById('alasanPenolakan').value;
-                        sendStatus(id, 'tolak', alasan);
+                        sendStatusPayment(id, 'tolak', alasan);
                     },
                 },
             },
+        });
+    }
+
+    function sendStatusPayment(id, status, alasan) {
+        let url = "{{ route('pesanan.gedung.confirm-payment') }}/" + id;
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: status,
+                alasanPenolakan: alasan
+            },
+            success: function(response) {
+                console.log("Response:", response);
+                window.location.reload();
+                bootbox.hideAll();
+            },
+            error: function(xhr, status, error) {
+                toastr.error("Terjadi kesalahan.");
+            }
         });
     }
 

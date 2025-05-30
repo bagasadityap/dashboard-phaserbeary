@@ -52,6 +52,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pilih/{id?}/{id2?}', 'pilih')->name('pilih');
     });
 
+    Route::prefix('pesanan')->name('pesanan.')->group(function () {
+        Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
+            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
+        });
+
+        Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
+            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
+        });
+    });
+
     Route::prefix('pesanan')->name('pesanan.')->middleware('can:Home')->group(function () {
         Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
             Route::post('/store', 'store')->name('store');
@@ -72,26 +82,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/view/{id?}', 'view')->name('view');
             Route::post('/input-gedung/{id?}', 'inputGedung')->name('inputGedung');
             Route::post('/confirm/{id?}', 'confirm')->name('confirm');
-            Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
+            Route::post('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
             Route::get('/add-optional/{id?}', 'tambahOpsional')->name('add-optional');
             Route::post('/store-optional/{id?}', 'storeOpsional')->name('store-optional');
             Route::get('/tambah-dokumen/{id?}', 'tambahDokumen')->name('tambah-dokumen');
             Route::post('/store-dokumen/{id?}', "storeDokumen")->name('store-dokumen');
-            Route::get('/download-excel/{id?}', 'downloadExcel')->name('download-excel');
-            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
         });
 
         Route::controller(PesananPublikasiController::class)->prefix('publikasi')->middleware('can:Pesanan Publikasi Acara-Pesanan')->name('publikasi.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/view/{id?}', 'view')->name('view');
             Route::post('/confirm/{id?}', 'confirm')->name('confirm');
-            Route::get('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
+            Route::post('/confirm-payment/{id?}', 'confirmPayment')->name('confirm-payment');
             Route::get('/add-order-cost/{id?}', 'tambahHargaPesanan')->name('add-order-cost');
             Route::post('/store-order-cost/{id?}', 'storeHargaPesanan')->name('store-order-cost');
             Route::get('/tambah-dokumen/{id?}', 'tambahDokumen')->name('tambah-dokumen');
             Route::post('/store-dokumen/{id?}', "storeDokumen")->name('store-dokumen');
-            Route::get('/download-excel/{id?}', 'downloadExcel')->name('download-excel');
-            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
         });
     });
 
@@ -102,6 +108,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit/{id?}', 'edit')->name('edit');
         Route::post('/update/{id?}', 'update')->name('update');
         Route::get('/delete/{id?}', 'delete')->name('delete');
+    });
+
+    Route::controller(GedungController::class)->prefix('gedung')->middleware('can:Gedung Read')->name('gedung.')->group(function () {
         Route::get('/view/{id?}', 'view')->name('view');
         Route::get('/view-360/{id?}', 'view_360')->name('view-360');
     });

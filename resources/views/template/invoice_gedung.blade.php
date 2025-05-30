@@ -8,196 +8,172 @@
     <style>
         body {
             background-color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            max-width: 770px;
         }
 
         .invoice-container {
-            width: 800px;
-            margin: 20px auto;
+            width: 770px;
             padding: 20px;
+        }
+
+        .content-container{
+            width: 770px;
             border: 1px solid black;
         }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border-bottom: 2px solid black;
-            padding-bottom: 10px;
-        }
-
-        .header img {
-            width: 80px;
-            height: auto;
-            margin-right: 20px;
-        }
-
-        .header-content {
-            text-align: center;
-            flex-grow: 1;
-        }
-
-        .header-content h1 {
-            font-size: 18px;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-        .header-content h2 {
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .header-content p {
-            font-size: 12px;
-            margin: 5px 0;
-        }
-
-        .title {
-            text-align: right;
-            margin-top: 10px;
-        }
-
-        .title h3 {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .details {
-            margin: 20px 0;
-        }
-
-        .details table {
-            width: 100%;
-            font-size: 14px;
-        }
-
-        .rincian-table {
-            margin-top: 20px;
-        }
-
-        .rincian-table th, .rincian-table td {
-            text-align: right;
-        }
-
-        .amount {
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        .amount .grand-total {
-            text-align: right;
-            font-size: 20px;
-            font-weight: bold;
-            border-top: 2px solid black;
-            padding-top: 10px;
-        }
-
-        .footer {
-            margin-top: 20px;
+        .alamat-font{
             font-size: 12px;
         }
 
-        .footer .signature {
-            text-align: right;
-            margin-top: 50px;
+        .header-font{
+            font-size: 18.62px;
         }
 
-        .footer .signature p {
-            margin: 5px 0;
+        .top{
+            vertical-align: top;
+            text-align: left;
         }
+
+        .table-content-font{
+            font-size: 13.33px;
+        }
+
+        .paralellogram{
+            width: fit-content;
+            padding: 10px 30px;
+            transform: skew(-30deg);
+            border: 1px solid black;
+            box-shadow: 2px 2px 5px rgb(46, 46, 46);
+        }
+
+        .paralellogram-text{
+            transform: skew(30deg);
+            font-size: 15.96px;
+        }
+
+        .total-price-font{
+            font-size: 15.96px;
+        }
+
+
     </style>
 </head>
 <body>
     <div class="invoice-container">
-        <div class="header">
+        <table class="header">
+            <tr>
+                <td rowspan="3"><img src="https://wiki.ub.ac.id/lib/exe/fetch.php?cache=&media=ub-logo-small.png" alt="Logo" width="100" height="100"></td>
+                <td><b><p class="header-font m-0">DIREKTORAT PENGEMBANGAN</p></b></td>
+            </tr>
+            <tr>
+                <td><b><p class="header-font m-0">KARIR DAN ALUMNI</p></b></td>
+            </tr>
+            <tr>
+                <td><p class="header-font m-0" style="color: white; background-color: black; -webkit-print-color-adjust: exact; padding-left: 2px; width: 120%;"><strong>UNIVERSITAS BRAWIJAYA</strong></p></td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
             @php
-                $path = public_path('image/logo_ub.png');
+                $path = public_path('image/invoice.png');
                 $type = pathinfo($path, PATHINFO_EXTENSION);
                 $data = file_get_contents($path);
-                $logo = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
             @endphp
-            <img src="{{ $logo }}" alt="Logo">
-            <div class="header-content">
-                <h1>DIREKTORAT PENGEMBANGAN KARIR DAN ALUMNI</h1>
-                <h2>UNIVERSITAS BRAWIJAYA</h2>
-                <p>Office: Jl. Veteran Malang Telp. 0341 583787 Fax. 0341 575453<br>Telp. 0341 551611 Ext. 130<br>http://upkk.ub.ac.id - jpc@ub.ac.id</p>
-            </div>
-        </div>
-
-        <div class="title">
-            <h3>INVOICE</h3>
-        </div>
-
-        <div class="details">
-            <table class="table table-borderless">
+            <tr>
+                <td><p class="alamat-font" style="margin-bottom: 0;">Office:</p></td>
+                <td rowspan="4" style="padding: 0;">
+                    <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%;">
+                      <div style="display: flex; justify-content: flex-end;">
+                        <img src="{{$base64}}" alt="" width="150">
+                      </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><p class="alamat-font" style="margin-bottom: 0;">Jl. Veteran Malang Telp. 0341 583787 Fax. 0341 575453</p></td>
+            </tr>
+            <tr>
+                <td><p class="alamat-font" style="margin-bottom: 0;">Telp. 0341 551611 Ext. 130</p></td>
+            </tr>
+            <tr>
+                <td class="d-flex">
+                    <a class="alamat-font" href="http://upkk.ub.ac.id" style="margin-right: 5px;">http://upkk.ub.ac.id</a>
+                    <p class="alamat-font"> - </p>
+                    <a class="alamat-font" href="mailto:jpc@ub.ac.id">jpc@ub.ac.id</a>
+                </td>
+            </tr>
+        </table>
+        <div class="content-container">
+            <table border="0" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%;" class="table-content-font">
                 <tr>
-                    <td><strong>Nomor</strong></td>
-                    <td>: {{ $model->id < 10 ? '0' . $model->id : $model->id }}/BCE-I/DPKA/II/{{ $model->created_at->format('Y') }}</td>
+                  <td class="top">Nomor</td>
+                  <td class="top">:</td>
+                  <td class="top">{{ $model->id < 10 ? '0' . $model->id : $model->id }}/BCE-I/DPKA/II/{{ $model->created_at->format('Y') }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Telah diterima dari</strong></td>
-                    <td>: {{ $model->user->instansi }}</td>
+                  <td class="top">Telah terima dari</td>
+                  <td class="top">:</td>
+                  <td class="top"> <strong>{{ $model->user->instansi }}</strong></td>
                 </tr>
                 <tr>
-                    <td><strong>Buat Pembayaran</strong></td>
-                    <td>: Biaya Sewa Gedung Kegiatan {{ $model->judul }}<br>Tanggal {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('j F Y') }}</td>
-                </tr>
-            </table>
-
-            <table class="table table-striped rincian-table">
-                <thead>
-                    <tr>
-                        <th class="text-start">Deskripsi</th>
-                        <th class="text-end">Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-start">Biaya Gedung {{ $model->gedung->nama }}</td>
-                        <td class="text-end">{{ $model->hargaGedung }}</td>
-                    </tr>
-                    @foreach ($tambahanOpsional as $opsi)
+                  <td class="top">Buat Pembayaran</td>
+                  <td class="top"><p>:</p></td>
+                  <td class="w-75 top">
+                    Biaya Sewa Gedung Kegiatan {{ $model->judul }}<br>
+                    Tanggal {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('j F Y') }}<br>
+                    Dengan Rincian Sebagai Berikut:<br>
+                    <table>
                         <tr>
-                            <td class="text-start">{{ $opsi->nama }}</td>
-                            <td class="text-end">{{ $opsi->harga }}</td>
-                        </tr>
-                    @endforeach
-                    <tr>
-                        <td class="text-start"><strong>Total Harga</strong></td>
-                        @php
-                            $harga = $model->hargaGedung;
-                            foreach ($tambahanOpsional as $opsi) {
-                                $harga += $opsi->harga;
-                            }
-                        @endphp
-                        <td class="text-end"><strong>Rp. {{ $harga }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="text-start">PPN</td>
-                        <td class="text-end">Rp. {{ $model->PPN }}</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td class="text-start"><strong>Grand Total</strong></td>
-                        <td><strong>Rp. {{ $model->totalHarga }}</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <div class="amount">
-            @include('template.fungsi_terbilang')
-            <p>Terbilang: {{ terbilang($model->totalHarga) }} Rupiah</p>
-        </div>
-
-        <div class="footer">
-            <p>Transfer ke Virtual Account Universitas Brawijaya:<br>Mandiri : 1440001120234<br>a/n Karuniiawan Puji Wicaksono . Brawijaya Career Expo {{ \Carbon\Carbon::today()->format('Y') }}</p>
-            <div class="signature">
-                <p>Malang, {{ \Carbon\Carbon::parse($model->updated_at)->translatedFormat('j F Y') }}</p>
-                <p><strong>Andy Sulistyowatik</strong></p>
-            </div>
+                        <td class="text-start">Biaya Gedung {{ $model->gedung->nama }}</td>
+                        <td class="text-end">Rp. {{number_format($model->hargaGedung, 0, ',', thousands_separator: '.')}}</td>
+                            </tr>
+                            @foreach ($tambahanOpsional as $opsi)
+                                <tr>
+                                    <td class="text-start">{{ $opsi->nama }}</td>
+                                    <td class="text-end">Rp. {{number_format($opsi->harga, 0, ',', thousands_separator: '.')}}</td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td class="text-start">PPN</td>
+                                <td class="text-end">Rp. {{number_format($model->PPN, 0, ',', thousands_separator: '.')}}</td>
+                            </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                    @include('template.fungsi_terbilang')
+                    <td class="top">Terbilang</td>
+                    <td class="top">:</td>
+                    <td class="top">{{ terbilang($model->totalHarga) }} Rupiah</td>
+                </tr>
+                <tr>
+                    <td class="top">
+                        <p class="m-0">Jumlah</p>
+                        <i><small>*include tax</small></i>
+                    </td>
+                    <td class="top">:</td>
+                    <td class="top">
+                        <div class="paralellogram">
+                            <b><p class="my-auto paralellogram-text">Rp. {{number_format((int)$model->totalHarga,0, ',', '.')}},-*  </p></b>
+                        </div>
+                    </td>
+                  </tr>
+              </table>
+              <table style="border: 0; margin-top: 10px; width: 100%; margin-bottom: 15px;" class="table-content-font">
+                <tr>
+                    <td class="w-75 top">
+                        <b><i><u>
+                            <p class="m-0 ms-2">Transfer ke Virtual Account Universitas Brawijaya:</p>
+                            <p class="m-0 ms-2">Mandiri: 1440001120234 a/n Karuniawan Puji Wicaksono</p>
+                        </u></i></b>
+                    </td>
+                    <td class="w-525">
+                        <p class="text-end pe-3" >Malang, {{ \Carbon\Carbon::parse($model->created_at)->translatedFormat('j F Y') }}</p>
+                        <b><p class="text-end pe-3" style="margin-bottom: 0; margin-top: 40px;">{{ $confirmedBy }}</p></b>
+                    </td>
+                </tr>
+              </table>
         </div>
     </div>
 </body>

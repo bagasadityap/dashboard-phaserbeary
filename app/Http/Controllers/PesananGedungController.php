@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Gedung;
 use App\Models\OpsiTambahanPesananGedung;
-use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananGedung;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -114,6 +114,7 @@ class PesananGedungController extends Controller
             if ($request->status == 'konfirmasi') {
                 $model->status = 1;
                 $model->isConfirmed = 1;
+                $model->confirmedBy = auth()->user()->id;
             } else {
                 $model->status = 4;
                 $model->alasanPenolakan = $request->alasanPenolakan;
@@ -267,16 +268,13 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function downloadExcel() {
-
-    }
-
     public function downloadInvoice($id)  {
         try {
             $model = PesananGedung::findOrFail($id);
             $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+            $confirmedBy = $model->confirmedBy()->first()->name;
 
-            $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional'))->render();
+            $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
             $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
             $path = storage_path("app/public/$filename");
