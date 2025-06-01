@@ -55,10 +55,14 @@ class DashboardController extends Controller
             ]
         ];
 
-        $data = PesananGedung::selectRaw('status, COUNT(*) as count')
-            ->groupBy('status')
-            ->union(PesananPublikasi::selectRaw('status, COUNT(*) as count')->groupBy('status'))
-            ->get()
+        $dataGedung = PesananGedung::selectRaw('status, COUNT(*) as count')
+            ->get();
+
+        $dataPublikasi = PesananGedung::selectRaw('status, COUNT(*) as count')
+            ->get();
+
+        $data = collect($dataGedung)
+            ->concat($dataPublikasi)
             ->groupBy('status')
             ->map(function ($group) {
                 return $group->sum('count');
