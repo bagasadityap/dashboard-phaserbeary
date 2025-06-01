@@ -58,7 +58,7 @@
                                 <tr>
                                     <td class="d-flex align-items-center" style="width: 8rem">
                                         <p class="mb-0 d-flex align-items-center">
-                                            <i class="iconoir-map-pin me-1" style="font-size: 1.8rem;"></i> Fasilitas
+                                            <i class="iconoir-planimetry me-1" style="font-size: 1.8rem;"></i> Fasilitas
                                         </p>
                                     </td>
                                     <td class="align-middle fw-bold">
