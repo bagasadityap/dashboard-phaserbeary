@@ -56,9 +56,11 @@ class DashboardController extends Controller
         ];
 
         $dataGedung = PesananGedung::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
             ->get();
 
-        $dataPublikasi = PesananGedung::selectRaw('status, COUNT(*) as count')
+        $dataPublikasi = PesananPublikasi::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
             ->get();
 
         $data = collect($dataGedung)
