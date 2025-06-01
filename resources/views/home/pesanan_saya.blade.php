@@ -10,34 +10,22 @@
                     <h4 class="card-title d-flex align-items-center">{{ $model->type == 'gedung' ? 'Pesanan Gedung' : 'Pesanan Publikasi' }}
                         @switch($model->status)
                             @case(0)
-                                <div class="bg-warning-subtle p-2 border-dashed border-warning rounded">
-                                    <span class="text-warning fw-semibold">MENUNGGU DIKONFIRMASI</span>
-                                </div>
+                                <span class="badge rounded-pill bg-warning-subtle text-warning ms-2">MENUNGGU DIKONFIRMASI</span>
                                 @break
                             @case(1)
-                                <div class="bg-blue-subtle p-2 border-dashed border-blue rounded">
-                                    <span class="text-blue fw-semibold">DIKONFIRMASI</span>
-                                </div>
+                                <span class="badge rounded-pill bg-blue-subtle text-blue ms-2">DIKONFIRMASI</span>
                                 @break
                             @case(2)
-                                <div class="bg-warning-subtle p-2 border-dashed border-warning rounded">
-                                    <span class="text-warning fw-semibold">BELUM BAYAR</span>
-                                </div>
+                                <span class="badge rounded-pill bg-warning-subtle text-warning ms-2">BELUM BAYAR</span>
                                 @break
                             @case(3)
-                                <div class="bg-success-subtle p-2 border-dashed border-success rounded">
-                                    <span class="text-success fw-semibold">LUNAS</span>
-                                </div>
+                                <span class="badge rounded-pill bg-success-subtle text-success ms-2">LUNAS</span>
                                 @break
                             @case(4)
-                                <div class="bg-danger-subtle p-2 border-dashed border-danger rounded">
-                                    <span class="text-danger fw-semibold">DITOLAK</span>
-                                </div>
+                                <span class="badge rounded-pill bg-danger-subtle text-danger ms-2">DITOLAK</span>
                                 @break
                             @case(5)
-                                <div class="bg-danger-subtle p-2 border-dashed border-danger rounded">
-                                    <span class="text-danger fw-semibold">PEMBAYARAN DITOLAK</span>
-                                </div>
+                                <span class="badge rounded-pill bg-danger-subtle text-danger ms-2">PEMBAYARAN DITOLAK</span>
                                 @break
                         @endswitch
                     </h4>
