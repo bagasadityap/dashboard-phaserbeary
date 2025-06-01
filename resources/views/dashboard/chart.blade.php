@@ -27,6 +27,9 @@
                     </div>
                 </div>
             </div>
+            <div class="card-body pt-0">
+                <div id="status" class="apex-charts mt-n2"></div>
+            </div>
         </div>
     </div>
 </div>
