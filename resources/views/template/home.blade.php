@@ -56,9 +56,6 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{ route('home.pesanan-saya') }}">Pesanan Saya</a>
                     </li>
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="#">FAQ</a>
-                    </li> --}}
                 </ul>
                 <ul>
                     <li class="dropdown topbar-item">

@@ -12,9 +12,9 @@
                 <h4 class="card-title d-flex align-item-center">Pemesanan Gedung <i class="iconoir-building fs-20 ms-1"></i></h4>
             </div>
             <div class="card-body pt-0">
-                <p class="card-text text-muted ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint natus maiores reprehenderit laborum. Aut expedita neque molestiae debitis, officiis possimus?</p>
+                <p class="card-text text-muted ">Gunakan layanan pemesanan gedung Universitas Brawijaya untuk mendukung kegiatan akademik maupun non-akademik Anda. Tersedia berbagai pilihan gedung dengan fasilitas lengkap yang dapat disesuaikan dengan kebutuhan acara Anda.</p>
                 <a href="{{ route('home.pemesanan-gedung') }}" class="btn btn-primary btn-sm">Pesan</a>
-            </div>                             
+            </div>
         </div>
     </div>
     <div class="col-lg-6">
@@ -23,10 +23,9 @@
                 <h4 class="card-title d-flex align-item-center">Pemesanan Publikasi Acara <i class="iconoir-post fs-20 ms-1"></i></h4>
             </div>
             <div class="card-body pt-0">
-                <p class="card-text text-muted ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique voluptas natus officiis soluta facilis, suscipit eos eum minima nostrum repellat.
-                    content.</p>
+                <p class="card-text text-muted ">Promosikan acara kampus Anda secara resmi melalui kanal publikasi Universitas Brawijaya. Layanan ini membantu menyebarkan informasi acara Anda agar menjangkau audiens yang lebih luas dengan cepat dan efektif.</p>
                 <a href="{{ route('home.pemesanan-publikasi') }}" class="btn btn-primary btn-sm">Pesan</a>
-            </div>                           
+            </div>
         </div>
     </div>
 </div>
