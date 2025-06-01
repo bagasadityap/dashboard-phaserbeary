@@ -34,7 +34,7 @@
                         <input type="file" class="form-control" name="gambar[]" id="gambar" accept=".jpg, .jpeg, .png" multiple>
                     </div>
                     <div id="old-images-container" class="d-flex flex-wrap gap-2">
-                        @foreach (json_decode($model->gambar, true) as $image)
+                        @foreach ((is_array(json_decode($model->gambar, true)) ? json_decode($model->gambar, true) : []) as $image)
                             <div class="position-relative d-inline-block">
                                 <img src="{{ asset('storage/' . $image) }}" class="img-thumbnail" style="width: 100px; height: 100px;">
                                 <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0" style="transform: translate(50%, -50%);" onclick="removeOldImage('{{ $image }}')">

@@ -119,7 +119,7 @@ class GedungController extends Controller
                 'harga' => 'required|numeric',
                 'deskripsi' => 'required|string',
                 'gambar' => 'nullable',
-                'gambar.*' => 'file|mimes:jpg,jpeg,png|max:2048',
+                'gambar.*' => 'file|mimes:jpg,jpeg,png',
                 'gambarVR' => 'nullable|file|mimes:jpg,jpeg,png',
                 'fasilitas' => 'array',
             ]);
@@ -169,8 +169,6 @@ class GedungController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
         } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
