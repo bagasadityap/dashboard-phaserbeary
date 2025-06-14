@@ -51,11 +51,11 @@ class User extends Authenticatable
 
     public function pesananGedung()
     {
-        return $this->hasMany(PesananGedung::class);
+        return $this->hasMany(PesananGedung::class, 'userId');
     }
 
     public function pesananPublikasi()
     {
-        return $this->hasMany(PesananPublikasi::class);
+        return $this->hasMany(PesananPublikasi::class, 'userId');
     }
 }
