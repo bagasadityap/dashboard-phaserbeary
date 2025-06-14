@@ -9,12 +9,12 @@
         <div class="row dokumen-field">
             <div class="col-md-5 mb-2">
                 <label class="form-label">Nama Dokumen</label>
-                <input type="text" class="form-control" name="nama[]" value="{{ $dokumen['nama'] }}">
+                <input type="text" class="form-control" name="nama[]" value="{{ $dokumen['nama'] }}" required>
             </div>
             <div class="col-md-5 mb-2">
                 <label class="form-label">File</label>
                 <div class="input-group mb-2">
-                    <input type="file" name="file[]" class="form-control" value="">
+                    <input type="file" name="file[]" class="form-control" value="" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -30,7 +30,7 @@
             <div class="col-md-5 mb-2">
                 <label class="form-label">File</label>
                 <div class="input-group mb-2">
-                    <input type="file" name="file[]" class="form-control">
+                    <input type="file" name="file[]" class="form-control" required>
                 </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
@@ -57,7 +57,7 @@
         <div class="col-md-5 mb-2">
           <label class="form-label">File</label>
           <div class="input-group mb-2">
-              <input type="file" name="file[]" class="form-control">
+              <input type="file" name="file[]" class="form-control" required>
           </div>
         </div>
         <div class="col-md-2 d-flex align-items-center">
