@@ -131,7 +131,7 @@ class UserController extends Controller
                     'success' => false,
                     'message' => 'Anda tidak dapat menghapus user ini'
                 ]);
-            } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exist()) {
+            } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exists()) {
                 session()->flash('error', 'User tidak dapat dihapus karena terdapat pesanan yang terkait.');
                 return response()->json([
                     'success' => false,
