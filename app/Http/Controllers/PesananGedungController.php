@@ -281,7 +281,7 @@ class PesananGedungController extends Controller
 
             return response()->download($path)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.' . $e);
         }
     }
 }
