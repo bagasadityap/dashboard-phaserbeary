@@ -93,6 +93,7 @@ class PesananPublikasiController extends Controller
                 $model->alasanPenolakan = $request->alasanPenolakan;
             }
             $model->save();
+            session()->flash('success', 'Status pesanan berhasil diubah.');
             return response()->json([
                 'success' => true,
                 'message' => 'Status pesanan berhasil diubah'
@@ -239,8 +240,6 @@ class PesananPublikasiController extends Controller
             return redirect()->back()->with('success', 'Data berhasil disimpan.');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 

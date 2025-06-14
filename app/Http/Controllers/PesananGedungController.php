@@ -108,9 +108,10 @@ class PesananGedungController extends Controller
                 $model->alasanPenolakan = $request->alasanPenolakan;
             }
             $model->save();
+            session()->flash('success', 'Status pesanan berhasil diubah.');
             return response()->json([
                 'success' => true,
-                'message' => 'Status pesanan berhasil diubah'
+                'message' => 'Status pesanan berhasil diubah.'
             ]);
         } catch (\Exception $e) {
             session()->flash('error', 'Terjadi kesalahan.');
