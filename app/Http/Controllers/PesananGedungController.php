@@ -225,7 +225,9 @@ class PesananGedungController extends Controller
         try {
             $request->validate([
                 'nama' => 'array',
-                'harga' => 'array'
+                'nama.*' => 'string',
+                'harga' => 'array',
+                'harga.*' => 'numeric|min:0',
             ]);
 
             $pesanan = PesananGedung::findOrFail($id);

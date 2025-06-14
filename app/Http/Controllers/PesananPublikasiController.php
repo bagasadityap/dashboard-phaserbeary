@@ -209,9 +209,10 @@ class PesananPublikasiController extends Controller
     public function storeHargaPesanan(Request $request, $id) {
         try {
             $request->validate([
-                'hargaPublikasi' => 'required|int',
                 'nama' => 'array',
-                'harga' => 'array'
+                'nama.*' => 'string',
+                'harga' => 'array',
+                'harga.*' => 'numeric|min:0',
             ]);
 
             $pesanan = PesananPublikasi::findOrFail($id);
