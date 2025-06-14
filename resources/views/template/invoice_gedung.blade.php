@@ -86,17 +86,17 @@
         </table>
         <table style="width: 100%;">
             @php
-                $path = public_path('image/invoice.png');
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $path2 = public_path('image/invoice.png');
+                $type2 = pathinfo($path2, PATHINFO_EXTENSION);
+                $data2 = file_get_contents($path2);
+                $base64Invoice = 'data:image/' . $type2 . ';base64,' . base64_encode($data2);
             @endphp
             <tr>
                 <td><p class="alamat-font" style="margin-bottom: 0;">Office:</p></td>
                 <td rowspan="4" style="padding: 0;">
                     <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%;">
                       <div style="display: flex; justify-content: flex-end;">
-                        <img src="{{$base64}}" alt="" width="150">
+                        <img src="{{ $base64Invoice }}" alt="" width="150">
                       </div>
                     </div>
                 </td>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananPublikasi;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -245,22 +244,33 @@ class PesananPublikasiController extends Controller
         }
     }
 
-    public function downloadInvoice($id)  {
-        $model = PesananPublikasi::findOrFail($id);
-        $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
-        $confirmedBy = $model->confirmedBy()->first()->name;
+    public function downloadInvoice($id)
+    {
+        try {
+            $model = PesananPublikasi::findOrFail($id);
+            $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
+            $confirmedBy = $model->confirmedBy()->first()->name;
 
-        $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
+            $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
-        $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
-        $path = storage_path("app/public/$filename");
+            $mpdf = new Mpdf([
+                'format' => 'A4',
+                'margin_top' => 10,
+                'margin_right' => 10,
+                'margin_bottom' => 10,
+                'margin_left' => 10,
+            ]);
 
-        Browsershot::html($html)
-            ->noSandbox()
-            ->format('A4')
-            ->margins(10, 10, 10, 10)
-            ->savePdf($path);
+            $mpdf->WriteHTML($html);
 
-        return response()->download($path)->deleteFileAfterSend(true);
+            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+            $path = storage_path("app/public/$filename");
+
+            $mpdf->Output($path, \Mpdf\Output\Destination::FILE);
+
+            return response()->download($path)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

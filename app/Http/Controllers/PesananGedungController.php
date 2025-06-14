@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Mpdf\Mpdf;
 use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -253,7 +254,8 @@ class PesananGedungController extends Controller
         }
     }
 
-    public function downloadInvoice($id)  {
+    public function downloadInvoice($id)
+    {
         try {
             $model = PesananGedung::findOrFail($id);
             $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
@@ -261,18 +263,24 @@ class PesananGedungController extends Controller
 
             $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
+            $mpdf = new Mpdf([
+                'format' => 'A4',
+                'margin_top' => 10,
+                'margin_right' => 10,
+                'margin_bottom' => 10,
+                'margin_left' => 10,
+            ]);
+
+            $mpdf->WriteHTML($html);
+
             $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
             $path = storage_path("app/public/$filename");
 
-            Browsershot::html($html)
-                ->noSandbox()
-                ->format('A4')
-                ->margins(10, 10, 10, 10)
-                ->savePdf($path);
+            $mpdf->Output($path, \Mpdf\Output\Destination::FILE);
 
             return response()->download($path)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.' . $e);
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 }
