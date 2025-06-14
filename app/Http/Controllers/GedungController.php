@@ -66,7 +66,7 @@ class GedungController extends Controller
                 'nama' => 'required|string|max:255',
                 'lokasi' => 'required|string|max:255',
                 'kapasitas' => 'required|numeric',
-                'harga' => 'required|numeric',
+                'harga' => 'required|numeric|min:0',
                 'deskripsi' => 'required|string',
                 'gambar.*' => 'file|mimes:jpg,jpeg,png',
                 'gambarVR' => 'required|file|mimes:jpg,jpeg,png',
