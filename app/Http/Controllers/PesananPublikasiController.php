@@ -139,64 +139,60 @@ class PesananPublikasiController extends Controller
 
     public function storeDokumen(Request $request, $id)
     {
-        try {
-            $request->validate([
-                'nama' => 'array',
-                'file' => 'array',
-                'file.*' => 'file',
-            ]);
+        $request->validate([
+            'nama' => 'array',
+            'file' => 'array',
+            'file.*' => 'file',
+        ]);
 
-            $model = PesananPublikasi::findOrFail($id);
-            $dokumenOperator = $model->dokumenOperator;
-            $oldDokumen = json_decode($dokumenOperator, true) ?? [];
-            $files = is_array($request->file('file')) ? $request->file('file') : [];
-            $namaBaru = is_array($request->nama) ? $request->nama : [];
+        $model = PesananPublikasi::findOrFail($id);
+        $dokumenOperator = $model->dokumenOperator;
+        $oldDokumen = json_decode($dokumenOperator, true) ?? [];
+        $files = is_array($request->file('file')) ? $request->file('file') : [];
+        $namaBaru = is_array($request->nama) ? $request->nama : [];
 
-            foreach ($oldDokumen as $dokumen) {
-                if (!isset($dokumen['nama'], $dokumen['file'])) continue;
+        foreach ($oldDokumen as $dokumen) {
+            if (!isset($dokumen['nama'], $dokumen['file'])) continue;
 
-                $namaLama = $dokumen['nama'];
-                $fileLama = $dokumen['file'];
+            $namaLama = $dokumen['nama'];
+            $fileLama = $dokumen['file'];
 
-                $index = array_search($namaLama, $namaBaru);
-                $fileBaru = $files[$index] ?? null;
+            $index = array_search($namaLama, $namaBaru);
+            $fileBaru = $files[$index] ?? null;
 
-                if ($index === false || $fileBaru) {
-                    if (Storage::disk('public')->exists($fileLama)) {
-                        Storage::disk('public')->delete($fileLama);
-                    }
+            if ($index === false || $fileBaru) {
+                if (Storage::disk('public')->exists($fileLama)) {
+                    Storage::disk('public')->delete($fileLama);
                 }
             }
-
-            $newDokumen = [];
-
-            for ($i = 0; $i < count($namaBaru); $i++) {
-                $nama = $request->nama[$i];
-                $fileInput = $request->file('file')[$i] ?? null;
-                $existing = collect($oldDokumen)->firstWhere('nama', $nama);
-
-                if ($fileInput) {
-                    $filename = time() . '_' . Str::uuid() . '_' . $fileInput->getClientOriginalName();
-                    $filePath = $fileInput->storeAs('dokumen/publikasi', $filename, 'public');
-                    $newDokumen[] = [
-                        'nama' => $nama,
-                        'file' => $filePath,
-                    ];
-                } elseif ($existing) {
-                    $newDokumen[] = [
-                        'nama' => $existing['nama'],
-                        'file' => $existing['file'],
-                    ];
-                }
-            }
-
-            $model->dokumenOperator = $newDokumen;
-            $model->save();
-
-            return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         }
+
+        $newDokumen = [];
+
+        for ($i = 0; $i < count($namaBaru); $i++) {
+            $nama = $request->nama[$i];
+            $fileInput = $request->file('file')[$i] ?? null;
+            $existing = collect($oldDokumen)->firstWhere('nama', $nama);
+
+            if ($fileInput) {
+                $filename = time() . '_' . Str::uuid() . '_' . $fileInput->getClientOriginalName();
+                $filePath = $fileInput->storeAs('dokumen/publikasi', $filename, 'public');
+                $newDokumen[] = [
+                    'nama' => $nama,
+                    'file' => $filePath,
+                ];
+            } elseif ($existing) {
+                $newDokumen[] = [
+                    'nama' => $existing['nama'],
+                    'file' => $existing['file'],
+                ];
+            }
+        }
+
+        $model->dokumenOperator = $newDokumen;
+        $model->save();
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
     }
 
     public function tambahHargaPesanan($id) {
