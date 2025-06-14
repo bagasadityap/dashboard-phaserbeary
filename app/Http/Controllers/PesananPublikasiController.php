@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Mpdf\Mpdf;
 use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 

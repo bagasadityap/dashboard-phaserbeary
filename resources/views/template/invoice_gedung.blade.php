@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @php
+        $bootstrap = file_get_contents(public_path('assets/css/bootstrap.min.css'));
+    @endphp
+    <style>
+        {!! $bootstrap !!}
+    </style>
     <style>
         body {
             background-color: #ffffff;
@@ -63,7 +68,13 @@
     <div class="invoice-container">
         <table class="header">
             <tr>
-                <td rowspan="3"><img src="https://wiki.ub.ac.id/lib/exe/fetch.php?cache=&media=ub-logo-small.png" alt="Logo" width="100" height="100"></td>
+                @php
+                    $path = public_path('image/ub-logo-small.png');
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $data = file_get_contents($path);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                @endphp
+                <td rowspan="3"><img src="{{ $base64 }}" alt="Logo" width="100" height="100"></td>
                 <td><b><p class="header-font m-0">DIREKTORAT PENGEMBANGAN</p></b></td>
             </tr>
             <tr>
@@ -98,9 +109,9 @@
             </tr>
             <tr>
                 <td class="d-flex">
-                    <a class="alamat-font" href="http://upkk.ub.ac.id" style="margin-right: 5px;">http://upkk.ub.ac.id</a>
+                    <a class="alamat-font" href="http://upkk.ub.ac.id" style="margin-right: 5px; color:blue !important;">http://upkk.ub.ac.id</a>
                     <p class="alamat-font"> - </p>
-                    <a class="alamat-font" href="mailto:jpc@ub.ac.id">jpc@ub.ac.id</a>
+                    <a class="alamat-font" href="mailto:jpc@ub.ac.id" style="color:blue !important;">jpc@ub.ac.id</a>
                 </td>
             </tr>
         </table>
