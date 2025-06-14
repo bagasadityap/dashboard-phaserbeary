@@ -50,11 +50,9 @@ class RoleController extends Controller
 
             $role->save();
 
-            return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+            return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
@@ -79,69 +77,48 @@ class RoleController extends Controller
             $role->name = $request->name;
             $role->save();
 
-            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
         } catch (ValidationException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
     public function updatePermission(Request $request, $id) {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $role = Role::where('id', $id)->firstOrFail();
-            $role->permissions()->detach();
+        $role = Role::where('id', $id)->firstOrFail();
+        $role->permissions()->detach();
 
-            $permissions = $request->all();
+        $permissions = $request->all();
 
-            foreach ($permissions as $fieldName => $value) {
-                if ($fieldName !== '_token') {
-                    $role->givePermissionTo($value);
-                }
+        foreach ($permissions as $fieldName => $value) {
+            if ($fieldName !== '_token') {
+                $role->givePermissionTo($value);
             }
-
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Data berhasil diperbarui');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Pembaruan permission gagal: ' . $e->getMessage());
         }
+
+        DB::commit();
+
+        return redirect()->back()->with('success', 'Data berhasil diperbarui.');
     }
 
     public function delete($id) {
-        try {
-            $role = Role::findOrFail($id);
+        $role = Role::findOrFail($id);
 
-            if ($role->users()->exists()) {
-                session()->flash('error', 'Role tidak dapat dihapus karena terdapat user yang ditempatkan pada role ini.');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Role tidak dapat dihapus karena terdapat user yang ditempatkan pada role ini.'
-                ]);
-            }
-
-            $role->delete();
-            session()->flash('success', 'Data berhasil dihapus.');
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil dihapus'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
+        if ($role->users()->exists()) {
+            session()->flash('error', 'Role tidak dapat dihapus karena terdapat user yang ditempatkan pada role ini.');
             return response()->json([
                 'success' => false,
-                'message' => 'Validasi gagal'
-            ]);
-        } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus data.'
+                'message' => 'Role tidak dapat dihapus karena terdapat user yang ditempatkan pada role ini.'
             ]);
         }
+
+        $role->delete();
+        session()->flash('success', 'Data berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 
     public function setting($id) {

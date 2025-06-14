@@ -98,7 +98,7 @@ class GedungController extends Controller
 
             $model->save();
 
-            return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+            return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
         } catch (ValidationException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
@@ -167,41 +167,35 @@ class GedungController extends Controller
             $model->fasilitas = json_encode($fasilitas);
             $model->save();
 
-            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
         } catch (ValidationException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
     public function delete($id) {
-        try {
-            $model = Gedung::where('id', $id)->firstOrFail();
+        $model = Gedung::where('id', $id)->firstOrFail();
 
-            if ($model->gambar && Storage::disk('public')->exists($model->gambar)) {
-                Storage::disk('public')->delete($model->gambar);
-            }
-            if ($model->gambarVR && Storage::disk('public')->exists($model->gambarVR)) {
-                Storage::disk('public')->delete($model->gambarVR);
-            }
-
-            $model->delete();
-            session()->flash('success', 'Data berhasil dihapus.');
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil dihapus'
-            ]);
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
+        if ($model->pesanan()->exists()) {
+            session()->flash('error', 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.');
             return response()->json([
                 'success' => false,
-                'message' => 'Validasi gagal'
-            ]);
-        } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus data.'
+                'message' => 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.'
             ]);
         }
+
+        if ($model->gambar && Storage::disk('public')->exists($model->gambar)) {
+            Storage::disk('public')->delete($model->gambar);
+        }
+        if ($model->gambarVR && Storage::disk('public')->exists($model->gambarVR)) {
+            Storage::disk('public')->delete($model->gambarVR);
+        }
+
+        $model->delete();
+        session()->flash('success', 'Data berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 }

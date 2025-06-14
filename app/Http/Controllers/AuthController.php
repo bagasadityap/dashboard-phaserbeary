@@ -14,23 +14,19 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        try {
-            $validatedData = $request->validate([
-                'username' => 'required',
-                'password' => 'required',
-            ]);
-            if (Auth::attempt($validatedData)) {
-                if (auth()->user()->getRoleNames()->first() != 'Customer') {    
-                    return redirect('/dashboard');
-                } else {
-                    return redirect('/home');
-                }
+        $validatedData = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+        if (Auth::attempt($validatedData)) {
+            if (auth()->user()->getRoleNames()->first() != 'Customer') {
+                return redirect('/dashboard');
+            } else {
+                return redirect('/home');
             }
-            else {
-                return redirect()->back()->with('error', 'Username atau Password salah.');
-            }
-        } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+        }
+        else {
+            return redirect()->back()->with('error', 'Username atau Password salah.');
         }
     }
 

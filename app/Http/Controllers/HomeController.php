@@ -138,8 +138,6 @@ class HomeController extends Controller
             return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
         } catch (ValidationException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui dokumen.');
         }
     }
 
@@ -168,21 +166,17 @@ class HomeController extends Controller
     }
 
     public function pilih($id, $id2) {
-        try {
-            $model = PesananGedung::findOrFail($id2);
-            $gedung = Gedung::findOrFail($id);
-            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $model->id)->sum('harga');
-            $totalHarga = $gedung->harga + $opsiTambahanTotal;
-            $model->update([
-                'gedungId' => $gedung->id,
-                'hargaGedung' => $gedung->harga,
-                'status' => 2,
-                'PPN' => $totalHarga * 10/100,
-                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
-            ]);
-            session()->flash('success', 'Gedung berhasil dipilih.');
-        } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-        }
+        $model = PesananGedung::findOrFail($id2);
+        $gedung = Gedung::findOrFail($id);
+        $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $model->id)->sum('harga');
+        $totalHarga = $gedung->harga + $opsiTambahanTotal;
+        $model->update([
+            'gedungId' => $gedung->id,
+            'hargaGedung' => $gedung->harga,
+            'status' => 2,
+            'PPN' => $totalHarga * 10/100,
+            'totalHarga' => $totalHarga + ($totalHarga * 10/100)
+        ]);
+        session()->flash('success', 'Gedung berhasil dipilih.');
     }
 }

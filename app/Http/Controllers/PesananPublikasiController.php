@@ -77,8 +77,6 @@ class PesananPublikasiController extends Controller
 
             return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }

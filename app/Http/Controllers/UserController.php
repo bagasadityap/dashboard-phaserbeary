@@ -71,11 +71,9 @@ class UserController extends Controller
 
             $user->save();
 
-            return redirect()->back()->with('success', 'Data berhasil ditambahkan');
+            return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
@@ -116,43 +114,35 @@ class UserController extends Controller
 
             $user->save();
 
-            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+            return redirect()->back()->with('success', 'Data berhasil diperbarui.');
         } catch (ValidationException $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
     public function delete($id) {
-        try {
-            $user = User::findOrFail($id);
-            if ($user) {
-                if ($user->username == 'admin' || $id == auth()->user()->id) {
-                    session()->flash('error', 'Anda tidak dapat menghapus user ini.');
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Anda tidak dapat menghapus user ini'
-                    ]);
-                }
-                $user->delete();
-                session()->flash('success', 'Data berhasil dihapus.');
+        $user = User::findOrFail($id);
+
+
+        if ($user) {
+            if ($user->username == 'admin' || $id == auth()->user()->id) {
+                session()->flash('error', 'Anda tidak dapat menghapus user ini.');
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Data berhasil dihapus'
+                    'success' => false,
+                    'message' => 'Anda tidak dapat menghapus user ini'
+                ]);
+            } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exist()) {
+                session()->flash('error', 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.'
                 ]);
             }
-        } catch (ValidationException $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
+            $user->delete();
+            session()->flash('success', 'Data berhasil dihapus.');
             return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal'
-            ]);
-        } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan.');
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus data.'
+                'success' => true,
+                'message' => 'Data berhasil dihapus'
             ]);
         }
     }

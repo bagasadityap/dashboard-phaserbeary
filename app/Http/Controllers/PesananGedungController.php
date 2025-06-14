@@ -81,10 +81,8 @@ class PesananGedungController extends Controller
                 'userId' => auth()->user()->id,
             ]);
 
-            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
+            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
@@ -102,8 +100,6 @@ class PesananGedungController extends Controller
 
             return redirect()->route('pesanan.gedung.view', ['id' => $id])->with('success', 'Data berhasil disimpan.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
@@ -262,9 +258,7 @@ class PesananGedungController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil disimpan.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
