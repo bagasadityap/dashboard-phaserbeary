@@ -123,28 +123,25 @@ class UserController extends Controller
     public function delete($id) {
         $user = User::findOrFail($id);
 
-
-        if ($user) {
-            if ($user->username == 'admin' || $id == auth()->user()->id) {
-                session()->flash('error', 'Anda tidak dapat menghapus user ini.');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Anda tidak dapat menghapus user ini'
-                ]);
-            } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exists()) {
-                session()->flash('error', 'User tidak dapat dihapus karena terdapat pesanan yang terkait.');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User tidak dapat dihapus karena tedapat pesanan yang terkait.'
-                ]);
-            }
-            $user->delete();
-            session()->flash('success', 'Data berhasil dihapus.');
+        if ($user->username == 'admin' || $id == auth()->user()->id) {
+            session()->flash('error', 'Anda tidak dapat menghapus user ini.');
             return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil dihapus'
+                'success' => false,
+                'message' => 'Anda tidak dapat menghapus user ini'
+            ]);
+        } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exists()) {
+            session()->flash('error', 'User tidak dapat dihapus karena terdapat pesanan yang terkait.');
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak dapat dihapus karena tedapat pesanan yang terkait.'
             ]);
         }
+        $user->delete();
+        session()->flash('success', 'Data berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 
 }

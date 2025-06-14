@@ -49,7 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-        public function pesananGedung()
+    public function pesananGedung()
     {
         return $this->hasMany(PesananGedung::class);
     }
