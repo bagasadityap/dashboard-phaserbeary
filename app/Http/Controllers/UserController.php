@@ -132,10 +132,10 @@ class UserController extends Controller
                     'message' => 'Anda tidak dapat menghapus user ini'
                 ]);
             } elseif ($user->pesananGedung()->exists() || $user->pesananPublikasi()->exist()) {
-                session()->flash('error', 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.');
+                session()->flash('error', 'User tidak dapat dihapus karena terdapat pesanan yang terkait.');
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gedung tidak dapat dihapus karena tedapat pesanan yang terkait.'
+                    'message' => 'User tidak dapat dihapus karena tedapat pesanan yang terkait.'
                 ]);
             }
             $user->delete();
