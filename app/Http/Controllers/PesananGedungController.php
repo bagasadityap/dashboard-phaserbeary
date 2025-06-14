@@ -9,8 +9,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananGedungController extends Controller
@@ -87,19 +89,10 @@ class PesananGedungController extends Controller
 
     public function inputGedung(Request $request, $id)
     {
-        try {
-            $request->validate([
-                'gedungs' => 'nullable|array',
-                'gedungs.*' => 'exists:gedungs,id'
-            ]);
+        $pesanan = PesananGedung::findOrFail($id);
+        $pesanan->gedungTersedia()->sync($request->gedungs);
 
-            $pesanan = PesananGedung::findOrFail($id);
-            $pesanan->gedungTersedia()->sync($request->gedungs);
-
-            return redirect()->route('pesanan.gedung.view', ['id' => $id])->with('success', 'Data berhasil disimpan.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
-        }
+        return redirect()->route('pesanan.gedung.view', ['id' => $id])->with('success', 'Data berhasil disimpan.');
     }
 
     public function confirm(Request $request, $id) {
@@ -265,10 +258,17 @@ class PesananGedungController extends Controller
         $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
         $confirmedBy = $model->confirmedBy()->first()->name;
 
-        $pdf = Pdf::loadView('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'));
+        $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
         $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+        $path = storage_path("app/public/$filename");
 
-        return $pdf->download($filename);
+        Browsershot::html($html)
+            ->noSandbox()
+            ->format('A4')
+            ->margins(10, 10, 10, 10)
+            ->savePdf($path);
+
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 }

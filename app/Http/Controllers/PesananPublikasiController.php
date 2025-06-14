@@ -8,8 +8,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananPublikasiController extends Controller
@@ -247,10 +249,17 @@ class PesananPublikasiController extends Controller
         $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
         $confirmedBy = $model->confirmedBy()->first()->name;
 
-        $pdf = Pdf::loadView('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'));
+        $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
 
         $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+        $path = storage_path("app/public/$filename");
 
-        return $pdf->download($filename);
+        Browsershot::html($html)
+            ->noSandbox()
+            ->format('A4')
+            ->margins(10, 10, 10, 10)
+            ->savePdf($path);
+
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 }
