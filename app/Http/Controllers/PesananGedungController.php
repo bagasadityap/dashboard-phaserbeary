@@ -280,7 +280,7 @@ class PesananGedungController extends Controller
 
             return response()->download($path)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e);
         }
     }
 }
