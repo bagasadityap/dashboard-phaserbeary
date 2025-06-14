@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Gedung;
 use App\Models\OpsiTambahanPesananGedung;
 use App\Models\PesananGedung;
-use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananGedungController extends Controller
@@ -263,25 +261,14 @@ class PesananGedungController extends Controller
     }
 
     public function downloadInvoice($id)  {
-        try {
-            $model = PesananGedung::findOrFail($id);
-            $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
-            $confirmedBy = $model->confirmedBy()->first()->name;
+        $model = PesananGedung::findOrFail($id);
+        $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+        $confirmedBy = $model->confirmedBy()->first()->name;
 
-            $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
+        $pdf = Pdf::loadView('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'));
 
-            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
-            $path = storage_path("app/public/$filename");
+        $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
 
-            Browsershot::html($html)
-                ->noSandbox()
-                ->format('A4')
-                ->margins(10, 10, 10, 10)
-                ->savePdf($path);
-
-            return response()->download($path)->deleteFileAfterSend(true);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.' . $e);
-        }
+        return $pdf->download($filename);
     }
 }

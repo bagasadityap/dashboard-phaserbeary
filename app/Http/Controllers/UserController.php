@@ -73,7 +73,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 

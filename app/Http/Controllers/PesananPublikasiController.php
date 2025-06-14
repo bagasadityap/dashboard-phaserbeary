@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\OpsiTambahanPesananPublikasi;
 use App\Models\PesananPublikasi;
-use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
 
 class PesananPublikasiController extends Controller
@@ -245,25 +243,14 @@ class PesananPublikasiController extends Controller
     }
 
     public function downloadInvoice($id)  {
-        try {
-            $model = PesananPublikasi::findOrFail($id);
-            $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
-            $confirmedBy = $model->confirmedBy()->first()->name;
+        $model = PesananPublikasi::findOrFail($id);
+        $tambahanOpsional = OpsiTambahanPesananPublikasi::where('pesananId', $id)->get();
+        $confirmedBy = $model->confirmedBy()->first()->name;
 
-            $html = View::make('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
+        $pdf = Pdf::loadView('template.invoice_publikasi', compact('model', 'tambahanOpsional', 'confirmedBy'));
 
-            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
-            $path = storage_path("app/public/$filename");
+        $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
 
-            Browsershot::html($html)
-                ->noSandbox()
-                ->format('A4')
-                ->margins(10, 10, 10, 10)
-                ->savePdf($path);
-
-            return response()->download($path)->deleteFileAfterSend(true);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh invoice.');
-        }
+        return $pdf->download($filename);
     }
 }
