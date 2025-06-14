@@ -79,6 +79,13 @@
                                         <span class="text-muted font-13">Tanggal Publikasi:  {{ \Carbon\Carbon::parse($model->tanggal)->translatedFormat('d F Y') }}</span>
                                     </p>
                                 </td>
+                                @if ($model->totalHarga)
+                                    <td class="d-flex justify-content-end">
+                                        <div class="col-auto">
+                                            <a href="{{ route('pesanan.publikasi.download-invoice', ['id' => $model->id]) }}" class="text-secondary"><i class="fas fa-download me-1"></i> Download Invoice</a>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>
