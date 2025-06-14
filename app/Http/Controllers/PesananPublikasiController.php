@@ -236,7 +236,7 @@ class PesananPublikasiController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil disimpan.');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
