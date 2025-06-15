@@ -86,7 +86,7 @@
         </table>
         <table style="width: 100%;">
             @php
-                $path2 = public_path('image/invoice.jpg');
+                $path2 = public_path('image/invoice.png');
                 $type2 = pathinfo($path2, PATHINFO_EXTENSION);
                 $data2 = file_get_contents($path2);
                 $base64Invoice = 'data:image/' . $type2 . ';base64,' . base64_encode($data2);
