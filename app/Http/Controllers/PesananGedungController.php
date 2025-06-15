@@ -250,11 +250,30 @@ class PesananGedungController extends Controller
     public function downloadInvoice($id)
     {
         try {
-            $mpdf = new \Mpdf\Mpdf();
-            $mpdf->WriteHTML('<h1>Hello world</h1>');
-            return $mpdf->Output('test.pdf', 'I');
-        } catch (\Throwable $e) {
-            return response('Error: ' . $e->getMessage());
+            $model = PesananGedung::findOrFail($id);
+            $tambahanOpsional = OpsiTambahanPesananGedung::where('pesananId', $id)->get();
+            $confirmedBy = $model->confirmedBy()->first()->name;
+
+            $html = View::make('template.invoice_gedung', compact('model', 'tambahanOpsional', 'confirmedBy'))->render();
+
+            $mpdf = new Mpdf([
+                'format' => 'A4',
+                'margin_top' => 10,
+                'margin_right' => 10,
+                'margin_bottom' => 10,
+                'margin_left' => 10,
+            ]);
+
+            $mpdf->WriteHTML($html);
+
+            $filename = 'INVOICE_' . $model->id . '-BCE-I-DPKA-II-' . $model->created_at->format('Y') . '.pdf';
+            $path = storage_path("app/public/$filename");
+
+            $mpdf->Output($path, \Mpdf\Output\Destination::FILE);
+
+            return response()->download($path)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e);
         }
     }
 }
