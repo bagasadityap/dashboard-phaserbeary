@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GedungController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PesananGedungController;
 use App\Http\Controllers\PesananPublikasiController;
 use App\Http\Controllers\RoleController;
@@ -37,7 +37,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::controller(HomeController::class)->name('home.')->middleware('can:Home')->group( function () {
+    Route::controller( CustomerController::class)->name('home.')->middleware('can:Home')->group( function () {
         Route::get('/home', 'index')->name('index');
         Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
         Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');

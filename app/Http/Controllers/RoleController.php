@@ -117,7 +117,7 @@ class RoleController extends Controller
         session()->flash('success', 'Data berhasil dihapus.');
         return response()->json([
             'success' => true,
-            'message' => 'Data berhasil dihapus'
+            'message' => 'Data berhasil dihapus.'
         ]);
     }
 
