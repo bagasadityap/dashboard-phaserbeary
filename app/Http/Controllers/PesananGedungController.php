@@ -114,6 +114,49 @@ class PesananGedungController extends Controller
         }
     }
 
+    public function tambahOpsional($id) {
+        $model = PesananGedung::findOrFail($id);
+        $models = OpsiTambahanPesananGedung::where('pesananId', $model->id)->get();
+
+        return view('pesanan.gedung.tambah_opsional_pesanan', compact('model', 'models'));
+    }
+
+    public function storeOpsional(Request $request, $id) {
+        try {
+            $request->validate([
+                'nama' => 'array',
+                'nama.*' => 'string',
+                'harga' => 'array',
+                'harga.*' => 'numeric|min:0',
+            ]);
+
+            $pesanan = PesananGedung::findOrFail($id);
+            OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->delete();
+
+            if ($request->nama && $request->harga) {
+                for ($i=0; $i < count($request->nama); $i++) {
+                    OpsiTambahanPesananGedung::create([
+                        'nama' => $request->nama[$i],
+                        'harga' => $request->harga[$i],
+                        'pesananId' => $pesanan->id,
+                    ]);
+                }
+            }
+
+            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('harga');
+            $hargaGedung = $pesanan->hargaGedung ?? 0;
+            $totalHarga = $hargaGedung + $opsiTambahanTotal;
+            $pesanan->update([
+                'PPN' => $totalHarga * 10/100,
+                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
+            ]);
+
+            return redirect()->back()->with('success', 'Data berhasil disimpan.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        }
+    }
+
     public function tambahDokumen(Request $request, $id) {
         $model = PesananGedung::findOrFail($id);
         return view('pesanan.gedung.tambah_dokumen', compact('model'));
@@ -169,49 +212,6 @@ class PesananGedungController extends Controller
         $model->save();
 
         return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
-    }
-
-    public function tambahOpsional($id) {
-        $model = PesananGedung::findOrFail($id);
-        $models = OpsiTambahanPesananGedung::where('pesananId', $model->id)->get();
-
-        return view('pesanan.gedung.tambah_opsional_pesanan', compact('model', 'models'));
-    }
-
-    public function storeOpsional(Request $request, $id) {
-        try {
-            $request->validate([
-                'nama' => 'array',
-                'nama.*' => 'string',
-                'harga' => 'array',
-                'harga.*' => 'numeric|min:0',
-            ]);
-
-            $pesanan = PesananGedung::findOrFail($id);
-            OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->delete();
-
-            if ($request->nama && $request->harga) {
-                for ($i=0; $i < count($request->nama); $i++) {
-                    OpsiTambahanPesananGedung::create([
-                        'nama' => $request->nama[$i],
-                        'harga' => $request->harga[$i],
-                        'pesananId' => $pesanan->id,
-                    ]);
-                }
-            }
-
-            $opsiTambahanTotal = OpsiTambahanPesananGedung::where('pesananId', $pesanan->id)->sum('harga');
-            $hargaGedung = $pesanan->hargaGedung ?? 0;
-            $totalHarga = $hargaGedung + $opsiTambahanTotal;
-            $pesanan->update([
-                'PPN' => $totalHarga * 10/100,
-                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
-            ]);
-
-            return redirect()->back()->with('success', 'Data berhasil disimpan.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        }
     }
 
     public function downloadInvoice($id)

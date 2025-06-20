@@ -101,6 +101,51 @@ class PesananPublikasiController extends Controller
         }
     }
 
+    public function tambahHargaPesanan($id) {
+        $model = PesananPublikasi::findOrFail($id);
+        $models = OpsiTambahanPesananPublikasi::where('pesananId', $model->id)->get();
+
+        return view('pesanan.publikasi.tambah_opsional_pesanan', compact('model', 'models'));
+    }
+
+    public function storeHargaPesanan(Request $request, $id) {
+        try {
+            $request->validate([
+                'nama' => 'array',
+                'nama.*' => 'string',
+                'harga' => 'array',
+                'harga.*' => 'numeric|min:0',
+            ]);
+
+            $pesanan = PesananPublikasi::findOrFail($id);
+            $pesanan->hargaPublikasi = $request->hargaPublikasi;
+            $pesanan->save();
+
+            OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
+
+            if ($request->nama && $request->harga) {
+                for ($i=0; $i < count($request->nama); $i++) {
+                    OpsiTambahanPesananPublikasi::create([
+                        'nama' => $request->nama[$i],
+                        'harga' => $request->harga[$i],
+                        'pesananId' => $pesanan->id,
+                    ]);
+                }
+            }
+
+            $opsiTambahanTotal = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->sum('harga');
+            $totalHarga = $pesanan->hargaPublikasi + $opsiTambahanTotal;
+            $pesanan->update([
+                'PPN' => $totalHarga * 10/100,
+                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
+            ]);
+
+            return redirect()->back()->with('success', 'Data berhasil disimpan.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        }
+    }
+
     public function tambahDokumen(Request $request, $id) {
         $model = PesananPublikasi::findOrFail($id);
         return view('pesanan.publikasi.tambah_dokumen', compact('model'));
@@ -162,51 +207,6 @@ class PesananPublikasiController extends Controller
         $model->save();
 
         return redirect()->back()->with('success', 'Dokumen berhasil diperbarui.');
-    }
-
-    public function tambahHargaPesanan($id) {
-        $model = PesananPublikasi::findOrFail($id);
-        $models = OpsiTambahanPesananPublikasi::where('pesananId', $model->id)->get();
-
-        return view('pesanan.publikasi.tambah_opsional_pesanan', compact('model', 'models'));
-    }
-
-    public function storeHargaPesanan(Request $request, $id) {
-        try {
-            $request->validate([
-                'nama' => 'array',
-                'nama.*' => 'string',
-                'harga' => 'array',
-                'harga.*' => 'numeric|min:0',
-            ]);
-
-            $pesanan = PesananPublikasi::findOrFail($id);
-            $pesanan->hargaPublikasi = $request->hargaPublikasi;
-            $pesanan->save();
-
-            OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->delete();
-
-            if ($request->nama && $request->harga) {
-                for ($i=0; $i < count($request->nama); $i++) {
-                    OpsiTambahanPesananPublikasi::create([
-                        'nama' => $request->nama[$i],
-                        'harga' => $request->harga[$i],
-                        'pesananId' => $pesanan->id,
-                    ]);
-                }
-            }
-
-            $opsiTambahanTotal = OpsiTambahanPesananPublikasi::where('pesananId', $pesanan->id)->sum('harga');
-            $totalHarga = $pesanan->hargaPublikasi + $opsiTambahanTotal;
-            $pesanan->update([
-                'PPN' => $totalHarga * 10/100,
-                'totalHarga' => $totalHarga + ($totalHarga * 10/100)
-            ]);
-
-            return redirect()->back()->with('success', 'Data berhasil disimpan.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        }
     }
 
     public function downloadInvoice($id)
