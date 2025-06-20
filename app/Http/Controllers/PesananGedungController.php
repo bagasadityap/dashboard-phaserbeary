@@ -55,39 +55,6 @@ class PesananGedungController extends Controller
         return view('pesanan.gedung.detail_pesanan', compact('page', 'model', 'gedungs', 'selectedGedung', 'opsiTambahan'));
     }
 
-    public function store(Request $request) {
-        try {
-            $request->validate([
-                'judul' => 'required|string|max:255',
-                'tanggal' => 'required|date',
-                'jumlahPeserta' => 'required|integer',
-                'noHP' => 'required|string|max:255',
-                'suratPermohonanAcara' => 'required|file',
-                'catatan' => 'nullable|string',
-                'deskripsiAcara' => 'nullable|string',
-            ]);
-
-            $dokumen = $request->file('suratPermohonanAcara');
-            $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/gedung', $filename, 'public');
-
-            $model = PesananGedung::create([
-                'judul' => $request->judul,
-                'tanggal' => $request->tanggal,
-                'jumlahPeserta' => $request->jumlahPeserta,
-                'noHP' => $request->noHP,
-                'suratPermohonanAcara' => $dokumenPath,
-                'catatan' => $request->catatan,
-                'deskripsiAcara' => $request->deskripsiAcara,
-                'userId' => auth()->user()->id,
-            ]);
-
-            return redirect()->route('home.detail-pesanan-gedung', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan.');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        }
-    }
-
     public function inputGedung(Request $request, $id)
     {
         $pesanan = PesananGedung::findOrFail($id);

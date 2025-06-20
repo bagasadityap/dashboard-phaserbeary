@@ -50,37 +50,6 @@ class PesananPublikasiController extends Controller
         return view('pesanan.publikasi.detail_pesanan', compact('page', 'model', 'opsiTambahan'));
     }
 
-    public function store(Request $request) {
-        try {
-            $request->validate([
-                'judul' => 'required|string|max:255',
-                'tanggal' => 'required|date',
-                'noHP' => 'required|string|max:255',
-                'suratPermohonanAcara' => 'required|file',
-                'deskripsiAcara' => 'required|string',
-                'catatan' => 'nullable|string',
-            ]);
-
-            $dokumen = $request->file('suratPermohonanAcara');
-            $filename = time() . '_' . Str::uuid() . '_' . $dokumen->getClientOriginalName();
-            $dokumenPath = $dokumen->storeAs('dokumen/publikasi', $filename, 'public');
-
-            $model = PesananPublikasi::create([
-                'judul' => $request->judul,
-                'tanggal' => $request->tanggal,
-                'noHP' => $request->noHP,
-                'suratPermohonanAcara' => $dokumenPath,
-                'deskripsiAcara' => $request->deskripsiAcara,
-                'catatan' => $request->catatan,
-                'userId' => auth()->user()->id,
-            ]);
-
-            return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        }
-    }
-
     public function confirm(Request $request, $id) {
         try {
             $model = PesananPublikasi::findOrFail($id);

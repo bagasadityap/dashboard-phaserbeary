@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="card-body pt-0">
-            <form action="{{ route('pesanan.gedung.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('home.store-pesanan-gedung') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label for="judul" class="form-label">Judul Acara</label>

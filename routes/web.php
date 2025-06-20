@@ -41,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/home', 'index')->name('index');
         Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
         Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');
+        Route::post('/store-pesanan-gedung', 'storePesananGedung')->name('store-pesanan-gedung');
+        Route::post('/store-pesanan-publikasi', 'storePesananPublikasi')->name('store-pesanan-publikasi');
         Route::get('/pesanan-saya', 'pesananSaya')->name('pesanan-saya');
         Route::get('/detail-pesanan-gedung/{id?}', 'detailPesananGedung')->name('detail-pesanan-gedung');
         Route::get('/detail-pesanan-publikasi/{id?}', 'detailPesananPublikasi')->name('detail-pesanan-publikasi');
@@ -64,11 +66,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('pesanan')->name('pesanan.')->middleware('can:Home')->group(function () {
         Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
-            Route::post('/store', 'store')->name('store');
         });
 
         Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
-            Route::post('/store', 'store')->name('store');
         });
     });
 
