@@ -27,7 +27,6 @@ class PesananGedung extends Model
         'totalHarga',
         'isConfirmed',
         'isPaid',
-        'invoice',
         'status',
         'userId',
         'confirmedBy',
