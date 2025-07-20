@@ -85,7 +85,7 @@ class CustomerController extends Controller
     }
 
     public function storePesananPublikasi(Request $request) {
-        try {
+        // try {
             $request->validate([
                 'judul' => 'required|string|max:255',
                 'tanggal' => 'required|date',
@@ -110,9 +110,9 @@ class CustomerController extends Controller
             ]);
 
             return redirect()->route('home.detail-pesanan-publikasi', ['id' => $model->id])->with('success', 'Pesanan berhasil ditambahkan');
-        } catch (ValidationException $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan.');
-        }
+        // } catch (ValidationException $e) {
+        //     return redirect()->back()->with('error', 'Terjadi kesalahan.');
+        // }
     }
 
     public function tambahDokumenGedung(Request $request, $id) {
