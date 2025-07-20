@@ -36,7 +36,7 @@ class TambahDataGedungTest extends TestCase
             'deskripsi' => 'Contoh deskripsi',
             'gambar' => null,
             'gambarVR' => $gambarvr,
-            'fasilitas' => null,
+            'fasilitas' => [],
         ]);
 
         $response->assertRedirect();
@@ -47,7 +47,7 @@ class TambahDataGedungTest extends TestCase
             'kapasitas' => 1000,
             'harga' => 25000000,
             'deskripsi' => 'Contoh deskripsi',
-            'fasilitas' => null,
+            'fasilitas' => [],
         ]);
     }
 
@@ -69,7 +69,7 @@ class TambahDataGedungTest extends TestCase
             'deskripsi' => 'Contoh deskripsi',
             'gambar' => [$gambar],
             'gambarVR' => $gambarvr,
-            'fasilitas' => null,
+            'fasilitas' => [],
         ]);
 
         $response->assertRedirect();
@@ -80,7 +80,7 @@ class TambahDataGedungTest extends TestCase
             'kapasitas' => 1000,
             'harga' => 25000000,
             'deskripsi' => 'Contoh deskripsi',
-            'fasilitas' => null,
+            'fasilitas' => [],
         ]);
     }
 
@@ -101,7 +101,7 @@ class TambahDataGedungTest extends TestCase
             'deskripsi' => 'Contoh deskripsi',
             'gambar' => null,
             'gambarVR' => $gambarvr,
-            'fasilitas' => json_encode(['AC', 'Proyektor']),
+            'fasilitas' => ['AC', 'Proyektor'],
         ]);
 
         $response->assertRedirect();
@@ -112,7 +112,7 @@ class TambahDataGedungTest extends TestCase
             'kapasitas' => 1000,
             'harga' => 25000000,
             'deskripsi' => 'Contoh deskripsi',
-            'fasilitas' => ['AC', 'Proyektor'],
+            'fasilitas' => json_encode(['AC', 'Proyektor'])
         ]);
     }
 
@@ -131,7 +131,7 @@ class TambahDataGedungTest extends TestCase
             'deskripsi' => '',
             'gambar' => null,
             'gambarVR' => null,
-            'fasilitas' => null,
+            'fasilitas' => [],
         ]);
 
         $response->assertRedirect();
