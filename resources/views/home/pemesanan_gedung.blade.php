@@ -67,4 +67,8 @@
         window.location.href = '{{ route('home.index') }}';
     }
 </script>
+<script>
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tanggal').setAttribute('min', today);
+</script>
 @endpush
