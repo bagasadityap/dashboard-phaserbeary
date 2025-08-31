@@ -25,25 +25,13 @@ class DatabaseSeeder extends Seeder
 
         $super_admin = User::create(
             array_merge([
-                'email' => 'admin@email.com',
                 'name' => 'Super Admin',
                 'username' => 'admin',
-                'instansi' => 'Universitas Brawijaya'
-            ], $default_user_value)
-        );
-
-        $customer = User::create(
-            array_merge([
-                'email' => 'customer@email.com',
-                'name' => 'Customer',
-                'username' => 'customer',
-                'instansi' => 'Universitas Brawijaya'
             ], $default_user_value)
         );
 
         $roleSuperAdmin = Role::create(['name' => 'Super Admin']);
-        $roleOperator = Role::create(['name' => 'Operator']);
-        $roleCustomer = Role::create(['name' => 'Customer']);
+        $roleCurator = Role::create(['name' => 'Curator']);
 
         $menus = ['Dashboard', 'Gedung', 'Pesanan', 'Configuration', 'Home'];
 
@@ -95,10 +83,6 @@ class DatabaseSeeder extends Seeder
 
         Permission::create(['name' => 'Role Setting']);
         $roleSuperAdmin->givePermissionTo('Role Setting');
-
-        $roleCustomer->givePermissionTo('Home');
-
         $super_admin->assignRole($roleSuperAdmin);
-        $customer->assignRole($roleCustomer);
     }
 }

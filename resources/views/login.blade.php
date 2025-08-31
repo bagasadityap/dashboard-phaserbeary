@@ -31,11 +31,8 @@
                                 @endif
                                 <div class="card-body p-0 bg-dark auth-header-box rounded-top">
                                     <div class="text-center p-3">
-                                        <div class="logo logo-admin">
-                                            <img src="{{ asset('image/logo_ub.png') }}" height="50" alt="logo" class="auth-logo">
-                                        </div>
-                                        <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">Selamat Datang di Sistem Pemesanan Gedung Universitas Brawijaya</h4>
-                                        <p class="text-muted fw-medium mb-0">Silakan melakukan login.</p>
+                                        <img src="/image/1.PNG" alt="" style="width: 100px; height: auto; filter: sepia(80%);">
+                                        <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">Phaser Beary Dashboard</h4>
                                     </div>
                                 </div>
                                 <div class="card-body pt-0">
@@ -58,7 +55,7 @@
                                         </div>
                                     </form>
                                     <div class="mb-2">
-                                        <p class="text-danger">* Silahkan menghubungi Direktorat Pengembangan Karir dan Alumni Universitas Brawijaya jika anda belum memiliki akun.</p>
+                                        <p class="text-danger">* Dev Only</p>
                                     </div>
                                 </div>
                             </div>

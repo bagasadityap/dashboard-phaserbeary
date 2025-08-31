@@ -10,9 +10,9 @@
         <div class="card">
             <div class="card-header">
                 @include('template.alert')
-                <div class="row align-items-center">
-                    @can('User Create')
-                        <div class="text-start ms-2">
+                <div class="row justify-content-between align-items-center">
+                    @can('Gedung Create')
+                        <div class="col-md-2 text-start ms-2">
                             <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
                         </div>
                     @endcan
@@ -23,9 +23,10 @@
                     <table class="table datatable" id="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Role</th>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Description</th>
+                            <th>Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -47,21 +48,23 @@
                 serverSide: true,
                 ajax: '',
                 columns: [
-                    {data: 'name', name: 'users.name'},
-                    {data: 'username', name: 'users.username'},
-                    {data: 'role'},
-                    {data: '_', searchable : false, orderable: false, class: 'text-center nowrap'},
+                    {data: 'title', name: 'title'},
+                    {data: 'user.username', name: 'user.username'},
+                    {data: 'description', name: 'description'},
+                    {data: 'status', name: 'status'},
+                    {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
                 ]
             });
         })
 
         function create() {
             $.ajax({
-                url: '{{ route('configuration.user.create') }}',
+                url: '{{ route('gedung.create') }}',
                 success: function(response) {
                     bootbox.dialog({
-                        title: 'Buat Role',
-                        message: response
+                        title: 'Tambah Data Gedung ',
+                        message: response,
+                        size: 'large',
                     });
                 },
                 error: function(response) {
@@ -73,11 +76,12 @@
 
         function edit(id) {
             $.ajax({
-                url: '{{ route('configuration.user.edit') }}/'+id,
+                url: '{{ route('gedung.edit') }}/'+id,
                 success: function(response) {
                     bootbox.dialog({
-                        title: 'Edit User',
-                        message: response
+                        title: 'Edit Gedung ',
+                        message: response,
+                        size: 'large',
                     });
                 },
                 error: function(response) {
@@ -104,7 +108,7 @@
                 callback: function(result) {
                     if (result) {
                         $.ajax({
-                            url: '{{ route('configuration.user.delete') }}/' + id,
+                            url: '{{ route('gedung.delete') }}/' + id,
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
@@ -120,5 +124,10 @@
                 }
             });
         }
+
+        function view(id) {
+            window.location.href = '{{ route('gedung.view') }}/' + id;
+        }
+
     </script>
 @endpush

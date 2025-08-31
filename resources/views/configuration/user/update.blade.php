@@ -14,21 +14,13 @@
                         <input class="form-control" type="text" id="username" placeholder="Masukkan Username" name="username" value="{{ $user->username }}" required>
                     </div>
                     <div class="mb-2">
-                        <label for="email" class="form-label">Email</label>
-                        <input class="form-control" type="email" id="email" placeholder="Masukkan email" name="email" value="{{ $user->email }}" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="instansi" class="form-label">Instansi</label>
-                        <input class="form-control" type="text" id="instansi" placeholder="Masukkan instansi" name="instansi" value="{{ $user->instansi }}" required>
-                    </div>
-                    <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
                         <input class="form-control" type="password" id="password" placeholder="Masukkan password" name="password">
                     </div>
                     <div class="mb-2">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="Role" class="form-label">Role</label>
                         <select class="form-control" id="role" name="role" required>
-                            <option disabled selected hidden>Pilih role</option>
+                            <option disabled selected hidden>Choose role</option>
                             @foreach ($datas as $data)
                                 <option value="{{ $data->name }}"
                                     {{ $user->hasRole($data->name) ? 'selected' : '' }}>

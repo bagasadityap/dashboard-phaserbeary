@@ -13,7 +13,7 @@
                 <div class="row align-items-center">
                     @can('Role Create')
                         <div class="text-start ms-2">
-                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
+                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Add Role</button>
                         </div>
                     @endcan
                 </div>
@@ -23,7 +23,7 @@
                     <table class="table datatable" id="table">
                     <thead>
                         <tr>
-                            <th>Nama</th>
+                            <th>Name</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>

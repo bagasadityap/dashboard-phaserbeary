@@ -1,8 +1,8 @@
 @extends('template.dashboard');
 
 @section('content')
-    @include('dashboard.card')
-    @include('dashboard.chart')
+    {{-- @include('dashboard.card')
+    @include('dashboard.chart') --}}
 @endsection
 
 @push('script')

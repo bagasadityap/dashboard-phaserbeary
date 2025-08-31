@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\ArtController;
+use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PesananGedungController;
 use App\Http\Controllers\PesananPublikasiController;
+use App\Http\Controllers\RaffleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +39,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
     Route::post('/logout', 'logout')->name('logout');
 });
 
+
 Route::middleware(['auth'])->group(function () {
     Route::controller( CustomerController::class)->name('home.')->middleware('can:Home')->group( function () {
         Route::get('/home', 'index')->name('index');
@@ -52,6 +56,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store-dokumen-publikasi/{id?}', 'storeDokumenPublikasi')->name('store-dokumen-publikasi');
         Route::get('/pilih-gedung/{id?}', 'pilihGedung')->name('pilih-gedung');
         Route::get('/pilih/{id?}/{id2?}', 'pilih')->name('pilih');
+    });
+
+    Route::prefix('art-gallery')->name('art-gallery.')->group(function ()  {
+        Route::controller(ArtController::class)->prefix('arts')->name('arts.')->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
+        Route::controller(ArtistController::class)->prefix('artist')->name('artist.')->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
     });
 
     Route::prefix('pesanan')->name('pesanan.')->group(function () {
@@ -137,6 +150,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/setting/{id?}', 'setting')->name('setting');
             Route::post('/update-permission/{id?}', 'updatePermission')->name('update-permission');
         });
+    });
+
+    Route::controller(RaffleController::class)->prefix('raffle')->name('raffle.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/edit/{id?}', 'edit')->name('edit');
+        Route::post('/update/{id?}', 'update')->name('update');
+        Route::get('/delete/{id?}', 'delete')->name('delete');
+        Route::get('/view/{id?}', 'view')->name('view');
+        Route::get('/random-picker', 'randomPicker')->name('random-picker');
     });
 });
 

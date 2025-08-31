@@ -13,7 +13,7 @@
                 <div class="row align-items-center">
                     @can('User Create')
                         <div class="text-start ms-2">
-                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Tambah</button>
+                            <button class="btn btn-outline-primary px-2 d-inline-flex align-items-center nowrap" onclick="create()"><i class="iconoir-plus fs-14 me-1"></i>Create</button>
                         </div>
                     @endcan
                 </div>
@@ -23,9 +23,11 @@
                     <table class="table datatable" id="table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Role</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Created At</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -47,9 +49,11 @@
                 serverSide: true,
                 ajax: '',
                 columns: [
-                    {data: 'name', name: 'users.name'},
-                    {data: 'username', name: 'users.username'},
-                    {data: 'role'},
+                    {data: 'title', name: 'title'},
+                    {data: 'description', name: 'description'},
+                    {data: 'end_date', name: 'end_date'},
+                    {data: 'status', name: 'status'},
+                    {data: 'created_at', name: 'created_at'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center nowrap'},
                 ]
             });
@@ -57,10 +61,10 @@
 
         function create() {
             $.ajax({
-                url: '{{ route('configuration.user.create') }}',
+                url: '{{ route('raffle.create') }}',
                 success: function(response) {
                     bootbox.dialog({
-                        title: 'Buat Role',
+                        title: 'Add Raflle',
                         message: response
                     });
                 },
@@ -73,10 +77,26 @@
 
         function edit(id) {
             $.ajax({
-                url: '{{ route('configuration.user.edit') }}/'+id,
+                url: '{{ route('raffle.edit') }}/'+id,
                 success: function(response) {
                     bootbox.dialog({
-                        title: 'Edit User',
+                        title: 'Edit Raffle',
+                        message: response
+                    });
+                },
+                error: function(response) {
+                }
+            }).done(function() {
+                $('#table').unblock();
+            });
+        }
+
+        function view(id) {
+            $.ajax({
+                url: '{{ route('raffle.view') }}/'+id,
+                success: function(response) {
+                    bootbox.dialog({
+                        title: 'Detail Raffle',
                         message: response
                     });
                 },
@@ -103,19 +123,7 @@
                 },
                 callback: function(result) {
                     if (result) {
-                        $.ajax({
-                            url: '{{ route('configuration.user.delete') }}/' + id,
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                window.location.reload();
-                                bootbox.hideAll();
-                            },
-                            error: function() {
-                                toastr.error('An error occurred while deleting the data.');
-                            }
-                        });
+                        window.location.href = '{{ route('raffle.delete') }}/' + id;
                     }
                 }
             });

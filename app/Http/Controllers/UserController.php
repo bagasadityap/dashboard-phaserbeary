@@ -50,8 +50,6 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255',
-                'email' => 'required|string|max:255|unique:users',
-                'instansi' => 'required|string|max:255',
                 'password' => 'required|string',
                 'role' => 'required',
             ]);
@@ -59,8 +57,6 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'username' => $request->username,
-                'email' => $request->email,
-                'instansi' => $request->instansi,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -91,21 +87,12 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255',
-                'email' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    Rule::unique('users')->ignore($user),
-                ],
-                'instansi' => 'required|string|max:255',
                 'password' => 'nullable|string',
                 'role' => 'required',
             ]);
 
             $user->name = $request->name;
             $user->username = $request->username;
-            $user->email = $request->email;
-            $user->instansi = $request->instansi;
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }
