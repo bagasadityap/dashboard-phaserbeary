@@ -96,8 +96,7 @@ class RaffleController extends Controller
         )->post('https://api.phaserbeary.xyz/api/raffle/create', [
             'title' => $request->title,
             'description' => $request->description,
-            'end_date' => Carbon::parse($request->end_date, 'Asia/Jakarta')
-                          ->setTimezone('UTC')
+            'end_date' => $request->end_date,
         ]);
 
         if ($response->successful()) {
