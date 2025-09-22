@@ -60,7 +60,7 @@
                                         </p>
                                     </td>
                                     <td class="align-middle fw-bold">
-                                        <a href="https://x.com/{{$model['user']->twitter_account}}">{{$model['user']->twitter_account}}</a>
+                                        <a href="https://x.com/{{$model['user']->twitter_account}}">@{{$model['user']->twitter_account}}</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -70,7 +70,7 @@
                                         </p>
                                     </td>
                                     <td class="align-middle fw-bold">
-                                        <a href="https://instagram.com/{{$model['user']->instagram}}">{{$model['user']->instagram}}</a>
+                                        <a href="https://instagram.com/{{$model['user']->instagram}}">@{{$model['user']->instagram}}</a>
                                     </td>
                                 </tr>
                             </table>
