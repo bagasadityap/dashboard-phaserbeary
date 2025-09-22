@@ -41,47 +41,16 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::controller( CustomerController::class)->name('home.')->middleware('can:Home')->group( function () {
-        Route::get('/home', 'index')->name('index');
-        Route::get('/pemesanan-gedung', 'pemesanan_gedung')->name('pemesanan-gedung');
-        Route::get('/pemesanan-publikasi', 'pemesanan_publikasi')->name('pemesanan-publikasi');
-        Route::post('/store-pesanan-gedung', 'storePesananGedung')->name('store-pesanan-gedung');
-        Route::post('/store-pesanan-publikasi', 'storePesananPublikasi')->name('store-pesanan-publikasi');
-        Route::get('/pesanan-saya', 'pesananSaya')->name('pesanan-saya');
-        Route::get('/detail-pesanan-gedung/{id?}', 'detailPesananGedung')->name('detail-pesanan-gedung');
-        Route::get('/detail-pesanan-publikasi/{id?}', 'detailPesananPublikasi')->name('detail-pesanan-publikasi');
-        Route::get('/tambah-dokumen-gedung/{id?}', 'tambahDokumenGedung')->name('tambah-dokumen-gedung');
-        Route::get('/tambah-dokumen-publikasi/{id?}', 'tambahDokumenPublikasi')->name('tambah-dokumen-publikasi');
-        Route::post('/store-dokumen-gedung/{id?}', 'storeDokumenGedung')->name('store-dokumen-gedung');
-        Route::post('/store-dokumen-publikasi/{id?}', 'storeDokumenPublikasi')->name('store-dokumen-publikasi');
-        Route::get('/pilih-gedung/{id?}', 'pilihGedung')->name('pilih-gedung');
-        Route::get('/pilih/{id?}/{id2?}', 'pilih')->name('pilih');
-    });
-
     Route::prefix('art-gallery')->name('art-gallery.')->group(function ()  {
         Route::controller(ArtController::class)->prefix('arts')->name('arts.')->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/view/{id?}', 'view')->name('view');
+            Route::get('/confirm-dialog/{id?}', 'confirmDialog')->name('confirm-dialog');
+            Route::post('/confirm/{id?}', 'confirm')->name('confirm');
+            Route::delete('/delete/{id?}', 'delete')->name('delete');
         });
         Route::controller(ArtistController::class)->prefix('artist')->name('artist.')->group(function () {
             Route::get('/', 'index')->name('index');
-        });
-    });
-
-    Route::prefix('pesanan')->name('pesanan.')->group(function () {
-        Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
-            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
-        });
-
-        Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
-            Route::get('/download-invoice/{id?}', 'downloadInvoice')->name('download-invoice');
-        });
-    });
-
-    Route::prefix('pesanan')->name('pesanan.')->middleware('can:Home')->group(function () {
-        Route::controller(PesananGedungController::class)->prefix('gedung')->name('gedung.')->group(function () {
-        });
-
-        Route::controller(PesananPublikasiController::class)->prefix('publikasi')->name('publikasi.')->group(function () {
         });
     });
 

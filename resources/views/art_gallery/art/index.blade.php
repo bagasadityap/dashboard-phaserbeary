@@ -25,6 +25,7 @@
                         <tr>
                             <th>Title</th>
                             <th>Artist</th>
+                            <th>Twitter</th>
                             <th>Description</th>
                             <th>Status</th>
                             <th class="text-center">Action</th>
@@ -50,6 +51,7 @@
                 columns: [
                     {data: 'title', name: 'title'},
                     {data: 'user.username', name: 'user.username'},
+                    {data: 'user.twitter_account', name: 'user.twitter_account'},
                     {data: 'description', name: 'description'},
                     {data: 'status', name: 'status'},
                     {data: '_', searchable : false, orderable: false, class: 'text-center dt-nowrap'},
@@ -57,44 +59,10 @@
             });
         })
 
-        function create() {
-            $.ajax({
-                url: '{{ route('gedung.create') }}',
-                success: function(response) {
-                    bootbox.dialog({
-                        title: 'Tambah Data Gedung ',
-                        message: response,
-                        size: 'large',
-                    });
-                },
-                error: function(response) {
-                }
-            }).done(function() {
-                $('#table').unblock();
-            });
-        }
-
-        function edit(id) {
-            $.ajax({
-                url: '{{ route('gedung.edit') }}/'+id,
-                success: function(response) {
-                    bootbox.dialog({
-                        title: 'Edit Gedung ',
-                        message: response,
-                        size: 'large',
-                    });
-                },
-                error: function(response) {
-                }
-            }).done(function() {
-                $('#table').unblock();
-            });
-        }
-
         function remove(id) {
             bootbox.confirm({
-                title: '<span class="text-danger">Perhatian!</span>',
-                message: 'Apakah anda yakin menghapus data ini?',
+                title: '<span class="text-danger">Warning!</span>',
+                message: 'Are you sure you want to delete this data? This action cannot be undone.',
                 buttons: {
                     confirm: {
                         label: 'Yes',
@@ -125,8 +93,24 @@
             });
         }
 
+        function confirm(id) {
+            $.ajax({
+                url: 'arts/confirm-dialog/' + id,
+                success: function(response) {
+                    bootbox.dialog({
+                        title: 'Confirm Art',
+                        message: response
+                    });
+                },
+                error: function(response) {
+                }
+            }).done(function() {
+                $('#table').unblock();
+            });
+        }
+
         function view(id) {
-            window.location.href = '{{ route('gedung.view') }}/' + id;
+            window.location.href = "{{ url('art-gallery/arts/view') }}/" + id;
         }
 
     </script>

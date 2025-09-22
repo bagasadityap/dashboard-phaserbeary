@@ -14,7 +14,7 @@ class ArtController extends Controller
 {
     public function index(Request $request) {
         $page = 'Art Gallery \ Art';
-        $response = Http::get('https://api.phaserbeary.xyz/api/arts');
+        $response = Http::get('https://api.phaserbeary.xyz/api/arts/all');
         $model = json_decode($response->body());
 
         if ($request->ajax()) {
@@ -34,15 +34,54 @@ class ArtController extends Controller
                     if ($model->status == 0) {
                         return '<span class="badge rounded-pill bg-warning p-1">Need to Review</span>';
                     } elseif ($model->status == 1) {
-                        return '<span class="badge rounded-pill badge-primary p-1">Published</span>';
+                        return '<span class="badge rounded-pill bg-primary p-1">Publised</span>';
                     }
-                    return '<span class="badge rounded-pill badge-danger p-1">Rejected</span>';
+                    return '<span class="badge rounded-pill bg-danger p-1">Rejected</span>';
                 })
                 ->rawColumns(['_', 'description', 'status'])
                 ->make(true);
         }
 
         return view('art_gallery.art.index', compact('page'));
+    }
+
+    public function view($id) {
+        $page = 'Art Gallery \ Art \ Detail';
+        $response = Http::get('https://api.phaserbeary.xyz/api/arts/single/' . $id);
+        $data = json_decode($response->body());
+        $model = collect($data->art);
+
+        return view('art_gallery.art.view', compact('page', 'model'));
+    }
+
+    public function confirmDialog($id) {
+        $response = Http::get('https://api.phaserbeary.xyz/api/arts/single/' . $id);
+        $data = json_decode($response->body());
+        $model = collect($data->art);
+
+        return view('art_gallery.art.confirm', compact('model'));
+    }
+
+    public function confirm(Request $request, $id) {
+        $request->validate([
+            'status' => 'required|numeric',
+            'comment' => 'string|nullable|max:255',
+        ]);
+
+        $url = 'https://api.phaserbeary.xyz/api/arts/confirm/' . $id;
+
+        $response = Http::post($url, [
+            'comment' => $request->comment,
+            'status' => $request->status,
+        ]);
+
+        if ($response->successful()) {
+            return redirect()->route('art-gallery.arts.index')
+                            ->with('success', 'Art updated successfully.');
+        } else {
+            return back()->withInput()
+                        ->with('error', 'Failed to udpate: ' . $response->body());
+        }
     }
 
     public function delete($id) {
